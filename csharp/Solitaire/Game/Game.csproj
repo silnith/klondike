@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+      <TargetFramework>netstandard2.1</TargetFramework>
+      <PackageId>Silnith.Game</PackageId>
+      <RootNamespace>Silnith.Game</RootNamespace>
+      <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+      <Product>Game</Product>
+      <Description>Interfaces for games with searchable state trees.</Description>
+      <Copyright>Kent Rosenkoetter</Copyright>
+      <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
+      <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

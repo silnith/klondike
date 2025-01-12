@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <PackageId>Silnith.Game.Klondike</PackageId>
+        <RootNamespace>Silnith.Game.Klondike</RootNamespace>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Product>Klondike</Product>
+        <Description>An implementation of Klondike solitaire.</Description>
+        <Copyright>Kent Rosenkoetter</Copyright>
+        <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Deck\Deck.csproj" />
+        <ProjectReference Include="..\Game\Game.csproj" />
+    </ItemGroup>
+
+</Project>
