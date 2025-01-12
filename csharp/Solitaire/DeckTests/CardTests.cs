@@ -104,7 +104,7 @@ namespace Silnith.Game.Deck.Tests
         {
             Card card = new(Value.Eight, Suit.Heart);
 
-            Assert.AreNotEqual(card, "Eight of Hearts");
+            Assert.AreNotEqual<object>(card, "Eight of Hearts");
         }
 
         [TestMethod]
