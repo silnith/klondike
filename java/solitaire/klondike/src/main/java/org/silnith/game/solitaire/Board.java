@@ -84,7 +84,7 @@ public class Board {
     /**
      * Constructs a new board. All parameters must be immutable.
      */
-    protected Board(final List<Column> columns, final List<Card> stockPile, final int stockPileIndex,
+    public Board(final List<Column> columns, final List<Card> stockPile, final int stockPileIndex,
             final Map<Suit, List<Card>> foundation) {
         super();
         this.columns = columns;
