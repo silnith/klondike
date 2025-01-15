@@ -65,6 +65,8 @@ public class RecycleStockPileMoveTest {
 		
 		assertEquals(expected, actual);
 	}
+	
+	// TODO: Add tests that illegal recycles throw exceptions.
 
 	@Test
 	public void testEquals() {
