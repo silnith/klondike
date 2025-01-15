@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Silnith.Game.Klondike.Move.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class RecycleStockPileMoveTests
     {
         [TestMethod]
@@ -82,6 +82,8 @@ namespace Silnith.Game.Klondike.Move.Tests
 
             Assert.AreEqual(expected, actual);
         }
+
+        // TODO: Add tests that illegal recycles throw exceptions.
 
         [TestMethod]
         public void TestEquals()

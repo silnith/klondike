@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Silnith.Game.Klondike.Move.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class DealMoveTests
     {
         private readonly List<Card> deck = new()
