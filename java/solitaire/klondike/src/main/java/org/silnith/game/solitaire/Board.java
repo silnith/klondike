@@ -191,7 +191,7 @@ public class Board {
      * @return the current top card for the suit in the foundation
      * @throws IndexOutOfBoundsException if the foundation has no cards for the given suit
      */
-    private Card getTopOfFoundation(final Suit suit) {
+    public Card getTopOfFoundation(final Suit suit) {
         final List<Card> foundationForSuit = foundation.get(suit);
         return foundationForSuit.get(foundationForSuit.size() - 1);
     }

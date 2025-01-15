@@ -178,8 +178,8 @@ namespace Silnith.Game.Klondike
         /// </summary>
         /// <param name="suit">The suit.</param>
         /// <returns>The current top card for the suit in the foundation.</returns>
-        /// <exception cref="IndexOutOfRangeException">If the foundation has no cards for <paramref name="suit"/>.</exception>
-        private Card GetTopOfFoundation(Suit suit)
+        /// <exception cref="ArgumentOutOfRangeException">If the foundation has no cards for <paramref name="suit"/>.</exception>
+        public Card GetTopOfFoundation(Suit suit)
         {
             IReadOnlyList<Card> foundationForSuit = Foundation[suit];
             return foundationForSuit[foundationForSuit.Count - 1];

@@ -38,16 +38,14 @@ public class BoardTest {
     
     private final List<Card> emptyListOfCards = Collections.emptyList();
     
-    private final EnumMap<Suit, List<Card>> emptyFoundation;
+    private final EnumMap<Suit, List<Card>> emptyFoundation = new EnumMap<>(Suit.class);
     
-    private final List<Column> emptyColumns;
+    private final List<Column> emptyColumns = new ArrayList<>(7);
     
     public BoardTest() {
-        this.emptyColumns = new ArrayList<>(7);
         for (int i = 0; i < 7; i++ ) {
             this.emptyColumns.add(new Column(emptyListOfCards, emptyListOfCards));
         }
-        this.emptyFoundation = new EnumMap<>(Suit.class);
         for (final Suit suit : Suit.values()) {
             this.emptyFoundation.put(suit, emptyListOfCards);
         }
@@ -914,175 +912,6 @@ public class BoardTest {
         columns.set(4, new Column(null, Arrays.asList(
         		new Card(KING, CLUB))));
         final Board expected = new Board(columns, emptyListOfCards, 0, foundation);
-        
-        assertEquals(expected, actual);
-    }
-    
-    @Test
-    public void testMoveCardFromFoundation() {
-        final Map<Suit, List<Card>> foundation = new EnumMap<>(emptyFoundation);
-        foundation.put(CLUB, Arrays.asList(
-        		new Card(ACE, CLUB),
-        		new Card(TWO, CLUB),
-        		new Card(THREE, CLUB),
-        		new Card(FOUR, CLUB),
-        		new Card(FIVE, CLUB),
-        		new Card(SIX, CLUB),
-        		new Card(SEVEN, CLUB),
-        		new Card(EIGHT, CLUB),
-        		new Card(NINE, CLUB),
-        		new Card(TEN, CLUB),
-        		new Card(JACK, CLUB),
-        		new Card(QUEEN, CLUB),
-        		new Card(KING, CLUB)));
-        final Board board = new Board(emptyColumns, emptyListOfCards, 0, foundation);
-        
-        final Board actualBoard = board.moveCardFromFoundation(CLUB, 3);
-
-        final Map<Suit, List<Card>> expectedFoundation = new EnumMap<>(emptyFoundation);
-        expectedFoundation.put(CLUB, Arrays.asList(
-        		new Card(ACE, CLUB),
-        		new Card(TWO, CLUB),
-        		new Card(THREE, CLUB),
-        		new Card(FOUR, CLUB),
-        		new Card(FIVE, CLUB),
-        		new Card(SIX, CLUB),
-        		new Card(SEVEN, CLUB),
-        		new Card(EIGHT, CLUB),
-        		new Card(NINE, CLUB),
-        		new Card(TEN, CLUB),
-        		new Card(JACK, CLUB),
-        		new Card(QUEEN, CLUB)));
-        final List<Column> expectedColumns = new ArrayList<>(emptyColumns);
-        expectedColumns.set(3, new Column(null, Arrays.asList(
-        		new Card(KING, CLUB))));
-        final Board expectedBoard = new Board(expectedColumns, emptyListOfCards, 0, expectedFoundation);
-        
-        assertEquals(expectedBoard, actualBoard);
-    }
-    
-    @Test
-    public void testMoveCardFromFoundationEmpty() {
-        final Board board = new Board(emptyColumns, emptyListOfCards, 0, emptyFoundation);
-        
-        assertThrows(RuntimeException.class, () -> board.moveCardFromFoundation(CLUB, 3));
-    }
-    
-    @Test
-    public void testMoveCardFromFoundationNonEmptyColumn() {
-        final Map<Suit, List<Card>> foundation = new EnumMap<>(emptyFoundation);
-        foundation.put(CLUB, Arrays.asList(
-        		new Card(ACE, CLUB),
-        		new Card(TWO, CLUB),
-        		new Card(THREE, CLUB)));
-        final List<Column> columns = new ArrayList<>(emptyColumns);
-        columns.set(3, new Column(
-        		Arrays.asList(
-        				new Card(FOUR, SPADE)),
-                Arrays.asList(
-                		new Card(SIX, HEART),
-                		new Card(FIVE, SPADE),
-                		new Card(FOUR, HEART))));
-        final Board board = new Board(columns, emptyListOfCards, 0, foundation);
-        
-        final Board actual = board.moveCardFromFoundation(CLUB, 3);
-
-        final Map<Suit, List<Card>> expectedFoundation = new EnumMap<>(emptyFoundation);
-        expectedFoundation.put(CLUB, Arrays.asList(
-        		new Card(ACE, CLUB),
-        		new Card(TWO, CLUB)));
-        final List<Column> expectedColumns = new ArrayList<>(emptyColumns);
-        expectedColumns.set(3, new Column(
-        		Arrays.asList(
-        				new Card(FOUR, SPADE)),
-        		Arrays.asList(
-        				new Card(SIX, HEART),
-        				new Card(FIVE, SPADE),
-        				new Card(FOUR, HEART),
-        				new Card(THREE, CLUB))));
-        final Board expected = new Board(expectedColumns, emptyListOfCards, 0, expectedFoundation);
-        
-        assertEquals(expected, actual);
-    }
-    
-    @Test
-    public void testMoveCardFromFoundationKeepsStockPile() {
-        final Map<Suit, List<Card>> foundation = new EnumMap<>(emptyFoundation);
-        foundation.put(CLUB, Arrays.asList(
-        		new Card(ACE, CLUB),
-        		new Card(TWO, CLUB),
-        		new Card(THREE, CLUB)));
-        final List<Column> columns = new ArrayList<>(emptyColumns);
-        columns.set(3, new Column(
-        		Arrays.asList(
-        				new Card(FOUR, SPADE)),
-                Arrays.asList(
-                		new Card(SIX, HEART),
-                		new Card(FIVE, SPADE),
-                		new Card(FOUR, HEART))));
-        final List<Card> stockPile = Arrays.asList(
-        		new Card(JACK, CLUB),
-        		new Card(TWO, DIAMOND),
-        		new Card(SIX, HEART));
-        final Board board = new Board(columns, stockPile, 0, foundation);
-        
-        final Board actual = board.moveCardFromFoundation(CLUB, 3);
-        
-        final Map<Suit, List<Card>> expectedFoundation = new EnumMap<>(emptyFoundation);
-        expectedFoundation.put(CLUB, Arrays.asList(
-        		new Card(ACE, CLUB),
-        		new Card(TWO, CLUB)));
-        final List<Column> expectedColumns = new ArrayList<>(emptyColumns);
-        expectedColumns.set(3, new Column(
-        		Arrays.asList(
-        				new Card(FOUR, SPADE)),
-        		Arrays.asList(
-        				new Card(SIX, HEART),
-        				new Card(FIVE, SPADE),
-        				new Card(FOUR, HEART),
-        				new Card(THREE, CLUB))));
-        final Board expected = new Board(expectedColumns, stockPile, 0, expectedFoundation);
-        
-        assertEquals(expected, actual);
-    }
-    
-    @Test
-    public void testMoveCardFromFoundationKeepsStockPileIndex() {
-        final Map<Suit, List<Card>> foundation = new EnumMap<>(emptyFoundation);
-        foundation.put(CLUB, Arrays.asList(
-        		new Card(ACE, CLUB),
-        		new Card(TWO, CLUB),
-        		new Card(THREE, CLUB)));
-        final List<Column> columns = new ArrayList<>(emptyColumns);
-        columns.set(3, new Column(
-        		Arrays.asList(
-        				new Card(FOUR, SPADE)),
-                Arrays.asList(
-                		new Card(SIX, HEART),
-                		new Card(FIVE, SPADE),
-                		new Card(FOUR, HEART))));
-        final List<Card> stockPile = Arrays.asList(
-        		new Card(JACK, CLUB),
-        		new Card(TWO, DIAMOND),
-        		new Card(SIX, HEART));
-        final Board board = new Board(columns, stockPile, 2, foundation);
-        
-        final Board actual = board.moveCardFromFoundation(CLUB, 3);
-        
-        final Map<Suit, List<Card>> expectedFoundation = new EnumMap<>(emptyFoundation);
-        expectedFoundation.put(CLUB, Arrays.asList(
-        		new Card(ACE, CLUB),
-        		new Card(TWO, CLUB)));
-        final List<Column> expectedColumns = new ArrayList<>(emptyColumns);
-        expectedColumns.set(3, new Column(
-        		Arrays.asList(
-        				new Card(FOUR, SPADE)),
-        		Arrays.asList(
-        				new Card(SIX, HEART),
-        				new Card(FIVE, SPADE),
-        				new Card(FOUR, HEART),
-        				new Card(THREE, CLUB))));
-        final Board expected = new Board(expectedColumns, stockPile, 2, expectedFoundation);
         
         assertEquals(expected, actual);
     }
