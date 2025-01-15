@@ -167,7 +167,7 @@ namespace Silnith.Game.Klondike
         /// Returns the current card that can be drawn from the stock pile.
         /// </summary>
         /// <returns>The current card available from the stock pile.</returns>
-        /// <exception cref="IndexOutOfRangeException">If no card is available to be drawn from the stock pile.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If no card is available to be drawn from the stock pile.</exception>
         public Card GetStockPileCard()
         {
             return StockPile[StockPileIndex - 1];
