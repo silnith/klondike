@@ -65,9 +65,8 @@ namespace Silnith.Game.Klondike.Move
         /// </para>
         /// </remarks>
         /// <param name="board">The board from which to get the <see cref="SourceIndex"/> and <see cref="Card"/>.</param>
-        /// <exception cref="IndexOutOfRangeException">If the board stock pile index is <c>0</c> or greater than the size of
-        /// the stock pile.</exception>
-        public StockPileToFoundationMove(Board board) : this(board.StockPileIndex, board.StockPile[board.StockPileIndex - 1])
+        /// <exception cref="IndexOutOfRangeException">If no card is available to be drawn from the stock pile.</exception>
+        public StockPileToFoundationMove(Board board) : this(board.StockPileIndex, board.GetStockPileCard())
         {
         }
 
