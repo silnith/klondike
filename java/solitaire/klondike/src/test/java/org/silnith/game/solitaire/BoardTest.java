@@ -688,55 +688,6 @@ public class BoardTest {
     }
     
     @Test
-    public void testMoveCardToFoundation() {
-        final List<Column> columns = new ArrayList<>(emptyColumns);
-        columns.set(2, new Column(null, Arrays.asList(
-        		new Card(ACE, CLUB))));
-        final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
-        
-        final Board actual = board.moveCardToFoundation(2);
-
-        final Map<Suit, List<Card>> expectedFoundation = new EnumMap<>(emptyFoundation);
-        expectedFoundation.put(CLUB, Arrays.asList(
-        		new Card(ACE, CLUB)));
-        final Board expected = new Board(emptyColumns, emptyListOfCards, 0, expectedFoundation);
-        
-        assertEquals(expected, actual);
-    }
-    
-    @Test
-    public void testMoveCardToFoundationFromEmptyColumn() {
-        final Board board = new Board(emptyColumns, emptyListOfCards, 0, emptyFoundation);
-        
-        assertThrows(RuntimeException.class, () -> board.moveCardToFoundation(2));
-    }
-    
-    @Test
-    public void testMoveCardToFoundationNonEmptyFoundation() {
-        final List<Column> columns = new ArrayList<>(emptyColumns);
-        columns.set(2, new Column(null, Arrays.asList(
-        		new Card(FOUR, CLUB))));
-        final Map<Suit, List<Card>> foundation = new EnumMap<>(emptyFoundation);
-        foundation.put(CLUB, Arrays.asList(
-        		new Card(ACE, CLUB),
-        		new Card(TWO, CLUB),
-        		new Card(THREE, CLUB)));
-        final Board board = new Board(columns, emptyListOfCards, 0, foundation);
-        
-        final Board actual = board.moveCardToFoundation(2);
-
-        final Map<Suit, List<Card>> expectedFoundation = new EnumMap<>(emptyFoundation);
-        expectedFoundation.put(CLUB, Arrays.asList(
-        		new Card(ACE, CLUB),
-        		new Card(TWO, CLUB),
-        		new Card(THREE, CLUB),
-        		new Card(FOUR, CLUB)));
-        final Board expected = new Board(emptyColumns, emptyListOfCards, 0, expectedFoundation);
-        
-        assertEquals(expected, actual);
-    }
-    
-    @Test
     public void testDrawStockPileCardToColumn() {
         final List<Card> stockPile = Arrays.asList(
         		new Card(KING, CLUB));

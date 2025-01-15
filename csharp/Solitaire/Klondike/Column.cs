@@ -137,7 +137,7 @@ namespace Silnith.Game.Klondike
         /// Returns the top face-up card in the column.
         /// </summary>
         /// <returns>The top card.</returns>
-        /// <exception cref="IndexOutOfRangeException">If there are no face-up cards in the column.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If there are no face-up cards in the column.</exception>
         public Card GetTopCard()
         {
             return FaceUp[FaceUp.Count - 1];
