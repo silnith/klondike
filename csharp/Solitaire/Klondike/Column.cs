@@ -217,6 +217,42 @@ namespace Silnith.Game.Klondike
             return new Column(FaceDown, newFaceUp);
         }
 
+        /// <summary>
+        /// Checks whether it is legal to add the given run of cards to this column.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// If the column is empty, this checks whether the first card in the run
+        /// is a <see cref="Value.King"/>.
+        /// </para>
+        /// <para>
+        /// If the column is not empty, this checks whether the first card in the run
+        /// is one lower in value and of the opposite color to the top card on the column.
+        /// </para>
+        /// </remarks>
+        /// <param name="run">The run of cards to add to this column.</param>
+        /// <returns><see langword="true"/> if it is legal to add the given run of cards to this column.</returns>
+        /// <exception cref="ArgumentException">If <paramref name="run"/> is empty.</exception>
+        public bool CanAddRun(IReadOnlyList<Card> run)
+        {
+            if (!run.Any())
+            {
+                throw new ArgumentException("Cannot be empty.", nameof(run));
+            }
+
+            Card firstCardOfRunToAdd = run[0];
+            if (HasFaceUpCards())
+            {
+                Card topCardOfColumn = GetTopCard();
+                return topCardOfColumn.Value.GetValue() == 1 + firstCardOfRunToAdd.Value.GetValue()
+                    && topCardOfColumn.Suit.GetColor() != firstCardOfRunToAdd.Suit.GetColor();
+            }
+            else
+            {
+                return firstCardOfRunToAdd.Value == Value.King;
+            }
+        }
+
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {

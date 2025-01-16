@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.silnith.deck.Card;
+import org.silnith.deck.Value;
 
 
 /**
@@ -13,14 +14,14 @@ import org.silnith.deck.Card;
  * <p>A column consists of a number of face-down cards and a number of face-up
  * cards.  The face-down cards are initialized when the board is first dealt.
  * When there are no face-up cards, the top face-down card is flipped to face up.
- * If there are no cards remaining, the column is empty and any {@link org.silnith.deck.Value#KING King}
+ * If there are no cards remaining, the column is empty and any {@link Value#KING King}
  * may be moved to it.</p>
  * 
  * <p>Face-up cards in a column must obey the rules of a run.  Cards may be
  * stacked on top of other face-up cards to make a run provided that a card is
  * only placed on top of a card of the opposite color and of one value higher.
- * For example, a {@link org.silnith.deck.Value#TWO two} of {@link org.silnith.deck.Suit#CLUB clubs}
- * may be placed on top of a {@link org.silnith.deck.Value#THREE three}
+ * For example, a {@link Value#TWO two} of {@link org.silnith.deck.Suit#CLUB clubs}
+ * may be placed on top of a {@link Value#THREE three}
  * of {@link org.silnith.deck.Suit#HEART hearts}.</p>
  */
 public class Column {
@@ -204,6 +205,36 @@ public class Column {
         newFaceUp.addAll(faceUp);
         newFaceUp.add(newCard);
         return new Column(faceDown, newFaceUp);
+    }
+    
+    /**
+     * Returns whether it is legal to add the given run of cards to this column.
+     * 
+     * <p>If the column is empty, this checks whether the first card in the run
+     * is a {@link Value#KING}.</p>
+     * 
+     * <p>If the column is not empty, this checks whether the first card in the run
+     * is one lower in value and of the opposite color to the top card on the column.
+     * 
+     * @param run the run of cards to add to this column
+     * @return {@code true} if it is legal to add the given run of cards to this column
+     */
+    public boolean canAddRun(final List<Card> run) {
+    	if (run == null) {
+    		throw new IllegalArgumentException("Run cannot be null.");
+    	}
+    	if (run.isEmpty()) {
+    		throw new IllegalArgumentException("Run cannot be empty.");
+    	}
+    	
+    	final Card firstCardOfRunToAdd = run.get(0);
+    	if (hasFaceUpCards()) {
+    		final Card topCardOfColumn = getTopCard();
+    		return topCardOfColumn.getValue().getValue() == 1 + firstCardOfRunToAdd.getValue().getValue()
+    				&& topCardOfColumn.getSuit().getColor() != firstCardOfRunToAdd.getSuit().getColor();
+    	} else {
+    		return firstCardOfRunToAdd.getValue() == Value.KING;
+    	}
     }
     
     @Override

@@ -935,6 +935,241 @@ namespace Silnith.Game.Klondike.Tests
             });
         }
 
+        #region CanAddRun
+
+        [TestMethod]
+        public void TestCanAddRunEmptyColumnEmptyRun()
+        {
+            Column column = new(Array.Empty<Card>(), Array.Empty<Card>());
+
+            Assert.ThrowsException<ArgumentException>(() =>
+            {
+                _ = column.CanAddRun(Array.Empty<Card>());
+            });
+        }
+
+        [TestMethod]
+        public void TestCanAddRunEmptyColumnKing()
+        {
+            Column column = new(Array.Empty<Card>(), Array.Empty<Card>());
+
+            List<Card> run = new()
+            {
+                new Card(Value.King, Suit.Club),
+            };
+
+            Assert.IsTrue(column.CanAddRun(run));
+        }
+
+        [TestMethod]
+        public void TestCanAddRunEmptyColumnKingRun()
+        {
+            Column column = new(Array.Empty<Card>(), Array.Empty<Card>());
+
+            List<Card> run = new()
+            {
+                new Card(Value.King, Suit.Club),
+                new Card(Value.Queen, Suit.Heart),
+                new Card(Value.Jack, Suit.Club),
+            };
+
+            Assert.IsTrue(column.CanAddRun(run));
+        }
+
+        [TestMethod]
+        public void TestCanAddRunEmptyColumnQueen()
+        {
+            Column column = new(Array.Empty<Card>(), Array.Empty<Card>());
+
+            List<Card> run = new()
+            {
+                new Card(Value.Queen, Suit.Heart),
+            };
+
+            Assert.IsFalse(column.CanAddRun(run));
+        }
+
+        [TestMethod]
+        public void TestCanAddRunEmptyColumnQueenRun()
+        {
+            Column column = new(Array.Empty<Card>(), Array.Empty<Card>());
+
+            List<Card> run = new()
+            {
+                new Card(Value.Queen, Suit.Heart),
+                new Card(Value.Jack, Suit.Club),
+                new Card(Value.Ten, Suit.Heart),
+            };
+
+            Assert.IsFalse(column.CanAddRun(run));
+        }
+
+        [TestMethod]
+        public void TestCanAddRunEmptyRun()
+        {
+            List<Card> faceDown = new()
+            {
+                new Card(Value.Three, Suit.Club),
+                new Card(Value.Three, Suit.Diamond),
+                new Card(Value.Three, Suit.Heart),
+                new Card(Value.Three, Suit.Spade),
+            };
+            List<Card> faceUp = new()
+            {
+                new Card(Value.Ten, Suit.Spade),
+                new Card(Value.Nine, Suit.Heart),
+                new Card(Value.Eight, Suit.Spade),
+            };
+            Column column = new(faceDown, faceUp);
+
+            Assert.ThrowsException<ArgumentException>(() =>
+            {
+                _ = column.CanAddRun(Array.Empty<Card>());
+            });
+        }
+
+        [TestMethod]
+        public void TestCanAddRun()
+        {
+            List<Card> faceDown = new()
+            {
+                new Card(Value.Three, Suit.Club),
+                new Card(Value.Three, Suit.Diamond),
+                new Card(Value.Three, Suit.Heart),
+                new Card(Value.Three, Suit.Spade),
+            };
+            List<Card> faceUp = new()
+            {
+                new Card(Value.Ten, Suit.Spade),
+                new Card(Value.Nine, Suit.Heart),
+                new Card(Value.Eight, Suit.Spade),
+            };
+            Column column = new(faceDown, faceUp);
+
+            List<Card> run = new()
+            {
+                new Card(Value.Seven, Suit.Heart),
+                new Card(Value.Six, Suit.Spade),
+                new Card(Value.Five, Suit.Heart),
+            };
+
+            Assert.IsTrue(column.CanAddRun(run));
+        }
+
+        [TestMethod]
+        public void TestCanAddRunWrongColor()
+        {
+            List<Card> faceDown = new()
+            {
+                new Card(Value.Three, Suit.Club),
+                new Card(Value.Three, Suit.Diamond),
+                new Card(Value.Three, Suit.Heart),
+                new Card(Value.Three, Suit.Spade),
+            };
+            List<Card> faceUp = new()
+            {
+                new Card(Value.Ten, Suit.Spade),
+                new Card(Value.Nine, Suit.Heart),
+                new Card(Value.Eight, Suit.Spade),
+            };
+            Column column = new(faceDown, faceUp);
+
+            List<Card> run = new()
+            {
+                new Card(Value.Seven, Suit.Spade),
+                new Card(Value.Six, Suit.Heart),
+                new Card(Value.Five, Suit.Spade),
+            };
+
+            Assert.IsFalse(column.CanAddRun(run));
+        }
+
+        [TestMethod]
+        public void TestCanAddRunTooHigh()
+        {
+            List<Card> faceDown = new()
+            {
+                new Card(Value.Three, Suit.Club),
+                new Card(Value.Three, Suit.Diamond),
+                new Card(Value.Three, Suit.Heart),
+                new Card(Value.Three, Suit.Spade),
+            };
+            List<Card> faceUp = new()
+            {
+                new Card(Value.Ten, Suit.Spade),
+                new Card(Value.Nine, Suit.Heart),
+                new Card(Value.Eight, Suit.Spade),
+            };
+            Column column = new(faceDown, faceUp);
+
+            List<Card> run = new()
+            {
+                new Card(Value.Eight, Suit.Heart),
+                new Card(Value.Seven, Suit.Spade),
+                new Card(Value.Six, Suit.Heart),
+            };
+
+            Assert.IsFalse(column.CanAddRun(run));
+        }
+
+        [TestMethod]
+        public void TestCanAddRunTooLow()
+        {
+            List<Card> faceDown = new()
+            {
+                new Card(Value.Three, Suit.Club),
+                new Card(Value.Three, Suit.Diamond),
+                new Card(Value.Three, Suit.Heart),
+                new Card(Value.Three, Suit.Spade),
+            };
+            List<Card> faceUp = new()
+            {
+                new Card(Value.Ten, Suit.Spade),
+                new Card(Value.Nine, Suit.Heart),
+                new Card(Value.Eight, Suit.Spade),
+            };
+            Column column = new(faceDown, faceUp);
+
+            List<Card> run = new()
+            {
+                new Card(Value.Six, Suit.Heart),
+                new Card(Value.Five, Suit.Spade),
+                new Card(Value.Four, Suit.Heart),
+            };
+
+            Assert.IsFalse(column.CanAddRun(run));
+        }
+
+        [TestMethod]
+        public void TestCanAddRunKing()
+        {
+            List<Card> faceDown = new()
+            {
+                new Card(Value.Three, Suit.Club),
+                new Card(Value.Three, Suit.Diamond),
+                new Card(Value.Three, Suit.Heart),
+                new Card(Value.Three, Suit.Spade),
+            };
+            List<Card> faceUp = new()
+            {
+                new Card(Value.Ten, Suit.Spade),
+                new Card(Value.Nine, Suit.Heart),
+                new Card(Value.Eight, Suit.Spade),
+            };
+            Column column = new(faceDown, faceUp);
+
+            List<Card> run = new()
+            {
+                new Card(Value.King, Suit.Heart),
+                new Card(Value.Queen, Suit.Spade),
+                new Card(Value.Jack, Suit.Heart),
+            };
+
+            Assert.IsFalse(column.CanAddRun(run));
+        }
+
+        #endregion
+
         [TestMethod]
         public void TestEquals()
         {

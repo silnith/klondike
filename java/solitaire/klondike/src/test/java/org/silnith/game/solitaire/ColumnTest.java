@@ -10,6 +10,7 @@ import static org.silnith.deck.Suit.HEART;
 import static org.silnith.deck.Suit.SPADE;
 import static org.silnith.deck.Value.ACE;
 import static org.silnith.deck.Value.EIGHT;
+import static org.silnith.deck.Value.FIVE;
 import static org.silnith.deck.Value.FOUR;
 import static org.silnith.deck.Value.JACK;
 import static org.silnith.deck.Value.KING;
@@ -18,6 +19,7 @@ import static org.silnith.deck.Value.QUEEN;
 import static org.silnith.deck.Value.SEVEN;
 import static org.silnith.deck.Value.SIX;
 import static org.silnith.deck.Value.TEN;
+import static org.silnith.deck.Value.THREE;
 import static org.silnith.deck.Value.TWO;
 
 import java.util.Arrays;
@@ -769,6 +771,211 @@ public class ColumnTest {
         assertThrows(IllegalArgumentException.class, () -> {
         	column.getWithCards(null);
         });
+    }
+    
+    @Test
+    public void testCanAddRunEmptyColumnNull() {
+    	final Column column = new Column(null, null);
+    	
+    	assertThrows(IllegalArgumentException.class, () -> {
+    		column.canAddRun(null);
+    	});
+    }
+    
+    @Test
+    public void testCanAddRunEmptyColumnEmptyRun() {
+    	final Column column = new Column(null, null);
+    	
+    	assertThrows(IllegalArgumentException.class, () -> {
+    		column.canAddRun(Collections.emptyList());
+    	});
+    }
+    
+    @Test
+    public void testCanAddRunEmptyColumnKing()
+    {
+    	final Column column = new Column(null, null);
+    	
+    	final List<Card> run = Arrays.asList(
+    			new Card(KING, CLUB));
+    	
+    	assertTrue(column.canAddRun(run));
+    }
+    
+    @Test
+    public void testCanAddRunEmptyColumnKingRun()
+    {
+    	final Column column = new Column(null, null);
+    	
+    	final List<Card> run = Arrays.asList(
+    			new Card(KING, CLUB),
+    			new Card(QUEEN, HEART),
+    			new Card(JACK, CLUB));
+    	
+    	assertTrue(column.canAddRun(run));
+    }
+    
+    @Test
+    public void testCanAddRunEmptyColumnQueen() {
+    	final Column column = new Column(null, null);
+    	
+    	final List<Card> run = Arrays.asList(
+    			new Card(QUEEN, HEART));
+    	
+    	assertFalse(column.canAddRun(run));
+    }
+    
+    @Test
+    public void testCanAddRunEmptyColumnQueenRun() {
+    	final Column column = new Column(null, null);
+    	
+    	final List<Card> run = Arrays.asList(
+    			new Card(QUEEN, HEART),
+    			new Card(JACK, CLUB),
+    			new Card(TEN, HEART));
+    	
+    	assertFalse(column.canAddRun(run));
+    }
+    
+    @Test
+    public void testCanAddRunNull() {
+    	final List<Card> faceDown = Arrays.asList(
+    			new Card(THREE, CLUB),
+    			new Card(THREE, DIAMOND),
+    			new Card(THREE, HEART),
+    			new Card(THREE, SPADE));
+    	final List<Card> faceUp = Arrays.asList(
+    			new Card(TEN, SPADE),
+    			new Card(NINE, HEART),
+    			new Card(EIGHT, SPADE));
+    	final Column column = new Column(faceDown, faceUp);
+    	
+    	assertThrows(IllegalArgumentException.class, () -> {
+    		column.canAddRun(null);
+    	});
+    }
+    
+    @Test
+    public void testCanAddRunEmptyRun() {
+    	final List<Card> faceDown = Arrays.asList(
+    			new Card(THREE, CLUB),
+    			new Card(THREE, DIAMOND),
+    			new Card(THREE, HEART),
+    			new Card(THREE, SPADE));
+    	final List<Card> faceUp = Arrays.asList(
+    			new Card(TEN, SPADE),
+    			new Card(NINE, HEART),
+    			new Card(EIGHT, SPADE));
+    	final Column column = new Column(faceDown, faceUp);
+    	
+    	assertThrows(IllegalArgumentException.class, () -> {
+    		column.canAddRun(Collections.emptyList());
+    	});
+    }
+    
+    @Test
+    public void testCanAddRun() {
+    	final List<Card> faceDown = Arrays.asList(
+    			new Card(THREE, CLUB),
+    			new Card(THREE, DIAMOND),
+    			new Card(THREE, HEART),
+    			new Card(THREE, SPADE));
+    	final List<Card> faceUp = Arrays.asList(
+    			new Card(TEN, SPADE),
+    			new Card(NINE, HEART),
+    			new Card(EIGHT, SPADE));
+    	final Column column = new Column(faceDown, faceUp);
+    	
+    	final List<Card> run = Arrays.asList(
+    			new Card(SEVEN, HEART),
+    			new Card(SIX, SPADE),
+    			new Card(FIVE, HEART));
+    	
+    	assertTrue(column.canAddRun(run));
+    }
+    
+    @Test
+    public void testCanAddRunWrongColor() {
+    	final List<Card> faceDown = Arrays.asList(
+    			new Card(THREE, CLUB),
+    			new Card(THREE, DIAMOND),
+    			new Card(THREE, HEART),
+    			new Card(THREE, SPADE));
+    	final List<Card> faceUp = Arrays.asList(
+    			new Card(TEN, SPADE),
+    			new Card(NINE, HEART),
+    			new Card(EIGHT, SPADE));
+    	final Column column = new Column(faceDown, faceUp);
+    	
+    	final List<Card> run = Arrays.asList(
+    			new Card(SEVEN, SPADE),
+    			new Card(SIX, HEART),
+    			new Card(FIVE, SPADE));
+    	
+    	assertFalse(column.canAddRun(run));
+    }
+    
+    @Test
+    public void testCanAddRunTooHigh() {
+    	final List<Card> faceDown = Arrays.asList(
+    			new Card(THREE, CLUB),
+    			new Card(THREE, DIAMOND),
+    			new Card(THREE, HEART),
+    			new Card(THREE, SPADE));
+    	final List<Card> faceUp = Arrays.asList(
+    			new Card(TEN, SPADE),
+    			new Card(NINE, HEART),
+    			new Card(EIGHT, SPADE));
+    	final Column column = new Column(faceDown, faceUp);
+    	
+    	final List<Card> run = Arrays.asList(
+    			new Card(EIGHT, HEART),
+    			new Card(SEVEN, SPADE),
+    			new Card(SIX, HEART));
+    	
+    	assertFalse(column.canAddRun(run));
+    }
+    
+    @Test
+    public void testCanAddRunTooLow() {
+    	final List<Card> faceDown = Arrays.asList(
+    			new Card(THREE, CLUB),
+    			new Card(THREE, DIAMOND),
+    			new Card(THREE, HEART),
+    			new Card(THREE, SPADE));
+    	final List<Card> faceUp = Arrays.asList(
+    			new Card(TEN, SPADE),
+    			new Card(NINE, HEART),
+    			new Card(EIGHT, SPADE));
+    	final Column column = new Column(faceDown, faceUp);
+    	
+    	final List<Card> run = Arrays.asList(
+    			new Card(SIX, HEART),
+    			new Card(FIVE, SPADE),
+    			new Card(FOUR, HEART));
+    	
+    	assertFalse(column.canAddRun(run));
+    }
+    
+    @Test
+    public void testCanAddRunKing() {
+    	final List<Card> faceDown = Arrays.asList(
+    			new Card(THREE, CLUB),
+    			new Card(THREE, DIAMOND),
+    			new Card(THREE, HEART),
+    			new Card(THREE, SPADE));
+    	final List<Card> faceUp = Arrays.asList(
+    			new Card(TEN, SPADE),
+    			new Card(NINE, HEART),
+    			new Card(EIGHT, SPADE));
+    	final Column column = new Column(faceDown, faceUp);
+    	
+    	final List<Card> run = Arrays.asList(
+    			new Card(KING, HEART),
+    			new Card(QUEEN, SPADE),
+    			new Card(JACK, HEART));
+    	
+    	assertFalse(column.canAddRun(run));
     }
     
     @Test
