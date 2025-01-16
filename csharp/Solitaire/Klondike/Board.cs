@@ -186,24 +186,6 @@ namespace Silnith.Game.Klondike
         }
 
         /// <summary>
-        /// Returns a copy of the current board with one card drawn from the stock pile
-        /// and put into the foundation.
-        /// </summary>
-        /// <returns>A copy of the board with one card moved.</returns>
-        public Board DrawStockPileCardToFoundation()
-        {
-            Tuple<Card, IReadOnlyList<Card>> tuple = ExtractStockPileCard();
-            Card card = tuple.Item1;
-            IReadOnlyList<Card> newStockPile = tuple.Item2;
-
-            int newStockPileIndex = StockPileIndex - 1;
-
-            IReadOnlyDictionary<Suit, IReadOnlyList<Card>> newFoundation = GetFoundationPlusCard(card);
-
-            return new Board(Columns, newStockPile, newStockPileIndex, newFoundation);
-        }
-
-        /// <summary>
         /// Returns a copy of this board with one card moved from the foundation
         /// to the specified column run.
         /// </summary>

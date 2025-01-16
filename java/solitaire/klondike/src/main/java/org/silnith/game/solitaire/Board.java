@@ -198,24 +198,6 @@ public class Board {
     }
     
     /**
-     * Returns a copy of the current board with one card drawn from the stock pile
-     * and put into the foundation.
-     * 
-     * @return a copy of the board with one card moved
-     */
-    public Board drawStockPileCardToFoundation() {
-    	final Pair<Card, List<Card>> pair = extractStockPileCard();
-        final Card card = pair.getFirst();
-        final List<Card> newStockPile = pair.getSecond();
-        
-        final int newStockPileIndex = stockPileIndex - 1;
-        
-        final Map<Suit, List<Card>> newFoundation = getFoundationPlusCard(card);
-        
-        return new Board(columns, newStockPile, newStockPileIndex, newFoundation);
-    }
-    
-    /**
      * Returns a copy of this board with one card moved from the foundation
      * to the specified column run.
      * 

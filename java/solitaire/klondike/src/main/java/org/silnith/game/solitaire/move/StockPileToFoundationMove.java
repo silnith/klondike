@@ -2,9 +2,12 @@ package org.silnith.game.solitaire.move;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.silnith.deck.Card;
+import org.silnith.deck.Suit;
 import org.silnith.game.solitaire.Board;
+import org.silnith.util.Pair;
 
 
 /**
@@ -80,7 +83,15 @@ public class StockPileToFoundationMove implements SolitaireMove {
     
     @Override
     public Board apply(final Board board) {
-        return board.drawStockPileCardToFoundation();
+        final Pair<Card, List<Card>> pair = board.extractStockPileCard();
+		final Card card = pair.getFirst();
+		final List<Card> newStockPile = pair.getSecond();
+		
+		final int newStockPileIndex = board.getStockPileIndex() - 1;
+		
+		final Map<Suit, List<Card>> newFoundation = board.getFoundationPlusCard(card);
+		
+		return new Board(board.getColumns(), newStockPile, newStockPileIndex, newFoundation);
     }
     
     @Override
