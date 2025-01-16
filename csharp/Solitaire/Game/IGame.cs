@@ -8,7 +8,7 @@ namespace Silnith.Game
     /// <typeparam name="M">The move type for the game.  This can simply be <see cref="IMove{B}"/>,
     /// but the interface allows specifying a subtype in the case that a game-specific interface is needed.</typeparam>
     /// <typeparam name="B">The board type for the game.</typeparam>
-    interface IGame<M, B> where M : IMove<B>
+    public interface IGame<M, B> where M : IMove<B>
     {
         /// <summary>
         /// Returns whether the given board is a winning game state for this game.
