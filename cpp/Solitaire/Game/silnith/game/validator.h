@@ -14,6 +14,13 @@ namespace silnith
         class validator
         {
         public:
+            validator(void) = default;
+            validator(validator const&) = default;
+            validator& operator=(validator const&) = default;
+            validator(validator&&) noexcept = default;
+            validator& operator=(validator&&) noexcept = default;
+            virtual ~validator(void) = default;
+
             /// <summary>
             /// Validates that the given object is in a valid state.
             /// </summary>

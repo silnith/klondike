@@ -12,6 +12,13 @@ namespace silnith
         class move
         {
         public:
+            move(void) = default;
+            move(move const&) = default;
+            move& operator=(move const&) = default;
+            move(move&&) noexcept = default;
+            move& operator=(move&&) noexcept = default;
+            virtual ~move(void) = default;
+
             /// <summary>
             /// Applies this move to the given board, returning the new board.
             /// </summary>
