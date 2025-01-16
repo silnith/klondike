@@ -228,7 +228,7 @@ namespace Silnith.Game.Klondike.Tests
         }
 
         [TestMethod]
-        public void TestNotEqualsStockPile()
+        public void TestEqualsStockPileDiffer()
         {
             List<Card> stockPile1 = new()
             {
@@ -593,7 +593,7 @@ namespace Silnith.Game.Klondike.Tests
         }
 
         [TestMethod]
-        public void TestNotEqualsFoundation()
+        public void TestEqualsFoundationDiffer()
         {
             IReadOnlyDictionary<Suit, IReadOnlyList<Card>> foundation1 = new Dictionary<Suit, IReadOnlyList<Card>>()
             {
