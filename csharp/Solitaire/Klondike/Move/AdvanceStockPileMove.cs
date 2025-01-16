@@ -91,7 +91,14 @@ namespace Silnith.Game.Klondike.Move
         /// <inheritdoc/>
         public Board Apply(Board board)
         {
-            return board.AdvanceStockPileIndex(Increment);
+            if (Increment < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(Increment), "Must advance by a positive number.");
+            }
+
+            IReadOnlyList<Card> stockPile = board.StockPile;
+            int newIndex = Math.Min(board.StockPileIndex + Increment, stockPile.Count);
+            return new Board(board.Columns, stockPile, newIndex, board.Foundation);
         }
 
         /// <inheritdoc/>

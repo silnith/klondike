@@ -1,9 +1,12 @@
 package org.silnith.game.solitaire.move;
 
 import java.util.List;
+import java.util.Map;
 
 import org.silnith.deck.Card;
+import org.silnith.deck.Suit;
 import org.silnith.game.solitaire.Board;
+import org.silnith.game.solitaire.Column;
 
 
 /**
@@ -92,7 +95,13 @@ public class AdvanceStockPileMove implements SolitaireMove {
     
     @Override
     public Board apply(final Board board) {
-        return board.advanceStockPileIndex(increment);
+        if (increment < 1) {
+		    throw new IllegalArgumentException();
+		}
+		
+		final List<Card> stockPile = board.getStockPile();
+		final int newIndex = Math.min(board.getStockPileIndex() + increment, stockPile.size());
+		return new Board(board.getColumns(), stockPile, newIndex, board.getFoundation());
     }
     
     @Override

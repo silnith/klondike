@@ -186,25 +186,6 @@ namespace Silnith.Game.Klondike
         }
 
         /// <summary>
-        /// Advances the stock pile by the given number of cards, and returns
-        /// the new board.  Depending on the game rules, the advance is either
-        /// <c>1</c> or <c>3</c>.
-        /// </summary>
-        /// <param name="advance">The number of cards to advance the stock pile.</param>
-        /// <returns>The new board.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="advance"/> is less than <c>1</c>.</exception>
-        public Board AdvanceStockPileIndex(int advance)
-        {
-            if (advance < 1)
-            {
-                throw new ArgumentOutOfRangeException(nameof(advance), "Must advance by a positive number.");
-            }
-
-            int newIndex = Math.Min(StockPileIndex + advance, StockPile.Count);
-            return new Board(Columns, StockPile, newIndex, Foundation);
-        }
-
-        /// <summary>
         /// Returns a new board with a run of cards moved from one column to another.
         /// </summary>
         /// <param name="fromIndex">The index of the column that the run of cards will be taken from.</param>

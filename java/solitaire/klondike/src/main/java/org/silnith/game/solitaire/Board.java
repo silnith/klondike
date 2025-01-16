@@ -197,24 +197,6 @@ public class Board {
     }
     
     /**
-     * Advances the stock pile by the given number of cards, and returns
-     * the new board.  Depending on the game rules, the advance is either
-     * {@code 1} or {@code 3}.
-     * 
-     * @param advance the number of cards to advance the stock pile
-     * @return the new board
-     * @throws IllegalArgumentException if {@code advance} is less than {@code 1}
-     */
-    public Board advanceStockPileIndex(final int advance) {
-        if (advance < 1) {
-            throw new IllegalArgumentException();
-        }
-        
-        final int newIndex = Math.min(stockPileIndex + advance, stockPile.size());
-        return new Board(columns, stockPile, newIndex, foundation);
-    }
-    
-    /**
      * Returns a new board with a run of cards moved from one column to another.
      * 
      * @param fromIndex the index of the column that the run of cards will be taken from
