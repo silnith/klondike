@@ -627,7 +627,7 @@ namespace Silnith.Game.Klondike.Tests
         }
 
         [TestMethod]
-        public void TestColumnMissingTopCardsOverflow()
+        public void TestGetWithoutTopCardsOverflow()
         {
             IReadOnlyList<Card>? faceDown = new List<Card>()
             {
@@ -646,12 +646,12 @@ namespace Silnith.Game.Klondike.Tests
             Column column = new(faceDown, faceUp);
 
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => {
-                _ = column.GetColumnMissingTopCards(5);
+                _ = column.GetWithoutTopCards(5);
             });
         }
 
         [TestMethod]
-        public void TestColumnMissingTopCards4()
+        public void TestGetWithoutTopCards4()
         {
             IReadOnlyList<Card>? faceDown = new List<Card>()
             {
@@ -669,7 +669,7 @@ namespace Silnith.Game.Klondike.Tests
 
             Column column = new(faceDown, faceUp);
 
-            Column actual = column.GetColumnMissingTopCards(4);
+            Column actual = column.GetWithoutTopCards(4);
 
             IReadOnlyList<Card> expectedFaceDown = new List<Card>()
             {
@@ -685,7 +685,7 @@ namespace Silnith.Game.Klondike.Tests
         }
 
         [TestMethod]
-        public void TestColumnMissingTopCards3()
+        public void TestGetWithoutTopCards3()
         {
             IReadOnlyList<Card>? faceDown = new List<Card>()
             {
@@ -703,7 +703,7 @@ namespace Silnith.Game.Klondike.Tests
 
             Column column = new(faceDown, faceUp);
 
-            Column actual = column.GetColumnMissingTopCards(3);
+            Column actual = column.GetWithoutTopCards(3);
 
             IReadOnlyList<Card> expectedFaceUp = new List<Card>()
             {
@@ -714,7 +714,7 @@ namespace Silnith.Game.Klondike.Tests
         }
 
         [TestMethod]
-        public void TestColumnMissingTopCards2()
+        public void TestGetWithoutTopCards2()
         {
             IReadOnlyList<Card>? faceDown = new List<Card>()
             {
@@ -732,7 +732,7 @@ namespace Silnith.Game.Klondike.Tests
 
             Column column = new(faceDown, faceUp);
 
-            Column actual = column.GetColumnMissingTopCards(2);
+            Column actual = column.GetWithoutTopCards(2);
 
             IReadOnlyList<Card> expectedFaceUp = new List<Card>()
             {
@@ -744,7 +744,7 @@ namespace Silnith.Game.Klondike.Tests
         }
 
         [TestMethod]
-        public void TestColumnMissingTopCards1()
+        public void TestGetWithoutTopCards1()
         {
             IReadOnlyList<Card>? faceDown = new List<Card>()
             {
@@ -762,7 +762,7 @@ namespace Silnith.Game.Klondike.Tests
 
             Column column = new(faceDown, faceUp);
 
-            Column actual = column.GetColumnMissingTopCards(1);
+            Column actual = column.GetWithoutTopCards(1);
 
             IReadOnlyList<Card> expectedFaceUp = new List<Card>()
             {
@@ -775,7 +775,7 @@ namespace Silnith.Game.Klondike.Tests
         }
 
         [TestMethod]
-        public void TestColumnMissingTopCardsUnderflow()
+        public void TestGetWithoutTopCardsUnderflow()
         {
             IReadOnlyList<Card>? faceDown = new List<Card>()
             {
@@ -794,12 +794,12 @@ namespace Silnith.Game.Klondike.Tests
             Column column = new(faceDown, faceUp);
 
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => {
-                _ = column.GetColumnMissingTopCards(0);
+                _ = column.GetWithoutTopCards(0);
             });
         }
 
         [TestMethod]
-        public void TestAddNewCard()
+        public void TestGetWithCard()
         {
             IReadOnlyList<Card>? faceDown = new List<Card>()
             {
@@ -817,7 +817,7 @@ namespace Silnith.Game.Klondike.Tests
 
             Column column = new(faceDown, faceUp);
 
-            Column actual = column.AddNewCard(new Card(Value.Nine, Suit.Club));
+            Column actual = column.GetWithCard(new Card(Value.Nine, Suit.Club));
 
             IReadOnlyList<Card> expectedFaceUp = new List<Card>()
             {
@@ -832,7 +832,7 @@ namespace Silnith.Game.Klondike.Tests
         }
 
         [TestMethod]
-        public void TestAddNewCards1()
+        public void TestGetWithCards1()
         {
             IReadOnlyList<Card>? faceDown = new List<Card>()
             {
@@ -854,7 +854,7 @@ namespace Silnith.Game.Klondike.Tests
             {
                 new Card(Value.Nine, Suit.Club),
             };
-            Column actual = column.AddNewCards(run);
+            Column actual = column.GetWithCards(run);
 
             IReadOnlyList<Card> expectedFaceUp = new List<Card>()
             {
@@ -869,7 +869,7 @@ namespace Silnith.Game.Klondike.Tests
         }
 
         [TestMethod]
-        public void TestAddNewCards3()
+        public void TestGetWithCards3()
         {
             IReadOnlyList<Card>? faceDown = new List<Card>()
             {
@@ -893,7 +893,7 @@ namespace Silnith.Game.Klondike.Tests
                 new Card(Value.Eight, Suit.Diamond),
                 new Card(Value.Seven, Suit.Club),
             };
-            Column actual = column.AddNewCards(run);
+            Column actual = column.GetWithCards(run);
 
             IReadOnlyList<Card> expectedFaceUp = new List<Card>()
             {
@@ -910,7 +910,7 @@ namespace Silnith.Game.Klondike.Tests
         }
 
         [TestMethod]
-        public void TestAddNewCardsEmpty()
+        public void TestGetWithCardsEmpty()
         {
             IReadOnlyList<Card>? faceDown = new List<Card>()
             {
@@ -931,7 +931,7 @@ namespace Silnith.Game.Klondike.Tests
             IEnumerable<Card> run = Array.Empty<Card>();
 
             Assert.ThrowsException<ArgumentException>(() => {
-                _ = column.AddNewCards(run);
+                _ = column.GetWithCards(run);
             });
         }
 

@@ -174,7 +174,7 @@ namespace Silnith.Game.Klondike
         /// This may end up causing a face-down card to be flipped.</returns>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="numberOfCards"/> is less than <c>1</c>,
         /// or exceeds the number of face-up cards.</exception>
-        public Column GetColumnMissingTopCards(int numberOfCards)
+        public Column GetWithoutTopCards(int numberOfCards)
         {
             if (numberOfCards < 1)
             {
@@ -195,7 +195,7 @@ namespace Silnith.Game.Klondike
         /// <param name="newCards">The new run of cards.</param>
         /// <returns>A copy of the column with the new run of cards added.</returns>
         /// <exception cref="ArgumentException">If <paramref name="newCards"/> is empty.</exception>
-        public Column AddNewCards(IEnumerable<Card> newCards)
+        public Column GetWithCards(IEnumerable<Card> newCards)
         {
             if (!newCards.Any())
             {
@@ -211,7 +211,7 @@ namespace Silnith.Game.Klondike
         /// </summary>
         /// <param name="newCard">The card to add.</param>
         /// <returns>A copy of the column with the added card.</returns>
-        public Column AddNewCard(Card newCard)
+        public Column GetWithCard(Card newCard)
         {
             IReadOnlyList<Card> newFaceUp = FaceUp.Append(newCard).ToList();
             return new Column(FaceDown, newFaceUp);

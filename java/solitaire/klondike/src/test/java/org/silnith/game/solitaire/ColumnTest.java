@@ -505,7 +505,7 @@ public class ColumnTest {
     }
     
     @Test
-    public void testColumnMissingTopCardsOverflow() {
+    public void testGetWithoutTopCardsOverflow() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -518,12 +518,12 @@ public class ColumnTest {
 		final Column column = new Column(faceDown, faceUp);
               
         assertThrows(IllegalArgumentException.class, () -> {
-        	column.getColumnMissingTopCards(5);
+        	column.getWithoutTopCards(5);
         });
     }
     
     @Test
-    public void testColumnMissingTopCards4() {
+    public void testGetWithoutTopCards4() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -535,7 +535,7 @@ public class ColumnTest {
 		        new Card(TEN, DIAMOND));
 		final Column column = new Column(faceDown, faceUp);
         
-        final Column actual = column.getColumnMissingTopCards(4);
+        final Column actual = column.getWithoutTopCards(4);
         
         final List<Card> expectedFaceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
@@ -547,7 +547,7 @@ public class ColumnTest {
     }
     
     @Test
-    public void testColumnMissingTopCards3() {
+    public void testGetWithoutTopCards3() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -559,7 +559,7 @@ public class ColumnTest {
 		        new Card(TEN, DIAMOND));
 		final Column column = new Column(faceDown, faceUp);
 		
-        final Column actual = column.getColumnMissingTopCards(3);
+        final Column actual = column.getWithoutTopCards(3);
         
         final List<Card> expectedFaceUp = Collections.singletonList(
         		new Card(KING, CLUB));
@@ -568,7 +568,7 @@ public class ColumnTest {
     }
     
     @Test
-    public void testColumnMissingTopCards2() {
+    public void testGetWithoutTopCards2() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -580,7 +580,7 @@ public class ColumnTest {
 		        new Card(TEN, DIAMOND));
 		final Column column = new Column(faceDown, faceUp);
         
-        final Column actual = column.getColumnMissingTopCards(2);
+        final Column actual = column.getWithoutTopCards(2);
         
         final List<Card> expectedFaceUp = Arrays.asList(
         		new Card(KING, CLUB),
@@ -590,7 +590,7 @@ public class ColumnTest {
     }
     
     @Test
-    public void testColumnMissingTopCards1() {
+    public void testGetWithoutTopCards1() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -602,7 +602,7 @@ public class ColumnTest {
 		        new Card(TEN, DIAMOND));
 		final Column column = new Column(faceDown, faceUp);
         
-        final Column actual = column.getColumnMissingTopCards(1);
+        final Column actual = column.getWithoutTopCards(1);
         
         final List<Card> expectedFaceUp = Arrays.asList(
         		new Card(KING, CLUB),
@@ -613,7 +613,7 @@ public class ColumnTest {
     }
     
     @Test
-    public void testColumnMissingTopCardsUnderflow() {
+    public void testGetWithoutTopCardsUnderflow() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -626,12 +626,12 @@ public class ColumnTest {
 		final Column column = new Column(faceDown, faceUp);
                         
         assertThrows(IllegalArgumentException.class, () -> {
-        	column.getColumnMissingTopCards(0);
+        	column.getWithoutTopCards(0);
         });
     }
     
     @Test
-    public void testAddNewCard() {
+    public void testGetWithCard() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -643,7 +643,7 @@ public class ColumnTest {
 		        new Card(TEN, DIAMOND));
 		final Column column = new Column(faceDown, faceUp);
                         
-        final Column actual = column.addNewCard(new Card(NINE, CLUB));
+        final Column actual = column.getWithCard(new Card(NINE, CLUB));
         
         final List<Card> expectedFaceUp = Arrays.asList(
         		new Card(KING, CLUB),
@@ -656,7 +656,7 @@ public class ColumnTest {
     }
     
     @Test
-    public void testAddNewCardNull() {
+    public void testGetWithCardNull() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -669,12 +669,12 @@ public class ColumnTest {
 		final Column column = new Column(faceDown, faceUp);
 
         assertThrows(RuntimeException.class, () -> {
-        	column.addNewCard(null);
+        	column.getWithCard(null);
         });
     }
     
     @Test
-    public void testAddNewCards1() {
+    public void testGetWithCards1() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -688,7 +688,7 @@ public class ColumnTest {
                         
         final List<Card> run = Collections.singletonList(
         		new Card(NINE, CLUB));
-		final Column actual = column.addNewCards(run);
+		final Column actual = column.getWithCards(run);
         
         final List<Card> expectedFaceUp = Arrays.asList(
         		new Card(KING, CLUB),
@@ -701,7 +701,7 @@ public class ColumnTest {
     }
     
     @Test
-    public void testAddNewCards3() {
+    public void testGetWithCards3() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -717,7 +717,7 @@ public class ColumnTest {
         		new Card(NINE, CLUB),
         		new Card(EIGHT, DIAMOND),
         		new Card(SEVEN, CLUB));
-		final Column actual = originalColumn.addNewCards(run);
+		final Column actual = originalColumn.getWithCards(run);
 
         final List<Card> expectedFaceUp = Arrays.asList(
         		new Card(KING, CLUB),
@@ -732,7 +732,7 @@ public class ColumnTest {
     }
     
     @Test
-    public void testAddNewCardsEmpty() {
+    public void testGetWithCardsEmpty() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -747,12 +747,12 @@ public class ColumnTest {
 		final Column column = new Column(faceDown, faceUp);
 		
         assertThrows(IllegalArgumentException.class, () -> {
-        	column.addNewCards(Collections.emptyList());
+        	column.getWithCards(Collections.emptyList());
         });
     }
     
     @Test
-    public void testAddNewCardsNull() {
+    public void testGetWithCardsNull() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -767,7 +767,7 @@ public class ColumnTest {
 		final Column column = new Column(faceDown, faceUp);
                        
         assertThrows(IllegalArgumentException.class, () -> {
-        	column.addNewCards(null);
+        	column.getWithCards(null);
         });
     }
     

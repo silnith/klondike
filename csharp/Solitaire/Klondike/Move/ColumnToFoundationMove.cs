@@ -74,7 +74,7 @@ namespace Silnith.Game.Klondike.Move
             IReadOnlyList<Column> columns = board.Columns;
             Column column = columns[SourceColumn];
             Card card = column.GetTopCard();
-            Column newColumn = column.GetColumnMissingTopCards(1);
+            Column newColumn = column.GetWithoutTopCards(1);
 
             IReadOnlyList<Column> newColumns = new List<Column>(columns)
             {

@@ -158,7 +158,7 @@ public class Column {
      * @throws IllegalArgumentException if the number of cards is less than {@code 1},
      *         or exceeds the number of face-up cards
      */
-    public Column getColumnMissingTopCards(final int numberOfCards) {
+    public Column getWithoutTopCards(final int numberOfCards) {
         if (numberOfCards < 1) {
             throw new IllegalArgumentException();
         }
@@ -179,7 +179,7 @@ public class Column {
      * @return a copy of the column with the new run of cards added
      * @throws IllegalArgumentException if the run is {@code null} or empty
      */
-    public Column addNewCards(final List<Card> newCards) {
+    public Column getWithCards(final List<Card> newCards) {
         if (newCards == null || newCards.isEmpty()) {
             throw new IllegalArgumentException();
         }
@@ -196,7 +196,7 @@ public class Column {
      * @return a copy of the column with the added card
      * @throws IllegalArgumentException if the card is {@code null}
      */
-    public Column addNewCard(final Card newCard) {
+    public Column getWithCard(final Card newCard) {
         if (newCard == null) {
             throw new IllegalArgumentException();
         }

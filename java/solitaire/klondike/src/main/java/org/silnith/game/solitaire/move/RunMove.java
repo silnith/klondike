@@ -126,8 +126,8 @@ public class RunMove implements SolitaireMove {
 		final Column fromColumn = columns.get(sourceColumn);
 		final Column toColumn = columns.get(destinationColumn);
 		final List<Card> stackToMove = fromColumn.getTopCards(numberOfCards);
-		final Column newFromColumn = fromColumn.getColumnMissingTopCards(numberOfCards);
-		final Column newToColumn = toColumn.addNewCards(stackToMove);
+		final Column newFromColumn = fromColumn.getWithoutTopCards(numberOfCards);
+		final Column newToColumn = toColumn.getWithCards(stackToMove);
 		
 		final List<Column> newColumns = new ArrayList<>(columns);
 		newColumns.set(sourceColumn, newFromColumn);

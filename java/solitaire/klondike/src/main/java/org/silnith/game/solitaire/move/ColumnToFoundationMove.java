@@ -89,7 +89,7 @@ public class ColumnToFoundationMove implements SolitaireMove {
         final List<Column> columns = board.getColumns();
 		final Column column = columns.get(sourceColumn);
 		final Card card = column.getTopCard();
-		final Column newColumn = column.getColumnMissingTopCards(1);
+		final Column newColumn = column.getWithoutTopCards(1);
 		
 		final List<Column> newColumns = new ArrayList<>(columns);
 		newColumns.set(sourceColumn, newColumn);

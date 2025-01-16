@@ -83,7 +83,7 @@ namespace Silnith.Game.Klondike.Move
 
             IReadOnlyList<Column> newColumns = new List<Column>(board.Columns)
             {
-                [DestinationColumn] = board.Columns[DestinationColumn].AddNewCard(card),
+                [DestinationColumn] = board.Columns[DestinationColumn].GetWithCard(card),
             };
 
             return new Board(newColumns, board.StockPile, board.StockPileIndex, newFoundation);
