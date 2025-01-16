@@ -29,6 +29,102 @@ namespace Silnith.Game.Klondike.Tests
         };
 
         [TestMethod]
+        public void TestCanAddToFoundationEmptyAce()
+        {
+            Board board = new(EmptyColumns, EmptyListOfCards, 0, EmptyFoundation);
+
+            Assert.IsTrue(board.CanAddToFoundation(new Card(Value.Ace, Suit.Club)));
+        }
+
+        [TestMethod]
+        public void TestCanAddToFoundationEmptyTwo()
+        {
+            Board board = new(EmptyColumns, EmptyListOfCards, 0, EmptyFoundation);
+
+            Assert.IsFalse(board.CanAddToFoundation(new Card(Value.Two, Suit.Club)));
+        }
+
+        [TestMethod]
+        public void TestCanAddToFoundationEmptyKing()
+        {
+            Board board = new(EmptyColumns, EmptyListOfCards, 0, EmptyFoundation);
+
+            Assert.IsFalse(board.CanAddToFoundation(new Card(Value.King, Suit.Club)));
+        }
+
+        [TestMethod]
+        public void TestCanAddToFoundationLessThan()
+        {
+            Dictionary<Suit, IReadOnlyList<Card>> foundation = new(EmptyFoundation)
+            {
+                [Suit.Club] = new List<Card>()
+                {
+                    new Card(Value.Ace, Suit.Club),
+                    new Card(Value.Two, Suit.Club),
+                    new Card(Value.Three, Suit.Club),
+                    new Card(Value.Four, Suit.Club),
+                },
+            };
+            Board board = new(EmptyColumns, EmptyListOfCards, 0, foundation);
+
+            Assert.IsFalse(board.CanAddToFoundation(new Card(Value.Three, Suit.Club)));
+        }
+
+        [TestMethod]
+        public void TestCanAddToFoundationEquals()
+        {
+            Dictionary<Suit, IReadOnlyList<Card>> foundation = new(EmptyFoundation)
+            {
+                [Suit.Club] = new List<Card>()
+                {
+                    new Card(Value.Ace, Suit.Club),
+                    new Card(Value.Two, Suit.Club),
+                    new Card(Value.Three, Suit.Club),
+                    new Card(Value.Four, Suit.Club),
+                },
+            };
+            Board board = new(EmptyColumns, EmptyListOfCards, 0, foundation);
+
+            Assert.IsFalse(board.CanAddToFoundation(new Card(Value.Four, Suit.Club)));
+        }
+
+        [TestMethod]
+        public void TestCanAddToFoundationValid()
+        {
+            Dictionary<Suit, IReadOnlyList<Card>> foundation = new(EmptyFoundation)
+            {
+                [Suit.Club] = new List<Card>()
+                {
+                    new Card(Value.Ace, Suit.Club),
+                    new Card(Value.Two, Suit.Club),
+                    new Card(Value.Three, Suit.Club),
+                    new Card(Value.Four, Suit.Club),
+                },
+            };
+            Board board = new(EmptyColumns, EmptyListOfCards, 0, foundation);
+
+            Assert.IsTrue(board.CanAddToFoundation(new Card(Value.Five, Suit.Club)));
+        }
+
+        [TestMethod]
+        public void TestCanAddToFoundationGreaterThan()
+        {
+            Dictionary<Suit, IReadOnlyList<Card>> foundation = new(EmptyFoundation)
+            {
+                [Suit.Club] = new List<Card>()
+                {
+                    new Card(Value.Ace, Suit.Club),
+                    new Card(Value.Two, Suit.Club),
+                    new Card(Value.Three, Suit.Club),
+                    new Card(Value.Four, Suit.Club),
+                },
+            };
+            Board board = new(EmptyColumns, EmptyListOfCards, 0, foundation);
+
+            Assert.IsFalse(board.CanAddToFoundation(new Card(Value.Six, Suit.Club)));
+        }
+
+        [TestMethod]
         public void TestEqualsEmpty()
         {
             Board board1 = new(EmptyColumns, EmptyListOfCards, 0, EmptyFoundation);

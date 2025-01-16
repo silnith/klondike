@@ -51,6 +51,79 @@ public class BoardTest {
     }
     
     @Test
+    public void testCanAddToFoundationEmptyAce() {
+    	final Board board = new Board(emptyColumns, emptyListOfCards, 0, emptyFoundation);
+    	
+    	assertTrue(board.canAddToFoundation(new Card(ACE, CLUB)));
+    }
+    
+    @Test
+    public void testCanAddToFoundationEmptyTwo() {
+    	final Board board = new Board(emptyColumns, emptyListOfCards, 0, emptyFoundation);
+    	
+    	assertFalse(board.canAddToFoundation(new Card(TWO, CLUB)));
+    }
+    
+    @Test
+    public void testCanAddToFoundationEmptyKing() {
+    	final Board board = new Board(emptyColumns, emptyListOfCards, 0, emptyFoundation);
+    	
+    	assertFalse(board.canAddToFoundation(new Card(KING, CLUB)));
+    }
+    
+    @Test
+    public void testCanAddToFoundationLessThan() {
+    	final Map<Suit, List<Card>> foundation = new EnumMap<>(emptyFoundation);
+    	foundation.put(CLUB, Arrays.asList(
+    			new Card(ACE, CLUB),
+    			new Card(TWO, CLUB),
+    			new Card(THREE, CLUB),
+    			new Card(FOUR, CLUB)));
+    	final Board board = new Board(emptyColumns, emptyListOfCards, 0, foundation);
+    	
+    	assertFalse(board.canAddToFoundation(new Card(THREE, CLUB)));
+    }
+    
+    @Test
+    public void testCanAddToFoundationEquals() {
+    	final Map<Suit, List<Card>> foundation = new EnumMap<>(emptyFoundation);
+    	foundation.put(CLUB, Arrays.asList(
+    			new Card(ACE, CLUB),
+    			new Card(TWO, CLUB),
+    			new Card(THREE, CLUB),
+    			new Card(FOUR, CLUB)));
+    	final Board board = new Board(emptyColumns, emptyListOfCards, 0, foundation);
+    	
+    	assertFalse(board.canAddToFoundation(new Card(FOUR, CLUB)));
+    }
+    
+    @Test
+    public void testCanAddToFoundationValid() {
+    	final Map<Suit, List<Card>> foundation = new EnumMap<>(emptyFoundation);
+    	foundation.put(CLUB, Arrays.asList(
+    			new Card(ACE, CLUB),
+    			new Card(TWO, CLUB),
+    			new Card(THREE, CLUB),
+    			new Card(FOUR, CLUB)));
+    	final Board board = new Board(emptyColumns, emptyListOfCards, 0, foundation);
+    	
+    	assertTrue(board.canAddToFoundation(new Card(FIVE, CLUB)));
+    }
+    
+    @Test
+    public void testCanAddToFoundationGreaterThan() {
+    	final Map<Suit, List<Card>> foundation = new EnumMap<>(emptyFoundation);
+    	foundation.put(CLUB, Arrays.asList(
+    			new Card(ACE, CLUB),
+    			new Card(TWO, CLUB),
+    			new Card(THREE, CLUB),
+    			new Card(FOUR, CLUB)));
+    	final Board board = new Board(emptyColumns, emptyListOfCards, 0, foundation);
+    	
+    	assertFalse(board.canAddToFoundation(new Card(SIX, CLUB)));
+    }
+    
+    @Test
     public void testEqualsEmpty() {
         final Board board1 = new Board(emptyColumns, emptyListOfCards, 0, emptyFoundation);
         final Board board2 = new Board(emptyColumns, emptyListOfCards, 0, emptyFoundation);

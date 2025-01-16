@@ -255,6 +255,16 @@ public class Board {
 		return new Pair<Card, List<Card>>(card, newStockPile);
     }
     
+    /**
+     * Returns whether it would be legal to add the given card to the foundation.
+     * 
+     * @param card the card to check
+     * @return {@code true} if it is legal to add the card to the foundation
+     */
+    public boolean canAddToFoundation(final Card card) {
+    	return card.getValue().getValue() == 1 + foundation.get(card.getSuit()).size();
+    }
+    
     @Override
     public int hashCode() {
         return 0xc284f7a1 ^ columns.hashCode() ^ Integer.rotateLeft(stockPile.hashCode(), 8)

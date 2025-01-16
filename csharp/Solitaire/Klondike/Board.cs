@@ -244,6 +244,16 @@ namespace Silnith.Game.Klondike
             return new Tuple<Card, IReadOnlyList<Card>>(card, remainingStockPile);
         }
 
+        /// <summary>
+        /// Checks and returns whether it would be legal to add the given card to the foundation.
+        /// </summary>
+        /// <param name="card">The card to compare against the foundation.</param>
+        /// <returns><see langword="true"/> if it is legal to add the card to the foundation.</returns>
+        public bool CanAddToFoundation(Card card)
+        {
+            return card.Value.GetValue() == 1 + Foundation[card.Suit].Count;
+        }
+
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
