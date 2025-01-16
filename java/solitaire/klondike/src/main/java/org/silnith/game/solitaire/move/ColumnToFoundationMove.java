@@ -1,10 +1,14 @@
 package org.silnith.game.solitaire.move;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.silnith.deck.Card;
+import org.silnith.deck.Suit;
 import org.silnith.game.solitaire.Board;
+import org.silnith.game.solitaire.Column;
 
 
 /**
@@ -82,7 +86,19 @@ public class ColumnToFoundationMove implements SolitaireMove {
     
     @Override
     public Board apply(final Board board) {
-        return board.moveCardToFoundation(sourceColumn);
+        final List<Column> columns = board.getColumns();
+		final Column column = columns.get(sourceColumn);
+		final Card card = column.getTopCard();
+		final Column newColumn = column.getColumnMissingTopCards(1);
+		
+		final Map<Suit, List<Card>> newFoundation = board.getFoundationPlusCard(card);
+		
+		final List<Column> newColumns = new ArrayList<>(columns);
+		newColumns.set(sourceColumn, newColumn);
+		
+		final List<Card> stockPile = board.getStockPile();
+		final int stockPileIndex = board.getStockPileIndex();
+		return new Board(newColumns, stockPile, stockPileIndex, newFoundation);
     }
     
     @Override

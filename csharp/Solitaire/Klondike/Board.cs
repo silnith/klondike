@@ -186,28 +186,6 @@ namespace Silnith.Game.Klondike
         }
 
         /// <summary>
-        /// Returns a copy of the currenet board with one card removed from
-        /// a column run and put into the foundation.
-        /// </summary>
-        /// <param name="index">The index of the column from which to remove a card.</param>
-        /// <returns>A copy of the board with one card moved.</returns>
-        public Board MoveCardToFoundation(int index)
-        {
-            Column column = Columns[index];
-            Card card = column.GetTopCard();
-            Column newColumn = column.GetColumnMissingTopCards(1);
-
-            IReadOnlyDictionary<Suit, IReadOnlyList<Card>> newFoundation = AddToFoundation(card);
-
-            IReadOnlyList<Column> newColumns = new List<Column>(Columns)
-            {
-                [index] = newColumn,
-            };
-
-            return new Board(newColumns, StockPile, StockPileIndex, newFoundation);
-        }
-
-        /// <summary>
         /// Returns a copy of the current board with one card drawn from the stock pile
         /// and put on the specified column run.
         /// </summary>
@@ -240,7 +218,7 @@ namespace Silnith.Game.Klondike
 
             int newStockPileIndex = StockPileIndex - 1;
 
-            IReadOnlyDictionary<Suit, IReadOnlyList<Card>> newFoundation = AddToFoundation(card);
+            IReadOnlyDictionary<Suit, IReadOnlyList<Card>> newFoundation = GetFoundationPlusCard(card);
 
             return new Board(Columns, newStockPile, newStockPileIndex, newFoundation);
         }
@@ -274,7 +252,7 @@ namespace Silnith.Game.Klondike
         /// </remarks>
         /// <param name="card">The card to add to the foundation.</param>
         /// <returns>A copy of the foundation with one card added.</returns>
-        private IReadOnlyDictionary<Suit, IReadOnlyList<Card>> AddToFoundation(Card card)
+        public IReadOnlyDictionary<Suit, IReadOnlyList<Card>> GetFoundationPlusCard(Card card)
         {
             Suit suit = card.Suit;
 

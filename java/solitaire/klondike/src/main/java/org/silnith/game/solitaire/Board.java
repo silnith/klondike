@@ -197,28 +197,6 @@ public class Board {
     }
     
     /**
-     * Returns a copy of the current board with one card removed from
-     * a column run and put into the foundation.
-     * 
-     * @param index the index of the column from which to remove a card
-     * @return a copy of the board with one card moved
-     */
-    public Board moveCardToFoundation(final int index) {
-        final Column column = columns.get(index);
-        final Card card = column.getTopCard();
-        final Column newColumn = column.getColumnMissingTopCards(1);
-        
-        final Map<Suit, List<Card>> newFoundation = addToFoundation(card);
-        
-        final List<Column> newColumns = new ArrayList<>(columns);
-        newColumns.set(index, newColumn);
-        
-        // return new Board(Collections.unmodifiableList(newColumns), stockPile,
-        // stockPileIndex, newFoundation);
-        return new Board(newColumns, stockPile, stockPileIndex, newFoundation);
-    }
-    
-    /**
      * Returns a copy of the current board with one card drawn from the stock pile
      * and put on the specified column run.
      * 
@@ -254,7 +232,7 @@ public class Board {
         
         final int newStockPileIndex = stockPileIndex - 1;
         
-        final Map<Suit, List<Card>> newFoundation = addToFoundation(card);
+        final Map<Suit, List<Card>> newFoundation = getFoundationPlusCard(card);
         
         return new Board(columns, newStockPile, newStockPileIndex, newFoundation);
     }
@@ -290,7 +268,7 @@ public class Board {
      * @param card the card to add to the foundation
      * @return a copy of the foundation with one card added
      */
-    private Map<Suit, List<Card>> addToFoundation(final Card card) {
+    public Map<Suit, List<Card>> getFoundationPlusCard(final Card card) {
         final Map<Suit, List<Card>> newFoundation = new EnumMap<>(foundation);
         final Suit suit = card.getSuit();
         final List<Card> stackForSuit = newFoundation.get(suit);
