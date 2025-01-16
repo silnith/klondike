@@ -50,6 +50,20 @@ public class AdvanceStockPileMoveTest {
     }
     
     @Test
+    public void testZeroIncrement() {
+    	assertThrows(IllegalArgumentException.class, () -> {
+    		new AdvanceStockPileMove(0, 0);
+    	});
+    }
+    
+    @Test
+    public void testNegativeIncrement() {
+    	assertThrows(IllegalArgumentException.class, () -> {
+    		new AdvanceStockPileMove(0, -1);
+    	});
+    }
+    
+    @Test
     public void testGetBeginningIndex() {
         final AdvanceStockPileMove move = new AdvanceStockPileMove(17, 34);
         

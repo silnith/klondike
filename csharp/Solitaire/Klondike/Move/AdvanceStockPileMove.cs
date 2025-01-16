@@ -61,8 +61,14 @@ namespace Silnith.Game.Klondike.Move
         /// </summary>
         /// <param name="beginningIndex">The stock pile index before the move is applied.</param>
         /// <param name="increment">The number of cards that the stock pile index advances.</param>
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="increment"/> is not positive.</exception>
         public AdvanceStockPileMove(int beginningIndex, int increment)
         {
+            if (increment < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(increment), "Must be positive.");
+            }
+
             BeginningIndex = beginningIndex;
             Increment = increment;
         }
@@ -91,11 +97,6 @@ namespace Silnith.Game.Klondike.Move
         /// <inheritdoc/>
         public Board Apply(Board board)
         {
-            if (Increment < 1)
-            {
-                throw new ArgumentOutOfRangeException(nameof(Increment), "Must advance by a positive number.");
-            }
-
             IReadOnlyList<Card> stockPile = board.StockPile;
             int newIndex = Math.Min(board.StockPileIndex + Increment, stockPile.Count);
             return new Board(board.Columns, stockPile, newIndex, board.Foundation);

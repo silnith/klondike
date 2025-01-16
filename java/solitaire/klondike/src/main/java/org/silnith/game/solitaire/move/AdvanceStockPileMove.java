@@ -35,9 +35,14 @@ public class AdvanceStockPileMove implements SolitaireMove {
      * 
      * @param beginningIndex the stock pile index before the move is applied
      * @param increment the number of cards that the stock pile index advances
+     * @throws IllegalArgumentException if the increment is not positive
      */
     public AdvanceStockPileMove(final int beginningIndex, final int increment) {
         super();
+        if (increment < 1) {
+        	throw new IllegalArgumentException("Increment must be positive.");
+        }
+        
         this.beginningIndex = beginningIndex;
         this.increment = increment;
     }
@@ -95,9 +100,7 @@ public class AdvanceStockPileMove implements SolitaireMove {
     
     @Override
     public Board apply(final Board board) {
-        if (increment < 1) {
-		    throw new IllegalArgumentException();
-		}
+    	assert increment >= 1;
 		
 		final List<Card> stockPile = board.getStockPile();
 		final int newIndex = Math.min(board.getStockPileIndex() + increment, stockPile.size());

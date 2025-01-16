@@ -27,6 +27,24 @@ namespace Silnith.Game.Klondike.Move.Tests
         };
 
         [TestMethod]
+        public void TestZeroIncrement()
+        {
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+            {
+                _ = new AdvanceStockPileMove(0, 0);
+            });
+        }
+
+        [TestMethod]
+        public void TestNegativeIncrement()
+        {
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+            {
+                _ = new AdvanceStockPileMove(0, -1);
+            });
+        }
+
+        [TestMethod]
         public void TestBeginningIndex()
         {
             AdvanceStockPileMove move = new(17, 34);
