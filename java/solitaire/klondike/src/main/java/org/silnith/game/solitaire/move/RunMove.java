@@ -1,9 +1,13 @@
 package org.silnith.game.solitaire.move;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.silnith.deck.Card;
+import org.silnith.deck.Suit;
 import org.silnith.game.solitaire.Board;
+import org.silnith.game.solitaire.Column;
 
 
 /**
@@ -107,7 +111,25 @@ public class RunMove implements SolitaireMove {
     
     @Override
     public Board apply(final Board board) {
-        return board.moveRun(sourceColumn, destinationColumn, numberOfCards);
+        if (sourceColumn == destinationColumn) {
+		    throw new IllegalArgumentException();
+		}
+		
+		final List<Column> columns = board.getColumns();
+		final List<Card> stockPile = board.getStockPile();
+		final int stockPileIndex = board.getStockPileIndex();
+		final Map<Suit, List<Card>> foundation = board.getFoundation();
+		
+		final Column fromColumn = columns.get(sourceColumn);
+		final Column toColumn = columns.get(destinationColumn);
+		final List<Card> stackToMove = fromColumn.getTopCards(numberOfCards);
+		final Column newFromColumn = fromColumn.getColumnMissingTopCards(numberOfCards);
+		final Column newToColumn = toColumn.addNewCards(stackToMove);
+		
+		final List<Column> newColumns = new ArrayList<>(columns);
+		newColumns.set(sourceColumn, newFromColumn);
+		newColumns.set(destinationColumn, newToColumn);
+		return new Board(newColumns, stockPile, stockPileIndex, foundation);
     }
     
     @Override

@@ -87,7 +87,23 @@ namespace Silnith.Game.Klondike.Move
         /// <inheritdoc/>
         public Board Apply(Board board)
         {
-            return board.MoveRun(SourceColumn, DestinationColumn, CardCount);
+            if (SourceColumn == DestinationColumn)
+            {
+                throw new ArgumentException("Source and destination column are the same.");
+            }
+
+            Column fromColumn = board.Columns[SourceColumn];
+            Column toColumn = board.Columns[DestinationColumn];
+            IReadOnlyList<Card> run = fromColumn.GetTopCards(CardCount);
+            Column newFromColumn = fromColumn.GetColumnMissingTopCards(CardCount);
+            Column newToColumn = toColumn.AddNewCards(run);
+
+            List<Column> newColumns = new List<Column>(board.Columns)
+            {
+                [SourceColumn] = newFromColumn,
+                [DestinationColumn] = newToColumn,
+            };
+            return new Board(newColumns, board.StockPile, board.StockPileIndex, board.Foundation);
         }
 
         /// <inheritdoc/>

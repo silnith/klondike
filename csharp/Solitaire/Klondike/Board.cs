@@ -186,39 +186,6 @@ namespace Silnith.Game.Klondike
         }
 
         /// <summary>
-        /// Returns a new board with a run of cards moved from one column to another.
-        /// </summary>
-        /// <param name="fromIndex">The index of the column that the run of cards will be taken from.</param>
-        /// <param name="toIndex">The index of the column that the run of cards will be moved to.</param>
-        /// <param name="cardCount">The number of cards in the run to move.</param>
-        /// <returns>The new board.</returns>
-        /// <exception cref="ArgumentException">If <paramref name="fromIndex"/> equals <paramref name="toIndex"/>.</exception>
-        /// <exception cref="IndexOutOfRangeException">If <paramref name="fromIndex"/> or <paramref name="toIndex"/>
-        /// is invalid.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="cardCount"/> is less than <c>1</c>,
-        /// or more than the number of cards available in the source column.</exception>
-        public Board MoveRun(int fromIndex, int toIndex, int cardCount)
-        {
-            if (fromIndex == toIndex)
-            {
-                throw new ArgumentException("Source and destination column are the same.");
-            }
-
-            Column fromColumn = Columns[fromIndex];
-            Column toColumn = Columns[toIndex];
-            IReadOnlyList<Card> run = fromColumn.GetTopCards(cardCount);
-            Column newFromColumn = fromColumn.GetColumnMissingTopCards(cardCount);
-            Column newToColumn = toColumn.AddNewCards(run);
-
-            List<Column> newColumns = new List<Column>(Columns)
-            {
-                [fromIndex] = newFromColumn,
-                [toIndex] = newToColumn,
-            };
-            return new Board(newColumns, StockPile, StockPileIndex, Foundation);
-        }
-
-        /// <summary>
         /// Returns a copy of the currenet board with one card removed from
         /// a column run and put into the foundation.
         /// </summary>

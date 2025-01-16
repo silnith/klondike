@@ -197,37 +197,6 @@ public class Board {
     }
     
     /**
-     * Returns a new board with a run of cards moved from one column to another.
-     * 
-     * @param fromIndex the index of the column that the run of cards will be taken from
-     * @param toIndex the index of the column that the run of cards will be moved to
-     * @param numCards the number of cards in the run to move
-     * @return the new board
-     * @throws IllegalArgumentException if the source and destination columns are the same,
-     *         or if {@code numCards} is more than the number of cards available in the
-     *         source column
-     * @throws IndexOutOfBoundsException if the from or to index is invalid
-     */
-    public Board moveRun(final int fromIndex, final int toIndex, final int numCards) {
-        if (fromIndex == toIndex) {
-            throw new IllegalArgumentException();
-        }
-        
-        final Column fromColumn = columns.get(fromIndex);
-        final Column toColumn = columns.get(toIndex);
-        final List<Card> stackToMove = fromColumn.getTopCards(numCards);
-        final Column newFromColumn = fromColumn.getColumnMissingTopCards(numCards);
-        final Column newToColumn = toColumn.addNewCards(stackToMove);
-        
-        final List<Column> newColumns = new ArrayList<>(columns);
-        newColumns.set(fromIndex, newFromColumn);
-        newColumns.set(toIndex, newToColumn);
-        // return new Board(Collections.unmodifiableList(newColumns), stockPile,
-        // stockPileIndex, foundation);
-        return new Board(newColumns, stockPile, stockPileIndex, foundation);
-    }
-    
-    /**
      * Returns a copy of the current board with one card removed from
      * a column run and put into the foundation.
      * 
