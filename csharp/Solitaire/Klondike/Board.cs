@@ -186,16 +186,6 @@ namespace Silnith.Game.Klondike
         }
 
         /// <summary>
-        /// Returns a new board with the stock pile recycled.
-        /// Otherwise the returned board will be identical to this one.
-        /// </summary>
-        /// <returns>A new board identical to this, except with the stock pile recycled.</returns>
-        public Board RecycleStockPile()
-        {
-            return new Board(Columns, StockPile, 0, Foundation);
-        }
-
-        /// <summary>
         /// Advances the stock pile by the given number of cards, and returns
         /// the new board.  Depending on the game rules, the advance is either
         /// <c>1</c> or <c>3</c>.

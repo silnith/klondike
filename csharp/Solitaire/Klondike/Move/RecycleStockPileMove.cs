@@ -53,7 +53,7 @@ namespace Silnith.Game.Klondike.Move
         /// <inheritdoc/>
         public Board Apply(Board board)
         {
-            return board.RecycleStockPile();
+            return new Board(board.Columns, board.StockPile, 0, board.Foundation);
         }
 
         /// <inheritdoc/>

@@ -197,16 +197,6 @@ public class Board {
     }
     
     /**
-     * Returns a new board with the stock pile recycled.
-     * Otherwise the returned board will be identical to this one.
-     * 
-     * @return a new board identical to this, except with the stock pile recycled
-     */
-    public Board recycleStockPile() {
-        return new Board(columns, stockPile, 0, foundation);
-    }
-    
-    /**
      * Advances the stock pile by the given number of cards, and returns
      * the new board.  Depending on the game rules, the advance is either
      * {@code 1} or {@code 3}.
