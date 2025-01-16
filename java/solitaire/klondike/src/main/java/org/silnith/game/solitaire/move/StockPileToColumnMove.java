@@ -1,10 +1,14 @@
 package org.silnith.game.solitaire.move;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.silnith.deck.Card;
+import org.silnith.deck.Suit;
 import org.silnith.game.solitaire.Board;
+import org.silnith.game.solitaire.Column;
 
 
 /**
@@ -96,7 +100,21 @@ public class StockPileToColumnMove implements SolitaireMove {
     
     @Override
     public Board apply(final Board board) {
-        return board.drawStockPileCardToColumn(destinationColumn);
+        final Card card = board.getStockPileCard();
+		final List<Card> newStockPile = board.extractStockPileCard();
+		
+		final int stockPileIndex = board.getStockPileIndex();
+		final int newStockPileIndex = stockPileIndex - 1;
+		
+		final List<Column> columns = board.getColumns();
+		final Column column = columns.get(destinationColumn);
+		final Column newColumn = column.addNewCard(card);
+		
+		final List<Column> newColumns = new ArrayList<>(columns);
+		newColumns.set(destinationColumn, newColumn);
+		
+		final Map<Suit, List<Card>> foundation = board.getFoundation();
+		return new Board(newColumns, newStockPile, newStockPileIndex, foundation);
     }
     
     @Override

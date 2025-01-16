@@ -198,30 +198,6 @@ public class Board {
     
     /**
      * Returns a copy of the current board with one card drawn from the stock pile
-     * and put on the specified column run.
-     * 
-     * @param index the index of the column to receive the card
-     * @return a copy of the board with one card moved
-     */
-    public Board drawStockPileCardToColumn(final int index) {
-        final Card card = getStockPileCard();
-        final List<Card> newStockPile = extractStockPileCard();
-        
-        final int newStockPileIndex = stockPileIndex - 1;
-        
-        final Column column = columns.get(index);
-        final Column newColumn = column.addNewCard(card);
-        
-        final List<Column> newColumns = new ArrayList<>(columns);
-        newColumns.set(index, newColumn);
-        
-        // return new Board(Collections.unmodifiableList(newColumns), newStockPile,
-        // newStockPileIndex, foundation);
-        return new Board(newColumns, newStockPile, newStockPileIndex, foundation);
-    }
-    
-    /**
-     * Returns a copy of the current board with one card drawn from the stock pile
      * and put into the foundation.
      * 
      * @return a copy of the board with one card moved
@@ -305,7 +281,7 @@ public class Board {
      * 
      * @return a copy of the stock pile with one card missing
      */
-    private List<Card> extractStockPileCard() {
+    public List<Card> extractStockPileCard() {
         /*
          * StockPile: [a, b, c]
          * StockPileIndex: 2

@@ -86,7 +86,18 @@ namespace Silnith.Game.Klondike.Move
         /// <inheritdoc/>
         public Board Apply(Board board)
         {
-            return board.DrawStockPileCardToColumn(DestinationColumn);
+            Card card = board.GetStockPileCard();
+            IReadOnlyList<Card> newStockPile = board.ExtractStockPileCard();
+
+            int newStockPileIndex = board.StockPileIndex - 1;
+
+            IReadOnlyList<Column> columns = board.Columns;
+            IReadOnlyList<Column> newColumns = new List<Column>(columns)
+            {
+                [DestinationColumn] = columns[DestinationColumn].AddNewCard(card),
+            };
+
+            return new Board(newColumns, newStockPile, newStockPileIndex, board.Foundation);
         }
 
         /// <inheritdoc/>

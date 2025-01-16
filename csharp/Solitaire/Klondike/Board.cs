@@ -187,27 +187,6 @@ namespace Silnith.Game.Klondike
 
         /// <summary>
         /// Returns a copy of the current board with one card drawn from the stock pile
-        /// and put on the specified column run.
-        /// </summary>
-        /// <param name="index">The index of the column to receive the card.</param>
-        /// <returns>A copy of the board with one card moved.</returns>
-        public Board DrawStockPileCardToColumn(int index)
-        {
-            Card card = GetStockPileCard();
-            IReadOnlyList<Card> newStockPile = ExtractStockPileCard();
-
-            int newStockPileIndex = StockPileIndex - 1;
-
-            IReadOnlyList<Column> newColumns = new List<Column>(Columns)
-            {
-                [index] = Columns[index].AddNewCard(card),
-            };
-
-            return new Board(newColumns, newStockPile, newStockPileIndex, Foundation);
-        }
-
-        /// <summary>
-        /// Returns a copy of the current board with one card drawn from the stock pile
         /// and put into the foundation.
         /// </summary>
         /// <returns>A copy of the board with one card moved.</returns>
@@ -284,7 +263,7 @@ namespace Silnith.Game.Klondike
         /// Returns a copy of the stock pile with the currently indexed card removed.
         /// </summary>
         /// <returns>A copy of the stock pile with one card missing.</returns>
-        private IReadOnlyList<Card> ExtractStockPileCard()
+        public IReadOnlyList<Card> ExtractStockPileCard()
         {
             /*
              * StockPile: [a, b, c, d]
