@@ -76,12 +76,12 @@ namespace Silnith.Game.Klondike.Move
             Card card = column.GetTopCard();
             Column newColumn = column.GetColumnMissingTopCards(1);
 
-            IReadOnlyDictionary<Suit, IReadOnlyList<Card>> newFoundation = board.GetFoundationPlusCard(card);
-
             IReadOnlyList<Column> newColumns = new List<Column>(columns)
             {
                 [SourceColumn] = newColumn,
             };
+
+            IReadOnlyDictionary<Suit, IReadOnlyList<Card>> newFoundation = board.GetFoundationPlusCard(card);
 
             return new Board(newColumns, board.StockPile, board.StockPileIndex, newFoundation);
         }
