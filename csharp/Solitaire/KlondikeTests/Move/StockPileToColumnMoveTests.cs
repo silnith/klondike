@@ -1,11 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Silnith.Game.Deck;
-using Silnith.Game.Klondike.Move;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Silnith.Game.Klondike.Move.Tests
 {
