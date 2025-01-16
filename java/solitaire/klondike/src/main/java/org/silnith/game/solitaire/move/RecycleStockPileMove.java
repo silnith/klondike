@@ -50,7 +50,7 @@ public class RecycleStockPileMove implements SolitaireMove {
     
     @Override
     public Board apply(final Board board) {
-        return new Board(board.columns, board.stockPile, 0, board.foundation);
+        return new Board(board.getColumns(), board.getStockPile(), 0, board.getFoundation());
     }
     
     @Override
