@@ -11,6 +11,34 @@ namespace Silnith.Game.Klondike.Move
     public class ColumnToFoundationMove : ISolitaireMove, IEquatable<ColumnToFoundationMove?>
     {
         /// <summary>
+        /// Finds all moves for a given board.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// This will either contain one move or zero.
+        /// </para>
+        /// </remarks>
+        /// <param name="board">The board to examine.</param>
+        /// <returns>An enumerable of moves.</returns>
+        public static IEnumerable<ISolitaireMove> FindAllMovesForBoard(Board board)
+        {
+            List<ISolitaireMove> moves = new List<ISolitaireMove>();
+            for (int i = 0; i < board.Columns.Count; i++)
+            {
+                Column column = board.Columns[i];
+                if (column.HasFaceUpCards())
+                {
+                    Card card = column.GetTopCard();
+                    if (board.CanAddToFoundation(card))
+                    {
+                        moves.Add(new ColumnToFoundationMove(i, board));
+                    }
+                }
+            }
+            return moves;
+        }
+
+        /// <summary>
         /// The index in the board of the column from which the card is taken.
         /// </summary>
         public int SourceColumn

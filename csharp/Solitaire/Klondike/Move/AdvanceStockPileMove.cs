@@ -17,6 +17,32 @@ namespace Silnith.Game.Klondike.Move
     public class AdvanceStockPileMove : ISolitaireMove, IEquatable<AdvanceStockPileMove?>
     {
         /// <summary>
+        /// Finds all stock pile advance moves for a given board.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// This will either contain one move or zero.
+        /// </para>
+        /// </remarks>
+        /// <param name="stockPileAdvance">The number of cards to advance the stock pile.</param>
+        /// <param name="board">The board to examine.</param>
+        /// <returns>An enumerable of moves.</returns>
+        public static IEnumerable<ISolitaireMove> FindAllMovesForBoard(int stockPileAdvance, Board board)
+        {
+            if (board.CanAdvanceStockPile())
+            {
+                return new List<ISolitaireMove>(1)
+                {
+                    new AdvanceStockPileMove(stockPileAdvance, board),
+                };
+            }
+            else
+            {
+                return Array.Empty<ISolitaireMove>();
+            }
+        }
+
+        /// <summary>
         /// The index into the stock pile before the advance move happens.
         /// </summary>
         public int BeginningIndex

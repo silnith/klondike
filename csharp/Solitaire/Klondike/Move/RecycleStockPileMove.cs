@@ -11,6 +11,31 @@ namespace Silnith.Game.Klondike.Move
     public class RecycleStockPileMove : ISolitaireMove, IEquatable<RecycleStockPileMove?>
     {
         /// <summary>
+        /// Finds all recycle stock pile moves for a given board.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// This will either contain one move or zero.
+        /// </para>
+        /// </remarks>
+        /// <param name="board">The board to examine.</param>
+        /// <returns>An enumerable of moves.</returns>
+        public static IEnumerable<ISolitaireMove> FindAllMovesForBoard(Board board)
+        {
+            if (board.CanRecycleStockPile())
+            {
+                return new List<ISolitaireMove>(1)
+                {
+                    new RecycleStockPileMove(board),
+                };
+            }
+            else
+            {
+                return Array.Empty<ISolitaireMove>();
+            }
+        }
+
+        /// <summary>
         /// The index into the stock pile before the move is applied.
         /// </summary>
         /// <remarks>
@@ -48,6 +73,14 @@ namespace Silnith.Game.Klondike.Move
         public RecycleStockPileMove(int sourceIndex)
         {
             SourceIndex = sourceIndex;
+        }
+
+        /// <summary>
+        /// Constructs a new move that recycles the stock pile.
+        /// </summary>
+        /// <param name="board">The board from which to get the stock pile index.</param>
+        public RecycleStockPileMove(Board board) : this(board.StockPileIndex)
+        {
         }
 
         /// <inheritdoc/>
