@@ -192,8 +192,9 @@ namespace Silnith.Game.Klondike
         /// <returns>A copy of the board with one card moved.</returns>
         public Board DrawStockPileCardToFoundation()
         {
-            Card card = GetStockPileCard();
-            IReadOnlyList<Card> newStockPile = ExtractStockPileCard();
+            Tuple<Card, IReadOnlyList<Card>> tuple = ExtractStockPileCard();
+            Card card = tuple.Item1;
+            IReadOnlyList<Card> newStockPile = tuple.Item2;
 
             int newStockPileIndex = StockPileIndex - 1;
 
@@ -260,18 +261,21 @@ namespace Silnith.Game.Klondike
         }
 
         /// <summary>
-        /// Returns a copy of the stock pile with the currently indexed card removed.
+        /// Extracts the currently visible card from the stock pile, and returns both the card
+        /// and the remaining stock pile missing the card.
         /// </summary>
-        /// <returns>A copy of the stock pile with one card missing.</returns>
-        public IReadOnlyList<Card> ExtractStockPileCard()
+        /// <returns>A tuple of the card, and the remaining stock pile.</returns>
+        public Tuple<Card, IReadOnlyList<Card>> ExtractStockPileCard()
         {
+            Card card = StockPile[StockPileIndex - 1];
             /*
              * StockPile: [a, b, c, d]
              * StockPileIndex: 2
              * 
              * Result: [a, c, d]
              */
-            return StockPile.Take(StockPileIndex - 1).Concat(StockPile.Skip(StockPileIndex)).ToList();
+            IReadOnlyList<Card> remainingStockPile = StockPile.Take(StockPileIndex - 1).Concat(StockPile.Skip(StockPileIndex)).ToList();
+            return new Tuple<Card, IReadOnlyList<Card>>(card, remainingStockPile);
         }
 
         /// <inheritdoc/>

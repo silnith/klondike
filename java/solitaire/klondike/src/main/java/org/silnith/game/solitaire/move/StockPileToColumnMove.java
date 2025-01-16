@@ -9,6 +9,7 @@ import org.silnith.deck.Card;
 import org.silnith.deck.Suit;
 import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.Column;
+import org.silnith.util.Pair;
 
 
 /**
@@ -100,8 +101,9 @@ public class StockPileToColumnMove implements SolitaireMove {
     
     @Override
     public Board apply(final Board board) {
-        final Card card = board.getStockPileCard();
-		final List<Card> newStockPile = board.extractStockPileCard();
+    	final Pair<Card, List<Card>> pair = board.extractStockPileCard();
+        final Card card = pair.getFirst();
+		final List<Card> newStockPile = pair.getSecond();
 		
 		final int stockPileIndex = board.getStockPileIndex();
 		final int newStockPileIndex = stockPileIndex - 1;

@@ -86,8 +86,9 @@ namespace Silnith.Game.Klondike.Move
         /// <inheritdoc/>
         public Board Apply(Board board)
         {
-            Card card = board.GetStockPileCard();
-            IReadOnlyList<Card> newStockPile = board.ExtractStockPileCard();
+            Tuple<Card, IReadOnlyList<Card>> tuple = board.ExtractStockPileCard();
+            Card card = tuple.Item1;
+            IReadOnlyList<Card> newStockPile = tuple.Item2;
 
             int newStockPileIndex = board.StockPileIndex - 1;
 

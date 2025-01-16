@@ -10,6 +10,7 @@ import java.util.NoSuchElementException;
 
 import org.silnith.deck.Card;
 import org.silnith.deck.Suit;
+import org.silnith.util.Pair;
 
 
 /**
@@ -203,8 +204,9 @@ public class Board {
      * @return a copy of the board with one card moved
      */
     public Board drawStockPileCardToFoundation() {
-        final Card card = getStockPileCard();
-        final List<Card> newStockPile = extractStockPileCard();
+    	final Pair<Card, List<Card>> pair = extractStockPileCard();
+        final Card card = pair.getFirst();
+        final List<Card> newStockPile = pair.getSecond();
         
         final int newStockPileIndex = stockPileIndex - 1;
         
@@ -277,23 +279,24 @@ public class Board {
     }
     
     /**
-     * Returns a copy of the stock pile with the currently indexed card removed.
+     * Extracts the currently visible card from the stock pile, and returns
+     * both the card and the remaining stock pile missing the card.
      * 
-     * @return a copy of the stock pile with one card missing
+     * @return a pair of the card, and the remaining stock pile
      */
-    public List<Card> extractStockPileCard() {
-        /*
-         * StockPile: [a, b, c]
-         * StockPileIndex: 2
-         * 
-         * Result: [a, c]
-         */
-        final int size = stockPile.size();
-        final List<Card> newStockPile = new ArrayList<>(size - 1);
-        newStockPile.addAll(stockPile.subList(0, stockPileIndex - 1));
-        newStockPile.addAll(stockPile.subList(stockPileIndex, size));
-        // return Collections.unmodifiableList(newStockPile);
-        return newStockPile;
+    public Pair<Card, List<Card>> extractStockPileCard() {
+    	final Card card = getStockPileCard();
+		/*
+		 * StockPile: [a, b, c]
+		 * StockPileIndex: 2
+		 * 
+		 * Result: [a, c]
+		 */
+		final int size = stockPile.size();
+		final List<Card> newStockPile = new ArrayList<>(size - 1);
+		newStockPile.addAll(stockPile.subList(0, stockPileIndex - 1));
+		newStockPile.addAll(stockPile.subList(stockPileIndex, size));
+		return new Pair<Card, List<Card>>(card, newStockPile);
     }
     
     @Override
