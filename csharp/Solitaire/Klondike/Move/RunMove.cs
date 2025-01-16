@@ -62,8 +62,14 @@ namespace Silnith.Game.Klondike.Move
         /// <param name="destinationColumn">The index into the board of the destination column.</param>
         /// <param name="cardCount">The number of cards being moved.</param>
         /// <param name="cards">The cards being moved.</param>
+        /// <exception cref="ArgumentException">If <paramref name="sourceColumn"/> equals <paramref name="destinationColumn"/>.</exception>
         public RunMove(int sourceColumn, int destinationColumn, int cardCount, IReadOnlyList<Card> cards)
         {
+            if (sourceColumn == destinationColumn)
+            {
+                throw new ArgumentException("Source and destination column are the same.");
+            }
+
             SourceColumn = sourceColumn;
             DestinationColumn = destinationColumn;
             CardCount = cardCount;
@@ -87,11 +93,6 @@ namespace Silnith.Game.Klondike.Move
         /// <inheritdoc/>
         public Board Apply(Board board)
         {
-            if (SourceColumn == DestinationColumn)
-            {
-                throw new ArgumentException("Source and destination column are the same.");
-            }
-
             Column fromColumn = board.Columns[SourceColumn];
             Column toColumn = board.Columns[DestinationColumn];
             IReadOnlyList<Card> run = fromColumn.GetTopCards(CardCount);

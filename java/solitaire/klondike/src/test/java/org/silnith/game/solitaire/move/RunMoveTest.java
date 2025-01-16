@@ -48,6 +48,16 @@ public class RunMoveTest {
             this.emptyFoundation.put(suit, emptyListOfCards);
         }
     }
+    
+    @Test
+    public void testSourceAndDestinationSame() {
+    	final List<Card> run = Arrays.asList(
+    			new Card(ACE, CLUB));
+    	
+    	assertThrows(IllegalArgumentException.class, () -> {
+    		new RunMove(2, 2, 1, run);
+    	});
+    }
 
 	@Test
 	public void testGetSourceColumn() {
@@ -165,22 +175,6 @@ public class RunMoveTest {
         final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
         
         final RunMove move = new RunMove(0, 1, 0, run);
-        
-        assertThrows(RuntimeException.class, () -> {
-        	move.apply(board);
-        });
-    }
-    
-    @Test
-    public void testApplySameFromTo() {
-        final List<Card> run = Arrays.asList(
-        		new Card(KING, SPADE));
-        
-        final List<Column> columns = new ArrayList<>(emptyColumns);
-        columns.set(0, new Column(null, run));
-        final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
-        
-        final RunMove move = new RunMove(0, 0, 1, run);
         
         assertThrows(RuntimeException.class, () -> {
         	move.apply(board);

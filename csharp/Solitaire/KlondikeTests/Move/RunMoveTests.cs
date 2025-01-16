@@ -29,6 +29,20 @@ namespace Silnith.Game.Klondike.Move.Tests
         };
 
         [TestMethod]
+        public void TestSourceAndDestinationSame()
+        {
+            List<Card> run = new()
+            {
+                new Card(Value.Ace, Suit.Club),
+            };
+
+            Assert.ThrowsException<ArgumentException>(() =>
+            {
+                _ = new RunMove(2, 2, 1, run);
+            });
+        }
+
+        [TestMethod]
         public void TestSourceColumn()
         {
             List<Card> run = new()
@@ -168,28 +182,6 @@ namespace Silnith.Game.Klondike.Move.Tests
             RunMove move = new(0, 1, 0, run);
 
             Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
-            {
-                _ = move.Apply(board);
-            });
-        }
-
-        [TestMethod]
-        public void TestApplySameFromTo()
-        {
-            List<Card> run = new()
-            {
-                new Card(Value.King, Suit.Spade),
-            };
-
-            List<Column> columns = new(EmptyColumns)
-            {
-                [0] = new Column(null, run),
-            };
-            Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
-
-            RunMove move = new(0, 0, 1, board);
-
-            Assert.ThrowsException<ArgumentException>(() =>
             {
                 _ = move.Apply(board);
             });

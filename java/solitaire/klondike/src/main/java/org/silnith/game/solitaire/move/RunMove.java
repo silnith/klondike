@@ -45,9 +45,14 @@ public class RunMove implements SolitaireMove {
      * @param destinationColumn the index into the board of the destination column
      * @param numberOfCards the number of cards being moved
      * @param cards the cards being moved
+     * @throws IllegalArgumentException if the source and destination columns are the same
      */
     public RunMove(final int sourceColumn, final int destinationColumn, final int numberOfCards, final List<Card> cards) {
         super();
+        if (sourceColumn == destinationColumn) {
+		    throw new IllegalArgumentException("Source and destination column are the same.");
+		}
+		
         this.sourceColumn = sourceColumn;
         this.destinationColumn = destinationColumn;
         this.numberOfCards = numberOfCards;
@@ -111,10 +116,8 @@ public class RunMove implements SolitaireMove {
     
     @Override
     public Board apply(final Board board) {
-        if (sourceColumn == destinationColumn) {
-		    throw new IllegalArgumentException();
-		}
-		
+    	assert sourceColumn != destinationColumn;
+    	
 		final List<Column> columns = board.getColumns();
 		final List<Card> stockPile = board.getStockPile();
 		final int stockPileIndex = board.getStockPileIndex();
