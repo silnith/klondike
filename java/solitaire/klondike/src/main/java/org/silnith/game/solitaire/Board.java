@@ -198,29 +198,6 @@ public class Board {
     }
     
     /**
-     * Returns a copy of this board with one card moved from the foundation
-     * to the specified column run.
-     * 
-     * @param suit the suit from which to take a card from the foundation
-     * @param index the index of the column that will receive the card
-     * @return a copy of this board with one card moved from the foundation
-     *         to a column
-     */
-    public Board moveCardFromFoundation(final Suit suit, final int index) {
-        final Card card = getTopOfFoundation(suit);
-        
-        final Map<Suit, List<Card>> newFoundation = removeFromFoundation(suit);
-        
-        final Column column = columns.get(index);
-        final Column newColumn = column.addNewCard(card);
-        
-        final List<Column> newColumns = new ArrayList<>(columns);
-        newColumns.set(index, newColumn);
-        
-        return new Board(newColumns, stockPile, stockPileIndex, newFoundation);
-    }
-    
-    /**
      * Returns a copy of the foundation with the given card added to it.
      * 
      * <p>This does no validation that the move is legal.</p>
@@ -235,29 +212,26 @@ public class Board {
         final List<Card> newStackForSuit = new ArrayList<>(13);
         newStackForSuit.addAll(stackForSuit);
         newStackForSuit.add(card);
-        // newFoundation.put(suit, Collections.unmodifiableList(newStackForSuit));
         newFoundation.put(suit, newStackForSuit);
         
-        // return Collections.unmodifiableMap(newFoundation);
         return newFoundation;
     }
     
     /**
-     * Returns a copy of the foundation with the top element removed from the specified suit.
+     * Extracts the top card from the foundation for the given suit, and returns
+     * both the card and the remaining foundation missing the card.
      * 
-     * @param suit the suit from which to remove one card
-     * @return a copy of the foundation with one card missing
+     * @param suit the suit of the foundation from which to remove the top card
+     * @return a pair of the card and the remaining foundation
      */
-    private Map<Suit, List<Card>> removeFromFoundation(final Suit suit) {
-        final Map<Suit, List<Card>> newFoundation = new EnumMap<>(foundation);
-        final List<Card> stackForSuit = newFoundation.get(suit);
-        // final List<Card> newStackForSuit = stackForSuit.subList(0,
-        // stackForSuit.size() - 1);
-        final List<Card> newStackForSuit = new ArrayList<>(stackForSuit.subList(0, stackForSuit.size() - 1));
-        newFoundation.put(suit, newStackForSuit);
-        
-        // return Collections.unmodifiableMap(newFoundation);
-        return newFoundation;
+    public Pair<Card, Map<Suit, List<Card>>> extractCardFromFoundation(final Suit suit) {
+    	final List<Card> foundationForSuit = foundation.get(suit);
+		final int suitCountMinusOne = foundationForSuit.size() - 1;
+		final Card card = foundationForSuit.get(suitCountMinusOne);
+		final Map<Suit, List<Card>> newFoundation = new EnumMap<>(foundation);
+		final List<Card> newStackForSuit = new ArrayList<>(foundationForSuit.subList(0, suitCountMinusOne));
+		newFoundation.put(suit, newStackForSuit);
+		return new Pair<>(card, newFoundation);
     }
     
     /**

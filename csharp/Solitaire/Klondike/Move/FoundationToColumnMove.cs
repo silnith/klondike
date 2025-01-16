@@ -77,7 +77,16 @@ namespace Silnith.Game.Klondike.Move
         /// <inheritdoc/>
         public Board Apply(Board board)
         {
-            return board.MoveCardFromFoundation(Card.Suit, DestinationColumn);
+            Tuple<Card, IReadOnlyDictionary<Suit, IReadOnlyList<Card>>> tuple = board.ExtractCardFromFoundation(Card.Suit);
+            Card card = tuple.Item1;
+            IReadOnlyDictionary<Suit, IReadOnlyList<Card>> newFoundation = tuple.Item2;
+
+            IReadOnlyList<Column> newColumns = new List<Column>(board.Columns)
+            {
+                [DestinationColumn] = board.Columns[DestinationColumn].AddNewCard(card),
+            };
+
+            return new Board(newColumns, board.StockPile, board.StockPileIndex, newFoundation);
         }
 
         /// <inheritdoc/>

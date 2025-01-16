@@ -186,25 +186,6 @@ namespace Silnith.Game.Klondike
         }
 
         /// <summary>
-        /// Returns a copy of this board with one card moved from the foundation
-        /// to the specified column run.
-        /// </summary>
-        /// <param name="suit">The suit from which to take a card from the foundation.</param>
-        /// <param name="index">The index of the column that will receive the card.</param>
-        /// <returns>A copy of this board with one card moved from the foundation to a column.</returns>
-        public Board MoveCardFromFoundation(Suit suit, int index)
-        {
-            IReadOnlyDictionary<Suit, IReadOnlyList<Card>> newFoundation = RemoveFromFoundation(suit);
-
-            IReadOnlyList<Column> newColumns = new List<Column>(Columns)
-            {
-                [index] = Columns[index].AddNewCard(GetTopOfFoundation(suit)),
-            };
-
-            return new Board(newColumns, StockPile, StockPileIndex, newFoundation);
-        }
-
-        /// <summary>
         /// Returns a copy of the foundation with the given card added to it.
         /// </summary>
         /// <remarks>
@@ -228,18 +209,21 @@ namespace Silnith.Game.Klondike
         }
 
         /// <summary>
-        /// Returns a copy of the foundation with the top element removed from the specified suit.
+        /// Extracts the top card from the foundation for the given suit, and returns
+        /// both the card and the remaining foundation missing the card.
         /// </summary>
-        /// <param name="suit">The suit from which to remove one card.</param>
-        /// <returns>A copy of the foundation with one card missing.</returns>
-        private IReadOnlyDictionary<Suit, IReadOnlyList<Card>> RemoveFromFoundation(Suit suit)
+        /// <param name="suit">The suit of the foundation to remove the top card from.</param>
+        /// <returns>A tuple of the card, and the remaining foundation.</returns>
+        public Tuple<Card, IReadOnlyDictionary<Suit, IReadOnlyList<Card>>> ExtractCardFromFoundation(Suit suit)
         {
-            IReadOnlyList<Card> stackForSuit = Foundation[suit];
-
-            return new Dictionary<Suit, IReadOnlyList<Card>>(Foundation)
+            IReadOnlyList<Card> foundationForSuit = Foundation[suit];
+            int suitCountMinusOne = foundationForSuit.Count - 1;
+            Card card = foundationForSuit[suitCountMinusOne];
+            IReadOnlyDictionary<Suit, IReadOnlyList<Card>> newFoundation = new Dictionary<Suit, IReadOnlyList<Card>>(Foundation)
             {
-                [suit] = stackForSuit.Take(stackForSuit.Count - 1).ToList(),
+                [suit] = foundationForSuit.Take(suitCountMinusOne).ToList(),
             };
+            return new Tuple<Card, IReadOnlyDictionary<Suit, IReadOnlyList<Card>>>(card, newFoundation);
         }
 
         /// <summary>
