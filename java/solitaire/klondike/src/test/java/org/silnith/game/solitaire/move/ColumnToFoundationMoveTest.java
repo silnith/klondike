@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.silnith.deck.Suit.CLUB;
+import static org.silnith.deck.Suit.DIAMOND;
+import static org.silnith.deck.Suit.HEART;
+import static org.silnith.deck.Suit.SPADE;
 import static org.silnith.deck.Value.ACE;
 import static org.silnith.deck.Value.FOUR;
 import static org.silnith.deck.Value.THREE;
@@ -12,8 +15,10 @@ import static org.silnith.deck.Value.TWO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +43,47 @@ public class ColumnToFoundationMoveTest {
         for (final Suit suit : Suit.values()) {
             this.emptyFoundation.put(suit, emptyListOfCards);
         }
+    }
+    
+    @Test
+    public void testFindMovesEmptyColumns() {
+    	final Board board = new Board(emptyColumns, emptyListOfCards, 0, emptyFoundation);
+    	
+    	final Collection<ColumnToFoundationMove> actual = ColumnToFoundationMove.findMoves(board);
+    	
+    	final Collection<ColumnToFoundationMove> expected = Collections.emptyList();
+    	assertEquals(expected, actual);
+    }
+    
+    @Test
+    public void testFindMoves() {
+    	final List<Column> columns = new ArrayList<Column>(emptyColumns);
+    	columns.set(0, new Column(
+    			null,
+    			Arrays.asList(
+    					new Card(ACE, CLUB))));
+    	columns.set(1, new Column(
+    			null,
+    			Arrays.asList(
+    					new Card(ACE, DIAMOND))));
+    	columns.set(2, new Column(
+    			null,
+    			Arrays.asList(
+    					new Card(ACE, HEART))));
+    	columns.set(3, new Column(
+    			null,
+    			Arrays.asList(
+    					new Card(ACE, SPADE))));
+    	final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
+    	
+    	final Collection<ColumnToFoundationMove> actual = ColumnToFoundationMove.findMoves(board);
+    	
+    	final Collection<ColumnToFoundationMove> expected = new HashSet<>(Arrays.asList(
+    			new ColumnToFoundationMove(0, new Card(ACE, CLUB)),
+    			new ColumnToFoundationMove(1, new Card(ACE, DIAMOND)),
+    			new ColumnToFoundationMove(2, new Card(ACE, HEART)),
+    			new ColumnToFoundationMove(3, new Card(ACE, SPADE))));
+    	assertEquals(expected, new HashSet<>(actual));
     }
     
     @Test

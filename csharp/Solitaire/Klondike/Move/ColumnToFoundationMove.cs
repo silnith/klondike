@@ -15,14 +15,14 @@ namespace Silnith.Game.Klondike.Move
         /// </summary>
         /// <remarks>
         /// <para>
-        /// This will either contain one move or zero.
+        /// This could potentially find a move for each suit.
         /// </para>
         /// </remarks>
         /// <param name="board">The board to examine.</param>
         /// <returns>An enumerable of moves.</returns>
-        public static IEnumerable<ISolitaireMove> FindAllMovesForBoard(Board board)
+        public static IEnumerable<ColumnToFoundationMove> FindMoves(Board board)
         {
-            List<ISolitaireMove> moves = new List<ISolitaireMove>();
+            List<ColumnToFoundationMove> moves = new List<ColumnToFoundationMove>();
             for (int i = 0; i < board.Columns.Count; i++)
             {
                 Column column = board.Columns[i];

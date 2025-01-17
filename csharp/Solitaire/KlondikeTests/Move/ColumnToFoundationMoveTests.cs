@@ -28,6 +28,64 @@ namespace Silnith.Game.Klondike.Move.Tests
             new Column(null, null),
         };
 
+        #region FindMoves
+
+        [TestMethod]
+        public void TestFindMovesEmptyColumns()
+        {
+            Board board = new(EmptyColumns, EmptyListOfCards, 0, EmptyFoundation);
+
+            IEnumerable<ColumnToFoundationMove> moves = ColumnToFoundationMove.FindMoves(board);
+
+            Assert.IsFalse(moves.Any());
+        }
+
+        [TestMethod]
+        public void TestFindMoves()
+        {
+            List<Column> columns = new(EmptyColumns)
+            {
+                [0] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Ace, Suit.Club),
+                    }),
+                [1] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Ace, Suit.Diamond),
+                    }),
+                [2] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Ace, Suit.Heart),
+                    }),
+                [3] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Ace, Suit.Spade),
+                    }),
+            };
+            Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
+
+            IEnumerable<ColumnToFoundationMove> actual = ColumnToFoundationMove.FindMoves(board);
+
+            IEnumerable<ColumnToFoundationMove> expected = new HashSet<ColumnToFoundationMove>()
+            {
+                new ColumnToFoundationMove(0, new Card(Value.Ace, Suit.Club)),
+                new ColumnToFoundationMove(1, new Card(Value.Ace, Suit.Diamond)),
+                new ColumnToFoundationMove(2, new Card(Value.Ace, Suit.Heart)),
+                new ColumnToFoundationMove(3, new Card(Value.Ace, Suit.Spade)),
+            };
+            CollectionAssert.AreEquivalent(expected.ToList(), actual.ToList());
+        }
+
+        #endregion
+
         [TestMethod]
         public void TestConstructorSourceColumnOutOfRange()
         {

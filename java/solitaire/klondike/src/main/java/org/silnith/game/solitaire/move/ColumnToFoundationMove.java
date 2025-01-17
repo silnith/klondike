@@ -1,6 +1,7 @@
 package org.silnith.game.solitaire.move;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,29 @@ import org.silnith.game.solitaire.Column;
  * Foundation.
  */
 public class ColumnToFoundationMove implements SolitaireMove {
+	
+	/**
+	 * Finds all column to foundation moves for a given board.
+	 * 
+	 * <p>This could potentially find a move for each suit.</p>
+	 * 
+	 * @param board the board to examine
+	 * @return a collection of moves
+	 */
+	public static Collection<ColumnToFoundationMove> findMoves(final Board board) {
+		final Collection<ColumnToFoundationMove> moves = new ArrayList<ColumnToFoundationMove>(Suit.values().length);
+		final List<Column> columns = board.getColumns();
+		for (int i = 0; i < columns.size(); i++) {
+			final Column column = columns.get(i);
+			if (column.hasFaceUpCards()) {
+				final Card card = column.getTopCard();
+				if (board.canAddToFoundation(card)) {
+					moves.add(new ColumnToFoundationMove(i, card));
+				}
+			}
+		}
+		return moves;
+	}
     
     /**
      * The index in the board of the column from which the card is taken.
