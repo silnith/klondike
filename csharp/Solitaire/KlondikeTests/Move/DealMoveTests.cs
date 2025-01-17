@@ -81,6 +81,8 @@ namespace Silnith.Game.Klondike.Move.Tests
             Assert.AreEqual(7, move.ColumnCount);
         }
 
+        #region Apply
+
         [TestMethod]
         public void TestApply()
         {
@@ -207,6 +209,10 @@ namespace Silnith.Game.Klondike.Move.Tests
             Assert.AreEqual(expected, actual);
         }
 
+        #endregion
+
+        #region Equals & GetHashCode
+
         [TestMethod]
         public void TestEquals()
         {
@@ -242,5 +248,8 @@ namespace Silnith.Game.Klondike.Move.Tests
 
             Assert.AreNotEqual(move1, move2);
         }
+
+        #endregion
+
     }
 }

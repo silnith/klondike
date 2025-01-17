@@ -83,6 +83,8 @@ namespace Silnith.Game.Klondike.Move.Tests
             Assert.IsTrue(expectedCards.SequenceEqual(move.Cards));
         }
 
+        #region Apply
+
         [TestMethod]
         public void TestApply()
         {
@@ -165,6 +167,10 @@ namespace Silnith.Game.Klondike.Move.Tests
             Assert.AreEqual(expected, actual);
         }
 
+        #endregion
+
+        #region Equals & GetHashCode
+
         [TestMethod]
         public void TestEquals()
         {
@@ -200,5 +206,8 @@ namespace Silnith.Game.Klondike.Move.Tests
 
             Assert.AreNotEqual(move1, move2);
         }
+
+        #endregion
+
     }
 }

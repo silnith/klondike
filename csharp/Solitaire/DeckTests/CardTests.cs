@@ -27,6 +27,8 @@ namespace Silnith.Game.Deck.Tests
             Assert.AreEqual(Suit.Heart, card.Suit);
         }
 
+        #region Equals & GetHashCode
+
         [TestMethod]
         public void TestEquals()
         {
@@ -106,6 +108,8 @@ namespace Silnith.Game.Deck.Tests
 
             Assert.AreNotEqual<object>(card, "Eight of Hearts");
         }
+
+        #endregion
 
         [TestMethod]
         public void TestToString()

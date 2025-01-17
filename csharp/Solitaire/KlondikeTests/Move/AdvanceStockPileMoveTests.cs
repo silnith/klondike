@@ -90,6 +90,8 @@ namespace Silnith.Game.Klondike.Move.Tests
             Assert.IsFalse(move.HasCards);
         }
 
+        #region Apply
+
         [TestMethod]
         public void TestApply()
         {
@@ -193,6 +195,10 @@ namespace Silnith.Game.Klondike.Move.Tests
             Assert.AreEqual(expected, actual);
         }
 
+        #endregion
+
+        #region Equals & GetHashCode
+
         [TestMethod]
         public void TestEquals()
         {
@@ -237,5 +243,8 @@ namespace Silnith.Game.Klondike.Move.Tests
 
             Assert.AreNotEqual(move1, move2);
         }
+
+        #endregion
+
     }
 }

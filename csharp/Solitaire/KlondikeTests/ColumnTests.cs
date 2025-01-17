@@ -9,6 +9,8 @@ namespace Silnith.Game.Klondike.Tests
     [TestClass]
     public class ColumnTests
     {
+        #region Constructors
+
         [TestMethod]
         public void TestConstructorEmpty()
         {
@@ -78,6 +80,8 @@ namespace Silnith.Game.Klondike.Tests
 
             Column _ = new(faceDown, faceUp);
         }
+
+        #endregion
 
         [TestMethod]
         public void TestHasFaceDownCards()
@@ -460,6 +464,8 @@ namespace Silnith.Game.Klondike.Tests
             Assert.IsTrue(Enumerable.SequenceEqual(expected, column.FaceUp));
         }
 
+        #region GetTopCards
+
         [TestMethod]
         public void TestGetTopCardsOverflow()
         {
@@ -625,6 +631,10 @@ namespace Silnith.Game.Klondike.Tests
                 _ = column.GetTopCards(0);
             });
         }
+
+        #endregion
+
+        #region GetWithoutTopCards
 
         [TestMethod]
         public void TestGetWithoutTopCardsOverflow()
@@ -798,6 +808,8 @@ namespace Silnith.Game.Klondike.Tests
             });
         }
 
+        #endregion
+
         [TestMethod]
         public void TestGetWithCard()
         {
@@ -830,6 +842,8 @@ namespace Silnith.Game.Klondike.Tests
             Column expected = new(faceDown, expectedFaceUp);
             Assert.AreEqual(expected, actual);
         }
+
+        #region GetWithCards
 
         [TestMethod]
         public void TestGetWithCards1()
@@ -934,6 +948,8 @@ namespace Silnith.Game.Klondike.Tests
                 _ = column.GetWithCards(run);
             });
         }
+
+        #endregion
 
         #region CanAddRun
 
@@ -1170,6 +1186,8 @@ namespace Silnith.Game.Klondike.Tests
 
         #endregion
 
+        #region Equals & GetHashCode
+
         [TestMethod]
         public void TestEquals()
         {
@@ -1352,5 +1370,8 @@ namespace Silnith.Game.Klondike.Tests
 
             Assert.AreNotEqual(column1, column2);
         }
+
+        #endregion
+
     }
 }

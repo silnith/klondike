@@ -28,6 +28,8 @@ namespace Silnith.Game.Klondike.Tests
             new Column(null, null),
         };
 
+        #region CanAddToFoundation
+
         [TestMethod]
         public void TestCanAddToFoundationEmptyAce()
         {
@@ -123,6 +125,10 @@ namespace Silnith.Game.Klondike.Tests
 
             Assert.IsFalse(board.CanAddToFoundation(new Card(Value.Six, Suit.Club)));
         }
+
+        #endregion
+
+        #region Equals & GetHashCode
 
         [TestMethod]
         public void TestEqualsEmpty()
@@ -747,5 +753,8 @@ namespace Silnith.Game.Klondike.Tests
 
             Assert.AreNotEqual(board1, board2);
         }
+
+        #endregion
+
     }
 }

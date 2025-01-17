@@ -8,6 +8,8 @@ namespace Silnith.Game.Tests
     [TestClass]
     public class LinkedNodeTests
     {
+        #region Equals & GetHashCode
+
         [TestMethod]
         public void TestEquals()
         {
@@ -43,6 +45,8 @@ namespace Silnith.Game.Tests
 
             Assert.AreEqual(list1.GetHashCode(), list2.GetHashCode());
         }
+
+        #endregion
 
         [TestMethod]
         public void TestEnumeratorExists()
