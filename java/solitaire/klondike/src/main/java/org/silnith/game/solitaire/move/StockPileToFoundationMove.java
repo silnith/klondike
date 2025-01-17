@@ -1,5 +1,6 @@
 package org.silnith.game.solitaire.move;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,24 @@ import org.silnith.util.Pair;
  * A move that takes a card from the stock pile and puts it into the Foundation.
  */
 public class StockPileToFoundationMove implements SolitaireMove {
+	
+	/**
+	 * Finds all moves where a card is drawn from the stock pile to the foundation.
+	 * 
+	 * <p>This will either contain one move or zero.</p>
+	 * 
+	 * @param board the board to examine
+	 * @return a collection of moves
+	 */
+	public static Collection<StockPileToFoundationMove> findMoves(final Board board) {
+		if (board.getStockPileIndex() > 0) {
+			final Card card = board.getStockPileCard();
+			if (board.canAddToFoundation(card)) {
+				return Collections.singleton(new StockPileToFoundationMove(board));
+			}
+		}
+		return Collections.emptySet();
+	}
     
     /**
      * The index into the stock pile from which the card is being taken.

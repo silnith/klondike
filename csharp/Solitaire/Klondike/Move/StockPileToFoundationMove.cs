@@ -10,7 +10,7 @@ namespace Silnith.Game.Klondike.Move
     public class StockPileToFoundationMove : ISolitaireMove, IEquatable<StockPileToFoundationMove?>
     {
         /// <summary>
-        /// Finds all moves for a given board.
+        /// Finds all moves where a card is drawn from the stock pile to the foundation.
         /// </summary>
         /// <remarks>
         /// <para>
@@ -19,21 +19,21 @@ namespace Silnith.Game.Klondike.Move
         /// </remarks>
         /// <param name="board">The board to examine.</param>
         /// <returns>An enumerable of moves.</returns>
-        public static IEnumerable<ISolitaireMove> FindAllMovesForBoard(Board board)
+        public static IEnumerable<StockPileToFoundationMove> FindMoves(Board board)
         {
             if (board.StockPileIndex > 0)
             {
                 Card card = board.GetStockPileCard();
                 if (board.CanAddToFoundation(card))
                 {
-                    return new List<ISolitaireMove>(1)
+                    return new List<StockPileToFoundationMove>(1)
                     {
                         new StockPileToFoundationMove(board),
                     };
                 }
             }
 
-            return Array.Empty<ISolitaireMove>();
+            return Array.Empty<StockPileToFoundationMove>();
         }
 
         /// <summary>

@@ -28,6 +28,68 @@ namespace Silnith.Game.Klondike.Move.Tests
             new Column(null, null),
         };
 
+        #region FindMoves
+
+        [TestMethod]
+        public void TestFindMovesEmptyStockPile()
+        {
+            Board board = new(EmptyColumns, EmptyListOfCards, 0, EmptyFoundation);
+
+            IEnumerable<StockPileToFoundationMove> actual = StockPileToFoundationMove.FindMoves(board);
+
+            Assert.IsFalse(actual.Any());
+        }
+
+        [TestMethod]
+        public void TestFindMovesEmptyFoundation()
+        {
+            List<Card> stockPile = new()
+            {
+                new Card(Value.Ace, Suit.Club),
+            };
+            Board board = new(EmptyColumns, stockPile, 1, EmptyFoundation);
+
+            IEnumerable<StockPileToFoundationMove> actual = StockPileToFoundationMove.FindMoves(board);
+
+            IEnumerable<StockPileToFoundationMove> expected = new HashSet<StockPileToFoundationMove>()
+            {
+                new StockPileToFoundationMove(1, new Card(Value.Ace, Suit.Club)),
+            };
+            CollectionAssert.AreEquivalent(expected.ToList(), actual.ToList());
+        }
+
+        [TestMethod]
+        public void TestFindMoves()
+        {
+            List<Card> stockPile = new()
+            {
+                new Card(Value.Four, Suit.Club),
+                new Card(Value.Four, Suit.Diamond),
+                new Card(Value.Four, Suit.Heart),
+                new Card(Value.Four, Suit.Spade),
+            };
+            Dictionary<Suit, IReadOnlyList<Card>> foundation = new(EmptyFoundation)
+            {
+                [Suit.Club] = new List<Card>()
+                {
+                    new Card(Value.Ace, Suit.Club),
+                    new Card(Value.Two, Suit.Club),
+                    new Card(Value.Three, Suit.Club),
+                },
+            };
+            Board board = new(EmptyColumns, stockPile, 1, foundation);
+
+            IEnumerable<StockPileToFoundationMove> actual = StockPileToFoundationMove.FindMoves(board);
+
+            IEnumerable<StockPileToFoundationMove> expected = new HashSet<StockPileToFoundationMove>()
+            {
+                new StockPileToFoundationMove(1, new Card(Value.Four, Suit.Club)),
+            };
+            CollectionAssert.AreEquivalent(expected.ToList(), actual.ToList());
+        }
+
+        #endregion
+
         [TestMethod]
         public void TestSourceIndex()
         {

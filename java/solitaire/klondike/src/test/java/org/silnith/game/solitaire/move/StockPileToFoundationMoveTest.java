@@ -20,6 +20,7 @@ import static org.silnith.deck.Value.TWO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -47,6 +48,49 @@ public class StockPileToFoundationMoveTest {
         for (final Suit suit : Suit.values()) {
             this.emptyFoundation.put(suit, emptyListOfCards);
         }
+    }
+    
+    @Test
+    public void testFindMovesEmptyStockPile() {
+    	final Board board = new Board(emptyColumns, emptyListOfCards, 0, emptyFoundation);
+    	
+    	final Collection<StockPileToFoundationMove> actual = StockPileToFoundationMove.findMoves(board);
+    	
+    	assertTrue(actual.isEmpty());
+    }
+    
+    @Test
+    public void testFindMovesEmptyFoundation() {
+    	final List<Card> stockPile = Arrays.asList(
+    			new Card(ACE, CLUB));
+    	final Board board = new Board(emptyColumns, stockPile, 1, emptyFoundation);
+    	
+    	final Collection<StockPileToFoundationMove> actual = StockPileToFoundationMove.findMoves(board);
+    	
+    	final Collection<StockPileToFoundationMove> expected = Collections.singleton(
+    			new StockPileToFoundationMove(1, new Card(ACE, CLUB)));
+    	assertEquals(expected, actual);
+    }
+    
+    @Test
+    public void testFindMoves() {
+    	final List<Card> stockPile = Arrays.asList(
+    			new Card(FOUR, CLUB),
+    			new Card(FOUR, DIAMOND),
+    			new Card(FOUR, HEART),
+    			new Card(FOUR, SPADE));
+    	final Map<Suit, List<Card>> foundation = new EnumMap<>(emptyFoundation);
+    	foundation.put(CLUB, Arrays.asList(
+    			new Card(ACE, CLUB),
+    			new Card(TWO, CLUB),
+    			new Card(THREE, CLUB)));
+    	final Board board = new Board(emptyColumns, stockPile, 1, foundation);
+    	
+    	final Collection<StockPileToFoundationMove> actual = StockPileToFoundationMove.findMoves(board);
+    	
+    	final Collection<StockPileToFoundationMove> expected = Collections.singleton(
+    			new StockPileToFoundationMove(1, new Card(FOUR, CLUB)));
+    	assertEquals(expected, actual);
     }
 
 	@Test
