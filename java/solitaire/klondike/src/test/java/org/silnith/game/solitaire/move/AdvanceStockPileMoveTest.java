@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -56,10 +57,10 @@ public class AdvanceStockPileMoveTest {
     public void testFindMovesEmptyStockPile() {
     	final Board board = new Board(emptyColumns, emptyListOfCards, 0, emptyFoundation);
     	
-    	final Collection<AdvanceStockPileMove> moves = AdvanceStockPileMove.findMoves(3, board);
+    	final Collection<AdvanceStockPileMove> actual = AdvanceStockPileMove.findMoves(3, board);
     	
-    	final Collection<AdvanceStockPileMove> expected = Collections.emptyList();
-		assertEquals(expected, moves);
+    	final Collection<AdvanceStockPileMove> expected = Collections.emptySet();
+		assertEquals(expected, new HashSet<>(actual));
     }
     
     @Test
@@ -70,11 +71,11 @@ public class AdvanceStockPileMoveTest {
     			new Card(KING, SPADE));
     	final Board board = new Board(emptyColumns, stockPile, 0, emptyFoundation);
     	
-    	final Collection<AdvanceStockPileMove> moves = AdvanceStockPileMove.findMoves(3, board);
+    	final Collection<AdvanceStockPileMove> actual = AdvanceStockPileMove.findMoves(3, board);
     	
-    	final Collection<AdvanceStockPileMove> expected = Collections.singletonList(
+    	final Collection<AdvanceStockPileMove> expected = Collections.singleton(
     			new AdvanceStockPileMove(0, 3));
-    	assertEquals(expected, moves);
+    	assertEquals(expected, new HashSet<>(actual));
     }
     
     @Test
@@ -85,11 +86,11 @@ public class AdvanceStockPileMoveTest {
     			new Card(KING, SPADE));
     	final Board board = new Board(emptyColumns, stockPile, 2, emptyFoundation);
     	
-    	final Collection<AdvanceStockPileMove> moves = AdvanceStockPileMove.findMoves(3, board);
+    	final Collection<AdvanceStockPileMove> actual = AdvanceStockPileMove.findMoves(3, board);
     	
-    	final Collection<AdvanceStockPileMove> expected = Collections.singletonList(
+    	final Collection<AdvanceStockPileMove> expected = Collections.singleton(
     			new AdvanceStockPileMove(2, 3));
-    	assertEquals(expected, moves);
+    	assertEquals(expected, new HashSet<>(actual));
     }
     
     @Test
@@ -100,10 +101,10 @@ public class AdvanceStockPileMoveTest {
     			new Card(KING, SPADE));
     	final Board board = new Board(emptyColumns, stockPile, 3, emptyFoundation);
     	
-    	final Collection<AdvanceStockPileMove> moves = AdvanceStockPileMove.findMoves(3, board);
+    	final Collection<AdvanceStockPileMove> actual = AdvanceStockPileMove.findMoves(3, board);
     	
-    	final Collection<AdvanceStockPileMove> expected = Collections.emptyList();
-    	assertEquals(expected, moves);
+    	final Collection<AdvanceStockPileMove> expected = Collections.emptySet();
+    	assertEquals(expected, new HashSet<>(actual));
     }
     
     @Test
