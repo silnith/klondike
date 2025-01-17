@@ -54,61 +54,19 @@ namespace Silnith.Game.Klondike
         }
 
         /// <summary>
-        /// Deals a deck of cards into a new solitaire board.
-        /// </summary>
-        /// <param name="deck">The deck of cards to deal.</param>
-        /// <param name="columnCount">The number of columns on the board.  In any standard game,
-        /// this is <c>7</c>.</param>
-        /// <exception cref="ArgumentException">If the deck does not have enough cards to fill
-        /// all of the columns.  This could happen if the deck is partial, or if
-        /// the number of columns is greater than <c>7</c>.</exception>
-        public Board(IReadOnlyList<Card> deck, int columnCount)
-        {
-            int remaining = deck.Count;
-            List<List<Card>> stacks = new List<List<Card>>(columnCount);
-            for (int i = 0; i < columnCount; i++)
-            {
-                stacks.Add(new List<Card>(i + 1));
-            }
-            IEnumerator<Card> enumerator = deck.GetEnumerator();
-            for (int i = 0; i < columnCount; i++)
-            {
-                for (int j = i; j < columnCount; j++)
-                {
-                    if (!enumerator.MoveNext())
-                    {
-                        throw new ArgumentException("Deck does not have enough cards to fill all columns.", nameof(deck));
-                    }
-                    remaining--;
-                    stacks[j].Add(enumerator.Current);
-                }
-            }
-
-            Columns = stacks.Select(stack => new Column(stack, null)).ToList();
-
-            List<Card> tempStockPile = new List<Card>(remaining);
-            while (enumerator.MoveNext())
-            {
-                tempStockPile.Add(enumerator.Current);
-            }
-            StockPile = tempStockPile;
-            StockPileIndex = 0;
-
-            Foundation = new Dictionary<Suit, IReadOnlyList<Card>>()
-            {
-                { Suit.Club, Array.Empty<Card>() },
-                { Suit.Diamond, Array.Empty<Card>() },
-                { Suit.Heart, Array.Empty<Card>() },
-                { Suit.Spade, Array.Empty<Card>() },
-            };
-        }
-
-        /// <summary>
         /// Constructs a new board.  All parameters should be immutable.
         /// </summary>
-        /// <param name="columns">The columns.</param>
+        /// <remarks>
+        /// <para>
+        /// Parameters should be immutable.  This is not enforced in code.
+        /// </para>
+        /// </remarks>
+        /// <param name="columns">The columns for the new board.</param>
         /// <param name="stockPile">The stock pile.</param>
-        /// <param name="stockPileIndex">The index into the stock pile.</param>
+        /// <param name="stockPileIndex">The index into the stock pile of the current draw card.
+        /// <c>0</c> means no card is available to be drawn,
+        /// <c>stockPile.Count</c> means all cards have been advanced
+        /// and the last card is available to be drawn.</param>
         /// <param name="foundation">The foundation.</param>
         public Board(IReadOnlyList<Column> columns, IReadOnlyList<Card> stockPile, int stockPileIndex, IReadOnlyDictionary<Suit, IReadOnlyList<Card>> foundation)
         {

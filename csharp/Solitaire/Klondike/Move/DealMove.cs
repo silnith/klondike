@@ -51,6 +51,15 @@ namespace Silnith.Game.Klondike.Move
         /// <param name="columnCount">The number of columns on the board.  This is always <c>7</c>.</param>
         public DealMove(IReadOnlyList<Card> deck, int columnCount)
         {
+            int cardsRequired = 0;
+            for (int i = 1; i <= columnCount; i++)
+            {
+                cardsRequired += i;
+            }
+            if (deck.Count < cardsRequired)
+            {
+                throw new ArgumentException($"A deck of size {cardsRequired}  is required to deal {columnCount} columns.");
+            }
             ColumnCount = columnCount;
             Deck = deck;
         }
@@ -58,7 +67,39 @@ namespace Silnith.Game.Klondike.Move
         /// <inheritdoc/>
         public Board Apply(Board board)
         {
-            return new Board(Deck, ColumnCount);
+            int remaining = Deck.Count;
+            List<List<Card>> stacks = new List<List<Card>>(ColumnCount);
+            for (int i = 0; i < ColumnCount; i++)
+            {
+                stacks.Add(new List<Card>(i + 1));
+            }
+            IEnumerator<Card> enumerator = Deck.GetEnumerator();
+            for (int i = 0; i < ColumnCount; i++)
+            {
+                for (int j = i; j < ColumnCount; j++)
+                {
+                    _ = enumerator.MoveNext();
+                    remaining--;
+                    stacks[j].Add(enumerator.Current);
+                }
+            }
+
+            IReadOnlyList<Column> columns = stacks.Select(stack => new Column(stack, null)).ToList();
+
+            List<Card> stockPile = new List<Card>(remaining);
+            while (enumerator.MoveNext())
+            {
+                stockPile.Add(enumerator.Current);
+            }
+
+            IReadOnlyDictionary<Suit, IReadOnlyList<Card>> foundation = new Dictionary<Suit, IReadOnlyList<Card>>()
+            {
+                { Suit.Club, Array.Empty<Card>() },
+                { Suit.Diamond, Array.Empty<Card>() },
+                { Suit.Heart, Array.Empty<Card>() },
+                { Suit.Spade, Array.Empty<Card>() },
+            };
+            return new Board(columns, stockPile, 0, foundation);
         }
 
         /// <inheritdoc/>

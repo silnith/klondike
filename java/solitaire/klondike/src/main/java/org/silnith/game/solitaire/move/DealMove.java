@@ -1,9 +1,16 @@
 package org.silnith.game.solitaire.move;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.silnith.deck.Card;
+import org.silnith.deck.Suit;
 import org.silnith.game.solitaire.Board;
+import org.silnith.game.solitaire.Column;
 
 
 /**
@@ -29,6 +36,13 @@ public class DealMove implements SolitaireMove {
      */
     public DealMove(final List<Card> deck, final int numberOfColumns) {
         super();
+        int cardsRequired = 0;
+        for (int i = 1; i <= numberOfColumns; i++) {
+        	cardsRequired += i;
+        }
+        if (deck.size() < cardsRequired) {
+        	throw new IllegalArgumentException("A deck of size " + cardsRequired + " is required to deal " + numberOfColumns + " columns.");
+        }
         this.numberOfColumns = numberOfColumns;
         this.deck = deck;
     }
@@ -67,7 +81,39 @@ public class DealMove implements SolitaireMove {
     
     @Override
     public Board apply(final Board board) {
-        return new Board(deck, numberOfColumns);
+    	// The parameter is completely ignored.
+        int remaining = deck.size();
+        final List<List<Card>> stacks = new ArrayList<>(numberOfColumns);
+        for (int i = 0; i < numberOfColumns; i++ ) {
+            stacks.add(new ArrayList<Card>(i + 1));
+        }
+        final Iterator<Card> iter = deck.iterator();
+        for (int i = 0; i < numberOfColumns; i++ ) {
+            for (int j = i; j < numberOfColumns; j++ ) {
+                final Card card = iter.next();
+                remaining-- ;
+                stacks.get(j).add(card);
+            }
+        }
+        
+        final List<Column> columns = new ArrayList<>(numberOfColumns);
+        for (final List<Card> stack : stacks) {
+            columns.add(new Column(stack, null));
+        }
+        
+        final List<Card> stockPile = new ArrayList<>(remaining);
+        while (iter.hasNext()) {
+            final Card card = iter.next();
+            stockPile.add(card);
+        }
+        
+        final Map<Suit, List<Card>> foundation = new EnumMap<>(Suit.class);
+        for (final Suit suit : Suit.values()) {
+            final List<Card> cards = Collections.emptyList();
+            foundation.put(suit, cards);
+        }
+        
+        return new Board(columns, stockPile, 0, foundation);
     }
     
     @Override

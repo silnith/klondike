@@ -9,6 +9,8 @@ namespace Silnith.Game.Klondike.Move.Tests
     [TestClass]
     public class DealMoveTests
     {
+        private readonly int numberOfColumns = 7;
+
         private readonly List<Card> deck = new()
         {
             new Card(Value.Seven, Suit.Heart),
@@ -68,7 +70,7 @@ namespace Silnith.Game.Klondike.Move.Tests
         [TestMethod]
         public void TestDeck()
         {
-            DealMove move = new(deck, 7);
+            DealMove move = new(deck, numberOfColumns);
 
             Assert.IsTrue(deck.SequenceEqual(move.Deck));
         }
@@ -76,9 +78,9 @@ namespace Silnith.Game.Klondike.Move.Tests
         [TestMethod]
         public void TestColumnCount()
         {
-            DealMove move = new(deck, 7);
+            DealMove move = new(deck, numberOfColumns);
 
-            Assert.AreEqual(7, move.ColumnCount);
+            Assert.AreEqual(numberOfColumns, move.ColumnCount);
         }
 
         #region Apply
@@ -86,13 +88,13 @@ namespace Silnith.Game.Klondike.Move.Tests
         [TestMethod]
         public void TestApply()
         {
-            DealMove move = new(deck, 7);
+            Board board = new(Array.Empty<Column>(), Array.Empty<Card>(), 0, new Dictionary<Suit, IReadOnlyList<Card>>());
 
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-            Board actual = move.Apply(null);
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+            DealMove move = new(deck, numberOfColumns);
 
-            List<Column> expectedColumns = new(7)
+            Board actual = move.Apply(board);
+
+            List<Column> expectedColumns = new(numberOfColumns)
             {
                 new Column(
                     new List<Card>(),
@@ -216,8 +218,8 @@ namespace Silnith.Game.Klondike.Move.Tests
         [TestMethod]
         public void TestEquals()
         {
-            DealMove move1 = new(deck, 7);
-            DealMove move2 = new(deck, 7);
+            DealMove move1 = new(deck, numberOfColumns);
+            DealMove move2 = new(deck, numberOfColumns);
 
             Assert.AreEqual(move1, move2);
         }
@@ -225,8 +227,8 @@ namespace Silnith.Game.Klondike.Move.Tests
         [TestMethod]
         public void TestGetHashCode()
         {
-            DealMove move1 = new(deck, 7);
-            DealMove move2 = new(deck, 7);
+            DealMove move1 = new(deck, numberOfColumns);
+            DealMove move2 = new(deck, numberOfColumns);
 
             Assert.AreEqual(move1.GetHashCode(), move2.GetHashCode());
         }
@@ -234,8 +236,9 @@ namespace Silnith.Game.Klondike.Move.Tests
         [TestMethod]
         public void TestEqualsDifferentDeck()
         {
-            DealMove move1 = new(deck, 7);
-            DealMove move2 = new(deck.Skip(26).Concat(deck.Take(26)).ToList(), 7);
+            int halfCount = deck.Count / 2;
+            DealMove move1 = new(deck, numberOfColumns);
+            DealMove move2 = new(deck.Skip(halfCount).Concat(deck.Take(halfCount)).ToList(), numberOfColumns);
 
             Assert.AreNotEqual(move1, move2);
         }
@@ -243,8 +246,8 @@ namespace Silnith.Game.Klondike.Move.Tests
         [TestMethod]
         public void TestEqualsDifferentColumnCount()
         {
-            DealMove move1 = new(deck, 7);
-            DealMove move2 = new(deck, 6);
+            DealMove move1 = new(deck, numberOfColumns);
+            DealMove move2 = new(deck, numberOfColumns - 1);
 
             Assert.AreNotEqual(move1, move2);
         }

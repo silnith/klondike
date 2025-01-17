@@ -1,12 +1,9 @@
 package org.silnith.game.solitaire;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 import org.silnith.deck.Card;
 import org.silnith.deck.Suit;
@@ -29,72 +26,27 @@ public class Board {
     private final Map<Suit, List<Card>> foundation;
     
     /**
-     * Deals a deck of cards into a new solitaire board.
+     * Creates a new board.
      * 
-     * @param deck the deck of cards to deal
-     * @param numColumns the number of columns on the board.  In any standard game,
-     *         this is {@code 7}.
-     * @throws NoSuchElementException if the deck does not have enough cards to fill
-     *         all of the columns.  This could happen if the deck is partial, or if
-     *         the number of columns is greater than {@code 7}.
-     */
-    public Board(final List<Card> deck, final int numColumns) {
-        super();
-        
-        int remaining = deck.size();
-        final List<List<Card>> stacks = new ArrayList<>(numColumns);
-        for (int i = 0; i < numColumns; i++ ) {
-            stacks.add(new ArrayList<Card>(i + 1));
-        }
-        final Iterator<Card> iter = deck.iterator();
-        for (int i = 0; i < numColumns; i++ ) {
-            for (int j = i; j < numColumns; j++ ) {
-                final Card card = iter.next();
-                remaining-- ;
-                stacks.get(j).add(card);
-            }
-        }
-        
-        final List<Column> tempColumns = new ArrayList<>(numColumns);
-        for (final List<Card> stack : stacks) {
-            tempColumns.add(new Column(stack, null));
-        }
-        
-        // this.columns = Collections.unmodifiableList(tempColumns);
-        this.columns = tempColumns;
-        
-        final List<Card> tempStockPile = new ArrayList<>(remaining);
-        while (iter.hasNext()) {
-            final Card card = iter.next();
-            tempStockPile.add(card);
-        }
-        // this.stockPile = Collections.unmodifiableList(tempStockPile);
-        this.stockPile = tempStockPile;
-        this.stockPileIndex = 0;
-        
-        final Map<Suit, List<Card>> tempFoundation = new EnumMap<>(Suit.class);
-        for (final Suit suit : Suit.values()) {
-            final List<Card> cards = Collections.emptyList();
-            tempFoundation.put(suit, cards);
-        }
-        
-        // this.foundation = Collections.unmodifiableMap(tempFoundation);
-        this.foundation = tempFoundation;
-    }
-    
-    /**
-     * Constructs a new board. All parameters must be immutable.
+     * <p>Parameters should be immutable.  This is not enforced in code.</p>
+     * 
+     * @param columns the columns for the new board
+     * @param stockPile the stock pile
+     * @param stockPileIndex the index into the stock pile of the current draw card.
+     *         {@code 0} means no card is available to be drawn, {@code stockPile.size()}
+     *         means all cards have been advanced and the last card is available to be drawn.
+     * @param foundation the foundation
      */
     public Board(final List<Column> columns, final List<Card> stockPile, final int stockPileIndex,
             final Map<Suit, List<Card>> foundation) {
         super();
-        this.columns = columns;
         if (stockPileIndex < 0) {
         	throw new IllegalArgumentException("Stock pile index must be non-negative.");
         }
         if (stockPileIndex > stockPile.size()) {
             throw new IllegalArgumentException("Stock pile index outside of stock pile.");
         }
+        this.columns = columns;
         this.stockPile = stockPile;
         this.stockPileIndex = stockPileIndex;
         this.foundation = foundation;

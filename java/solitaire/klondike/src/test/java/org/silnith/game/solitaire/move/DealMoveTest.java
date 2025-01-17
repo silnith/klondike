@@ -2,6 +2,7 @@ package org.silnith.game.solitaire.move;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.silnith.deck.Suit.CLUB;
 import static org.silnith.deck.Suit.DIAMOND;
@@ -35,6 +36,8 @@ import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.Column;
 
 public class DealMoveTest {
+	
+	private final int numberOfColumns = 7;
 
 	private final List<Card> deck = Arrays.asList(
 			new Card(SEVEN, HEART),
@@ -89,42 +92,51 @@ public class DealMoveTest {
 			new Card(ACE, DIAMOND),
 			new Card(ACE, HEART),
 			new Card(ACE, SPADE));
+	
+	@Test
+	public void testConstructorDeckTooSmall() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			new DealMove(Collections.emptyList(), numberOfColumns);
+		});
+	}
 
 	@Test
 	public void testGetNumberOfColumns() {
-		final DealMove move = new DealMove(deck, 7);
+		final DealMove move = new DealMove(deck, numberOfColumns);
 		
-		assertEquals(7, move.getNumberOfColumns());
+		assertEquals(numberOfColumns, move.getNumberOfColumns());
 	}
 
 	@Test
 	public void testGetDeck() {
-		final DealMove move = new DealMove(deck, 7);
+		final DealMove move = new DealMove(deck, numberOfColumns);
 		
 		assertEquals(deck, move.getDeck());
 	}
 
 	@Test
 	public void testHasCards() {
-		final DealMove move = new DealMove(deck, 7);
+		final DealMove move = new DealMove(deck, numberOfColumns);
 		
 		assertTrue(move.hasCards());
 	}
 
 	@Test
 	public void testGetCards() {
-		final DealMove move = new DealMove(deck, 7);
+		final DealMove move = new DealMove(deck, numberOfColumns);
 		
 		assertEquals(deck, move.getCards());
 	}
 
 	@Test
 	public void testApply() {
-		final DealMove move = new DealMove(deck, 7);
+		final Board board = new Board(Collections.emptyList(), Collections.emptyList(), 0, Collections.emptyMap());
 		
-		final Board actual = move.apply(null);
+		final DealMove move = new DealMove(deck, numberOfColumns);
 		
-		final List<Column> expectedColumns = new ArrayList<Column>(7);
+		final Board actual = move.apply(board);
+		
+		final List<Column> expectedColumns = new ArrayList<Column>(numberOfColumns);
 		expectedColumns.add(new Column(
 				Collections.emptyList(),
 				Collections.singletonList(
@@ -210,35 +222,37 @@ public class DealMoveTest {
 
 	@Test
 	public void testEquals() {
-		final DealMove move1 = new DealMove(deck, 7);
-		final DealMove move2 = new DealMove(deck, 7);
+		final DealMove move1 = new DealMove(deck, numberOfColumns);
+		final DealMove move2 = new DealMove(deck, numberOfColumns);
 		
 		assertTrue(move1.equals(move2));
 	}
 
 	@Test
 	public void testHashCode() {
-		final DealMove move1 = new DealMove(deck, 7);
-		final DealMove move2 = new DealMove(deck, 7);
+		final DealMove move1 = new DealMove(deck, numberOfColumns);
+		final DealMove move2 = new DealMove(deck, numberOfColumns);
 		
 		assertEquals(move1.hashCode(), move2.hashCode());
 	}
 
 	@Test
 	public void testEqualsDifferentDeck() {
-		final List<Card> otherDeck = new ArrayList<Card>(52);
-		otherDeck.addAll(deck.subList(26, 52));
-		otherDeck.addAll(deck.subList(0, 26));
-		final DealMove move1 = new DealMove(deck, 7);
-		final DealMove move2 = new DealMove(otherDeck, 7);
+		final int size = deck.size();
+		final int halfSize = size / 2;
+		final List<Card> otherDeck = new ArrayList<Card>(size);
+		otherDeck.addAll(deck.subList(halfSize, size));
+		otherDeck.addAll(deck.subList(0, halfSize));
+		final DealMove move1 = new DealMove(deck, numberOfColumns);
+		final DealMove move2 = new DealMove(otherDeck, numberOfColumns);
 		
 		assertFalse(move1.equals(move2));
 	}
 
 	@Test
 	public void testEqualsDifferentNumberOfColumns() {
-		final DealMove move1 = new DealMove(deck, 7);
-		final DealMove move2 = new DealMove(deck, 6);
+		final DealMove move1 = new DealMove(deck, numberOfColumns);
+		final DealMove move2 = new DealMove(deck, numberOfColumns - 1);
 		
 		assertFalse(move1.equals(move2));
 	}
