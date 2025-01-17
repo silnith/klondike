@@ -1,5 +1,7 @@
 package org.silnith.game.solitaire.move;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import org.silnith.deck.Card;
 import org.silnith.game.solitaire.Board;
@@ -12,6 +14,23 @@ import org.silnith.game.solitaire.Board;
  * three cards left in the stock pile.</p>
  */
 public class AdvanceStockPileMove implements SolitaireMove {
+	
+	/**
+	 * Finds all stock pile advance moves for a given board.
+	 * 
+	 * <p>This will either find zero or one move.</p>
+	 * 
+	 * @param stockPileAdvance the number of cards to advance the stock pile
+	 * @param board the board to examine
+	 * @return a collection of moves
+	 */
+	public static Collection<AdvanceStockPileMove> findMoves(final int stockPileAdvance, final Board board) {
+		if (board.canAdvanceStockPile()) {
+			return Collections.singletonList(new AdvanceStockPileMove(stockPileAdvance, board));
+		} else {
+			return Collections.emptyList();
+		}
+	}
     
     /**
      * The index into the stock pile before the advance move happens.

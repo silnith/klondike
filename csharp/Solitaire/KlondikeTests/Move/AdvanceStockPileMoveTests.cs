@@ -2,12 +2,14 @@
 using Silnith.Game.Deck;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Silnith.Game.Klondike.Move.Tests
 {
     [TestClass]
     public class AdvanceStockPileMoveTests
     {
+        private readonly IReadOnlyList<Card> EmptyListOfCards = Array.Empty<Card>();
         private readonly IReadOnlyDictionary<Suit, IReadOnlyList<Card>> EmptyFoundation = new Dictionary<Suit, IReadOnlyList<Card>>()
         {
             { Suit.Club, Array.Empty<Card>() },
@@ -25,6 +27,76 @@ namespace Silnith.Game.Klondike.Move.Tests
             new Column(null, null),
             new Column(null, null),
         };
+
+        #region FindMoves
+
+        [TestMethod]
+        public void TestFindMovesEmptyStockPile()
+        {
+            Board board = new(EmptyColumns, EmptyListOfCards, 0, EmptyFoundation);
+
+            IEnumerable<AdvanceStockPileMove> moves = AdvanceStockPileMove.FindMoves(3, board);
+
+            Assert.IsFalse(moves.Any());
+        }
+
+        [TestMethod]
+        public void TestFindMovesStockPileAtBeginning()
+        {
+            List<Card> stockPile = new()
+            {
+                new Card(Value.Ace, Suit.Club),
+                new Card(Value.Five, Suit.Diamond),
+                new Card(Value.King, Suit.Spade),
+            };
+            Board board = new(EmptyColumns, stockPile, 0, EmptyFoundation);
+
+            IEnumerable<AdvanceStockPileMove> moves = AdvanceStockPileMove.FindMoves(3, board);
+
+            List<ISolitaireMove> expected = new()
+            {
+                new AdvanceStockPileMove(0, 3),
+            };
+            Assert.IsTrue(expected.SequenceEqual(moves));
+        }
+
+        [TestMethod]
+        public void TestFindMovesStockPileInMiddle()
+        {
+            List<Card> stockPile = new()
+            {
+                new Card(Value.Ace, Suit.Club),
+                new Card(Value.Five, Suit.Diamond),
+                new Card(Value.King, Suit.Spade),
+            };
+            Board board = new(EmptyColumns, stockPile, 2, EmptyFoundation);
+
+            IEnumerable<AdvanceStockPileMove> moves = AdvanceStockPileMove.FindMoves(3, board);
+
+            List<ISolitaireMove> expected = new()
+            {
+                new AdvanceStockPileMove(2, 3),
+            };
+            Assert.IsTrue(expected.SequenceEqual(moves));
+        }
+
+        [TestMethod]
+        public void TestFindMovesStockPileAtEnd()
+        {
+            List<Card> stockPile = new()
+            {
+                new Card(Value.Ace, Suit.Club),
+                new Card(Value.Five, Suit.Diamond),
+                new Card(Value.King, Suit.Spade),
+            };
+            Board board = new(EmptyColumns, stockPile, 3, EmptyFoundation);
+
+            IEnumerable<AdvanceStockPileMove> moves = AdvanceStockPileMove.FindMoves(3, board);
+
+            Assert.IsFalse(moves.Any());
+        }
+
+        #endregion
 
         [TestMethod]
         public void TestZeroIncrement()

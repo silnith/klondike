@@ -10,7 +10,9 @@ import static org.silnith.deck.Suit.HEART;
 import static org.silnith.deck.Suit.SPADE;
 import static org.silnith.deck.Value.ACE;
 import static org.silnith.deck.Value.EIGHT;
+import static org.silnith.deck.Value.FIVE;
 import static org.silnith.deck.Value.FOUR;
+import static org.silnith.deck.Value.KING;
 import static org.silnith.deck.Value.NINE;
 import static org.silnith.deck.Value.SEVEN;
 import static org.silnith.deck.Value.TEN;
@@ -19,6 +21,7 @@ import static org.silnith.deck.Value.TWO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -47,6 +50,60 @@ public class AdvanceStockPileMoveTest {
         for (final Suit suit : Suit.values()) {
             this.emptyFoundation.put(suit, emptyListOfCards);
         }
+    }
+    
+    @Test
+    public void testFindMovesEmptyStockPile() {
+    	final Board board = new Board(emptyColumns, emptyListOfCards, 0, emptyFoundation);
+    	
+    	final Collection<AdvanceStockPileMove> moves = AdvanceStockPileMove.findMoves(3, board);
+    	
+    	final Collection<AdvanceStockPileMove> expected = Collections.emptyList();
+		assertEquals(expected, moves);
+    }
+    
+    @Test
+    public void testFindMovesStockPileAtBeginning() {
+    	final List<Card> stockPile = Arrays.asList(
+    			new Card(ACE, CLUB),
+    			new Card(FIVE, DIAMOND),
+    			new Card(KING, SPADE));
+    	final Board board = new Board(emptyColumns, stockPile, 0, emptyFoundation);
+    	
+    	final Collection<AdvanceStockPileMove> moves = AdvanceStockPileMove.findMoves(3, board);
+    	
+    	final Collection<AdvanceStockPileMove> expected = Collections.singletonList(
+    			new AdvanceStockPileMove(0, 3));
+    	assertEquals(expected, moves);
+    }
+    
+    @Test
+    public void testFindMovesStockPileInMiddle() {
+    	final List<Card> stockPile = Arrays.asList(
+    			new Card(ACE, CLUB),
+    			new Card(FIVE, DIAMOND),
+    			new Card(KING, SPADE));
+    	final Board board = new Board(emptyColumns, stockPile, 2, emptyFoundation);
+    	
+    	final Collection<AdvanceStockPileMove> moves = AdvanceStockPileMove.findMoves(3, board);
+    	
+    	final Collection<AdvanceStockPileMove> expected = Collections.singletonList(
+    			new AdvanceStockPileMove(2, 3));
+    	assertEquals(expected, moves);
+    }
+    
+    @Test
+    public void testFindMovesStockPileAtEnd() {
+    	final List<Card> stockPile = Arrays.asList(
+    			new Card(ACE, CLUB),
+    			new Card(FIVE, DIAMOND),
+    			new Card(KING, SPADE));
+    	final Board board = new Board(emptyColumns, stockPile, 3, emptyFoundation);
+    	
+    	final Collection<AdvanceStockPileMove> moves = AdvanceStockPileMove.findMoves(3, board);
+    	
+    	final Collection<AdvanceStockPileMove> expected = Collections.emptyList();
+    	assertEquals(expected, moves);
     }
     
     @Test
