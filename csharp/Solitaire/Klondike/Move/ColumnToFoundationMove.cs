@@ -11,7 +11,7 @@ namespace Silnith.Game.Klondike.Move
     public class ColumnToFoundationMove : ISolitaireMove, IEquatable<ColumnToFoundationMove?>
     {
         /// <summary>
-        /// Finds all moves for a given board.
+        /// Finds all moves of a card from a column run to the foundation.
         /// </summary>
         /// <remarks>
         /// <para>
