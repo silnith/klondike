@@ -19,18 +19,13 @@ namespace Silnith.Game.Klondike.Move
     public class StockPileToColumnMove : ISolitaireMove, IEquatable<StockPileToColumnMove?>
     {
         /// <summary>
-        /// Finds all moves for a given board.
+        /// Finds all moves where a card is drawn to a column run.
         /// </summary>
-        /// <remarks>
-        /// <para>
-        /// This will either contain one move or zero.
-        /// </para>
-        /// </remarks>
         /// <param name="board">The board to examine.</param>
         /// <returns>An enumerable of moves.</returns>
-        public static IEnumerable<ISolitaireMove> FindAllMovesForBoard(Board board)
+        public static IEnumerable<StockPileToColumnMove> FindMoves(Board board)
         {
-            List<ISolitaireMove> moves = new List<ISolitaireMove>();
+            List<StockPileToColumnMove> moves = new List<StockPileToColumnMove>();
             if (board.StockPileIndex > 0)
             {
                 Card card = board.GetStockPileCard();
@@ -40,11 +35,10 @@ namespace Silnith.Game.Klondike.Move
                 };
                 for (int i = 0; i < board.Columns.Count; i++)
                 {
-                    Column column = board.Columns[i];
-                    if (column.CanAddRun(run))
+                    if (board.Columns[i].CanAddRun(run))
                     {
                         moves.Add(new StockPileToColumnMove(i, board));
-                        // TODO: Short-circuit if the card is a king.
+                        // TODO: Short-circuit if the card is a king?
                     }
                 }
             }

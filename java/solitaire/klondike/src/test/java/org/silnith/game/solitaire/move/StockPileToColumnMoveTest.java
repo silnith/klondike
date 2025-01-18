@@ -11,16 +11,20 @@ import static org.silnith.deck.Value.FIVE;
 import static org.silnith.deck.Value.FOUR;
 import static org.silnith.deck.Value.JACK;
 import static org.silnith.deck.Value.KING;
+import static org.silnith.deck.Value.NINE;
 import static org.silnith.deck.Value.QUEEN;
 import static org.silnith.deck.Value.SEVEN;
 import static org.silnith.deck.Value.SIX;
+import static org.silnith.deck.Value.TEN;
 import static org.silnith.deck.Value.THREE;
 import static org.silnith.deck.Value.TWO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +50,65 @@ public class StockPileToColumnMoveTest {
         for (final Suit suit : Suit.values()) {
             this.emptyFoundation.put(suit, emptyListOfCards);
         }
+    }
+    
+    @Test
+    public void testFindMovesEmptyBoard() {
+    	final Board board = new Board(emptyColumns, emptyListOfCards, 0, emptyFoundation);
+    	
+    	final Collection<StockPileToColumnMove> actual = StockPileToColumnMove.findMoves(board);
+    	
+    	final Collection<StockPileToColumnMove> expected = Collections.emptySet();
+    	assertEquals(expected, actual);
+    }
+    
+    @Test
+    public void testFindMovesKingToEmptyBoard() {
+    	final List<Card> stockPile = Arrays.asList(
+    			new Card(KING, CLUB));
+    	final Board board = new Board(emptyColumns, stockPile, 1, emptyFoundation);
+    	
+    	final Collection<StockPileToColumnMove> actual = StockPileToColumnMove.findMoves(board);
+    	
+    	final Collection<StockPileToColumnMove> expected = Arrays.asList(
+    			new StockPileToColumnMove(1, 0, new Card(KING, CLUB)),
+    			new StockPileToColumnMove(1, 1, new Card(KING, CLUB)),
+    			new StockPileToColumnMove(1, 2, new Card(KING, CLUB)),
+    			new StockPileToColumnMove(1, 3, new Card(KING, CLUB)),
+    			new StockPileToColumnMove(1, 4, new Card(KING, CLUB)),
+    			new StockPileToColumnMove(1, 5, new Card(KING, CLUB)),
+    			new StockPileToColumnMove(1, 6, new Card(KING, CLUB)));
+    	assertEquals(new HashSet<>(expected), new HashSet<>(actual));
+    }
+    
+    @Test
+    public void testFindMoves() {
+    	final List<Column> columns = new ArrayList<>(emptyColumns);
+    	columns.set(1, new Column(null, Arrays.asList(
+    			new Card(EIGHT, CLUB))));
+    	columns.set(3, new Column(null, Arrays.asList(
+    			new Card(NINE, CLUB),
+    			new Card(EIGHT, DIAMOND))));
+    	columns.set(4, new Column(null, Arrays.asList(
+    			new Card(TEN, HEART),
+    			new Card(NINE, SPADE),
+    			new Card(EIGHT, HEART))));
+    	columns.set(6, new Column(null, Arrays.asList(
+    			new Card(SIX, DIAMOND),
+    			new Card(FIVE, CLUB))));
+    	final List<Card> stockPile = Arrays.asList(
+    			new Card(FOUR, DIAMOND),
+    			new Card(SEVEN, CLUB),
+    			new Card(THREE, DIAMOND));
+    	final Board board = new Board(columns, stockPile, 2, emptyFoundation);
+    	
+    	final Collection<StockPileToColumnMove> actual = StockPileToColumnMove.findMoves(board);
+    	
+    	final Collection<StockPileToColumnMove> expected = Arrays.asList(
+    			new StockPileToColumnMove(2, 3, new Card(SEVEN, CLUB)),
+    			new StockPileToColumnMove(2, 4, new Card(SEVEN, CLUB)));
+    	
+    	assertEquals(new HashSet<>(expected), new HashSet<>(actual));
     }
 
 	@Test

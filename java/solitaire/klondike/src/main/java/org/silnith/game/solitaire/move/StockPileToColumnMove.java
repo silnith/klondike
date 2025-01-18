@@ -1,8 +1,10 @@
 package org.silnith.game.solitaire.move;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import org.silnith.deck.Card;
@@ -19,6 +21,32 @@ import org.silnith.util.Pair;
  * If the column is not empty, the card must follow the rules of a run.</p>
  */
 public class StockPileToColumnMove implements SolitaireMove {
+	
+	/**
+	 * Finds all moves where a card is drawn from the stock pile to a column run.
+	 * 
+	 * @param board the board to examine
+	 * @return a collection of moves
+	 */
+	public static Collection<StockPileToColumnMove> findMoves(final Board board) {
+		if (board.getStockPileIndex() > 0) {
+			final Collection<StockPileToColumnMove> moves = new ArrayList<>(7);
+			final Card card = board.getStockPileCard();
+			final List<Card> run = Collections.singletonList(card);
+			final List<Column> columns = board.getColumns();
+			final ListIterator<Column> iter = columns.listIterator();
+			while (iter.hasNext()) {
+				final int index = iter.nextIndex();
+				final Column column = iter.next();
+				if (column.canAddRun(run)) {
+					moves.add(new StockPileToColumnMove(index, board));
+					// TODO: Short-circuit if the card is a king?
+				}
+			}
+			return moves;
+		}
+		return Collections.emptySet();
+	}
     
     /**
      * The index into the stock pile from which the card is taken.

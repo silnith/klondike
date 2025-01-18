@@ -28,6 +28,97 @@ namespace Silnith.Game.Klondike.Move.Tests
             new Column(null, null),
         };
 
+        #region FindMoves
+
+        [TestMethod]
+        public void TestFindMovesEmptyBoard()
+        {
+            Board board = new(EmptyColumns, EmptyListOfCards, 0, EmptyFoundation);
+
+            IEnumerable<StockPileToColumnMove> actual = StockPileToColumnMove.FindMoves(board);
+
+            IEnumerable<StockPileToColumnMove> expected = Array.Empty<StockPileToColumnMove>();
+            CollectionAssert.AreEquivalent(expected.ToList(), actual.ToList());
+        }
+
+        [TestMethod]
+        public void TestFindMovesKingToEmptyBoard()
+        {
+            List<Card> stockPile = new()
+            {
+                new Card(Value.King, Suit.Club),
+            };
+            Board board = new(EmptyColumns, stockPile, 1, EmptyFoundation);
+
+            IEnumerable<StockPileToColumnMove> actual = StockPileToColumnMove.FindMoves(board);
+
+            List<StockPileToColumnMove> expected = new()
+            {
+                new StockPileToColumnMove(1, 0, new Card(Value.King, Suit.Club)),
+                new StockPileToColumnMove(1, 1, new Card(Value.King, Suit.Club)),
+                new StockPileToColumnMove(1, 2, new Card(Value.King, Suit.Club)),
+                new StockPileToColumnMove(1, 3, new Card(Value.King, Suit.Club)),
+                new StockPileToColumnMove(1, 4, new Card(Value.King, Suit.Club)),
+                new StockPileToColumnMove(1, 5, new Card(Value.King, Suit.Club)),
+                new StockPileToColumnMove(1, 6, new Card(Value.King, Suit.Club)),
+            };
+            CollectionAssert.AreEquivalent(expected.ToList(), actual.ToList());
+        }
+
+        [TestMethod]
+        public void TestFindMoves()
+        {
+            List<Column> columns = new(EmptyColumns)
+            {
+                [1] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Eight, Suit.Club),
+                    }),
+                [3] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Nine, Suit.Club),
+                        new Card(Value.Eight, Suit.Diamond),
+                    }),
+                [4] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Ten, Suit.Heart),
+                        new Card(Value.Nine, Suit.Spade),
+                        new Card(Value.Eight, Suit.Heart),
+                    }),
+                [6] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Six, Suit.Diamond),
+                        new Card(Value.Five, Suit.Club),
+                    }),
+            };
+            List<Card> stockPile = new()
+            {
+                new Card(Value.Four, Suit.Diamond),
+                new Card(Value.Seven, Suit.Club),
+                new Card(Value.Three, Suit.Diamond),
+            };
+            Board board = new(columns, stockPile, 2, EmptyFoundation);
+
+            IEnumerable<StockPileToColumnMove> actual = StockPileToColumnMove.FindMoves(board);
+
+            IEnumerable<StockPileToColumnMove> expected = new List<StockPileToColumnMove>()
+            {
+                new StockPileToColumnMove(2, 3, new Card(Value.Seven, Suit.Club)),
+                new StockPileToColumnMove(2, 4, new Card(Value.Seven, Suit.Club)),
+            };
+            CollectionAssert.AreEquivalent(expected.ToList(), actual.ToList());
+        }
+
+        #endregion
+
         [TestMethod]
         public void TestSourceIndex()
         {
