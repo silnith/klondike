@@ -219,7 +219,7 @@ namespace Silnith.Game.Klondike.Move.Tests
         public void TestEquals()
         {
             DealMove move1 = new(deck, numberOfColumns);
-            DealMove move2 = new(deck, numberOfColumns);
+            DealMove move2 = new(deck.ToList(), numberOfColumns);
 
             Assert.AreEqual(move1, move2);
         }
@@ -228,7 +228,7 @@ namespace Silnith.Game.Klondike.Move.Tests
         public void TestGetHashCode()
         {
             DealMove move1 = new(deck, numberOfColumns);
-            DealMove move2 = new(deck, numberOfColumns);
+            DealMove move2 = new(deck.ToList(), numberOfColumns);
 
             Assert.AreEqual(move1.GetHashCode(), move2.GetHashCode());
         }

@@ -130,11 +130,21 @@ namespace Silnith.Game.Klondike.Tests
 
         #region Equals & GetHashCode
 
+        private static Suit GetKey(KeyValuePair<Suit, IReadOnlyList<Card>> pair)
+        {
+            return pair.Key;
+        }
+
+        private static IReadOnlyList<Card> GetValue(KeyValuePair<Suit, IReadOnlyList<Card>> pair)
+        {
+            return pair.Value;
+        }
+
         [TestMethod]
         public void TestEqualsEmpty()
         {
             Board board1 = new(EmptyColumns, EmptyListOfCards, 0, EmptyFoundation);
-            Board board2 = new(EmptyColumns, EmptyListOfCards, 0, EmptyFoundation);
+            Board board2 = new(EmptyColumns.ToList(), EmptyListOfCards.ToList(), 0, EmptyFoundation.ToDictionary(GetKey, GetValue));
 
             Assert.AreEqual(board1, board2);
         }
@@ -143,7 +153,7 @@ namespace Silnith.Game.Klondike.Tests
         public void TestGetHashCodeEmpty()
         {
             Board board1 = new(EmptyColumns, EmptyListOfCards, 0, EmptyFoundation);
-            Board board2 = new(EmptyColumns, EmptyListOfCards, 0, EmptyFoundation);
+            Board board2 = new(EmptyColumns.ToList(), EmptyListOfCards.ToList(), 0, EmptyFoundation.ToDictionary(GetKey, GetValue));
 
             Assert.AreEqual(board1.GetHashCode(), board2.GetHashCode());
         }
@@ -163,7 +173,7 @@ namespace Silnith.Game.Klondike.Tests
                 [6] = new Column(null, run),
             };
             Board board1 = new(columns, EmptyListOfCards, 0, EmptyFoundation);
-            Board board2 = new(columns, EmptyListOfCards, 0, EmptyFoundation);
+            Board board2 = new(columns.ToList(), EmptyListOfCards.ToList(), 0, EmptyFoundation.ToDictionary(GetKey, GetValue));
 
             Assert.AreEqual(board1, board2);
         }
@@ -183,7 +193,7 @@ namespace Silnith.Game.Klondike.Tests
                 [6] = new Column(null, run),
             };
             Board board1 = new(columns, EmptyListOfCards, 0, EmptyFoundation);
-            Board board2 = new(columns, EmptyListOfCards, 0, EmptyFoundation);
+            Board board2 = new(columns.ToList(), EmptyListOfCards.ToList(), 0, EmptyFoundation.ToDictionary(GetKey, GetValue));
 
             Assert.AreEqual(board1.GetHashCode(), board2.GetHashCode());
         }
@@ -216,7 +226,7 @@ namespace Silnith.Game.Klondike.Tests
             };
 
             Board board1 = new(columns1, EmptyListOfCards, 0, EmptyFoundation);
-            Board board2 = new(columns2, EmptyListOfCards, 0, EmptyFoundation);
+            Board board2 = new(columns2.ToList(), EmptyListOfCards.ToList(), 0, EmptyFoundation.ToDictionary(GetKey, GetValue));
 
             Assert.AreEqual(board1, board2);
         }
@@ -249,7 +259,7 @@ namespace Silnith.Game.Klondike.Tests
             };
 
             Board board1 = new(columns1, EmptyListOfCards, 0, EmptyFoundation);
-            Board board2 = new(columns2, EmptyListOfCards, 0, EmptyFoundation);
+            Board board2 = new(columns2.ToList(), EmptyListOfCards.ToList(), 0, EmptyFoundation.ToDictionary(GetKey, GetValue));
 
             Assert.AreEqual(board1.GetHashCode(), board2.GetHashCode());
         }
@@ -303,7 +313,7 @@ namespace Silnith.Game.Klondike.Tests
             };
 
             Board board1 = new(EmptyColumns, stockPile, 0, EmptyFoundation);
-            Board board2 = new(EmptyColumns, stockPile, 0, EmptyFoundation);
+            Board board2 = new(EmptyColumns.ToList(), stockPile.ToList(), 0, EmptyFoundation.ToDictionary(GetKey, GetValue));
 
             Assert.AreEqual(board1, board2);
         }
@@ -324,7 +334,7 @@ namespace Silnith.Game.Klondike.Tests
             };
 
             Board board1 = new(EmptyColumns, stockPile, 0, EmptyFoundation);
-            Board board2 = new(EmptyColumns, stockPile, 0, EmptyFoundation);
+            Board board2 = new(EmptyColumns.ToList(), stockPile.ToList(), 0, EmptyFoundation.ToDictionary(GetKey, GetValue));
 
             Assert.AreEqual(board1.GetHashCode(), board2.GetHashCode());
         }
@@ -376,7 +386,7 @@ namespace Silnith.Game.Klondike.Tests
             };
 
             Board board1 = new(EmptyColumns, stockPile, 8, EmptyFoundation);
-            Board board2 = new(EmptyColumns, stockPile, 8, EmptyFoundation);
+            Board board2 = new(EmptyColumns.ToList(), stockPile.ToList(), 8, EmptyFoundation.ToDictionary(GetKey, GetValue));
 
             Assert.AreEqual(board1, board2);
         }
@@ -397,7 +407,7 @@ namespace Silnith.Game.Klondike.Tests
             };
 
             Board board1 = new(EmptyColumns, stockPile, 8, EmptyFoundation);
-            Board board2 = new(EmptyColumns, stockPile, 8, EmptyFoundation);
+            Board board2 = new(EmptyColumns.ToList(), stockPile.ToList(), 8, EmptyFoundation.ToDictionary(GetKey, GetValue));
 
             Assert.AreEqual(board1.GetHashCode(), board2.GetHashCode());
         }
@@ -449,7 +459,7 @@ namespace Silnith.Game.Klondike.Tests
             };
 
             Board board1 = new(EmptyColumns, EmptyListOfCards, 0, foundation);
-            Board board2 = new(EmptyColumns, EmptyListOfCards, 0, foundation);
+            Board board2 = new(EmptyColumns.ToList(), EmptyListOfCards.ToList(), 0, foundation.ToDictionary(GetKey, GetValue));
 
             Assert.AreEqual(board1, board2);
         }
@@ -501,195 +511,7 @@ namespace Silnith.Game.Klondike.Tests
             };
 
             Board board1 = new(EmptyColumns, EmptyListOfCards, 0, foundation);
-            Board board2 = new(EmptyColumns, EmptyListOfCards, 0, foundation);
-
-            Assert.AreEqual(board1.GetHashCode(), board2.GetHashCode());
-        }
-
-        [TestMethod]
-        public void TestEqualsFoundationCopy()
-        {
-            IReadOnlyDictionary<Suit, IReadOnlyList<Card>> foundation1 = new Dictionary<Suit, IReadOnlyList<Card>>()
-            {
-                {
-                    Suit.Club,
-                    new List<Card>()
-                    {
-                        new Card(Value.Ace, Suit.Club),
-                        new Card(Value.Two, Suit.Club),
-                        new Card(Value.Three, Suit.Club),
-                        new Card(Value.Four, Suit.Club),
-                        new Card(Value.Five, Suit.Club),
-                        new Card(Value.Six, Suit.Club),
-                        new Card(Value.Seven, Suit.Club),
-                        new Card(Value.Eight, Suit.Club),
-                        new Card(Value.Nine, Suit.Club),
-                        new Card(Value.Ten, Suit.Club),
-                        new Card(Value.Jack, Suit.Club),
-                        new Card(Value.Queen, Suit.Club),
-                    }
-                },
-                {
-                    Suit.Diamond,
-                    new List<Card>()
-                    {
-                        new Card(Value.Ace, Suit.Diamond),
-                    }
-                },
-                {
-                    Suit.Heart,
-                    new List<Card>()
-                    {
-                        new Card(Value.Ace, Suit.Heart),
-                        new Card(Value.Two, Suit.Heart),
-                        new Card(Value.Three, Suit.Heart),
-                        new Card(Value.Four, Suit.Heart),
-                    }
-                },
-                {
-                    Suit.Spade,
-                    EmptyListOfCards
-                },
-            };
-            IReadOnlyDictionary<Suit, IReadOnlyList<Card>> foundation2 = new Dictionary<Suit, IReadOnlyList<Card>>()
-            {
-                {
-                    Suit.Club,
-                    new List<Card>()
-                    {
-                        new Card(Value.Ace, Suit.Club),
-                        new Card(Value.Two, Suit.Club),
-                        new Card(Value.Three, Suit.Club),
-                        new Card(Value.Four, Suit.Club),
-                        new Card(Value.Five, Suit.Club),
-                        new Card(Value.Six, Suit.Club),
-                        new Card(Value.Seven, Suit.Club),
-                        new Card(Value.Eight, Suit.Club),
-                        new Card(Value.Nine, Suit.Club),
-                        new Card(Value.Ten, Suit.Club),
-                        new Card(Value.Jack, Suit.Club),
-                        new Card(Value.Queen, Suit.Club),
-                    }
-                },
-                {
-                    Suit.Diamond,
-                    new List<Card>()
-                    {
-                        new Card(Value.Ace, Suit.Diamond),
-                    }
-                },
-                {
-                    Suit.Heart,
-                    new List<Card>()
-                    {
-                        new Card(Value.Ace, Suit.Heart),
-                        new Card(Value.Two, Suit.Heart),
-                        new Card(Value.Three, Suit.Heart),
-                        new Card(Value.Four, Suit.Heart),
-                    }
-                },
-                {
-                    Suit.Spade,
-                    EmptyListOfCards
-                },
-            };
-
-            Board board1 = new(EmptyColumns, EmptyListOfCards, 0, foundation1);
-            Board board2 = new(EmptyColumns, EmptyListOfCards, 0, foundation2);
-
-            Assert.AreEqual(board1, board2);
-        }
-
-        [TestMethod]
-        public void TestGetHashCodeFoundationCopy()
-        {
-            IReadOnlyDictionary<Suit, IReadOnlyList<Card>> foundation1 = new Dictionary<Suit, IReadOnlyList<Card>>()
-            {
-                {
-                    Suit.Club,
-                    new List<Card>()
-                    {
-                        new Card(Value.Ace, Suit.Club),
-                        new Card(Value.Two, Suit.Club),
-                        new Card(Value.Three, Suit.Club),
-                        new Card(Value.Four, Suit.Club),
-                        new Card(Value.Five, Suit.Club),
-                        new Card(Value.Six, Suit.Club),
-                        new Card(Value.Seven, Suit.Club),
-                        new Card(Value.Eight, Suit.Club),
-                        new Card(Value.Nine, Suit.Club),
-                        new Card(Value.Ten, Suit.Club),
-                        new Card(Value.Jack, Suit.Club),
-                        new Card(Value.Queen, Suit.Club),
-                    }
-                },
-                {
-                    Suit.Diamond,
-                    new List<Card>()
-                    {
-                        new Card(Value.Ace, Suit.Diamond),
-                    }
-                },
-                {
-                    Suit.Heart,
-                    new List<Card>()
-                    {
-                        new Card(Value.Ace, Suit.Heart),
-                        new Card(Value.Two, Suit.Heart),
-                        new Card(Value.Three, Suit.Heart),
-                        new Card(Value.Four, Suit.Heart),
-                    }
-                },
-                {
-                    Suit.Spade,
-                    EmptyListOfCards
-                },
-            };
-            IReadOnlyDictionary<Suit, IReadOnlyList<Card>> foundation2 = new Dictionary<Suit, IReadOnlyList<Card>>()
-            {
-                {
-                    Suit.Club,
-                    new List<Card>()
-                    {
-                        new Card(Value.Ace, Suit.Club),
-                        new Card(Value.Two, Suit.Club),
-                        new Card(Value.Three, Suit.Club),
-                        new Card(Value.Four, Suit.Club),
-                        new Card(Value.Five, Suit.Club),
-                        new Card(Value.Six, Suit.Club),
-                        new Card(Value.Seven, Suit.Club),
-                        new Card(Value.Eight, Suit.Club),
-                        new Card(Value.Nine, Suit.Club),
-                        new Card(Value.Ten, Suit.Club),
-                        new Card(Value.Jack, Suit.Club),
-                        new Card(Value.Queen, Suit.Club),
-                    }
-                },
-                {
-                    Suit.Diamond,
-                    new List<Card>()
-                    {
-                        new Card(Value.Ace, Suit.Diamond),
-                    }
-                },
-                {
-                    Suit.Heart,
-                    new List<Card>()
-                    {
-                        new Card(Value.Ace, Suit.Heart),
-                        new Card(Value.Two, Suit.Heart),
-                        new Card(Value.Three, Suit.Heart),
-                        new Card(Value.Four, Suit.Heart),
-                    }
-                },
-                {
-                    Suit.Spade,
-                    EmptyListOfCards
-                },
-            };
-
-            Board board1 = new(EmptyColumns, EmptyListOfCards, 0, foundation1);
-            Board board2 = new(EmptyColumns, EmptyListOfCards, 0, foundation2);
+            Board board2 = new(EmptyColumns.ToList(), EmptyListOfCards.ToList(), 0, foundation.ToDictionary(GetKey, GetValue));
 
             Assert.AreEqual(board1.GetHashCode(), board2.GetHashCode());
         }
