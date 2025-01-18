@@ -2,12 +2,101 @@
 using Silnith.Game.Deck;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Silnith.Game.Klondike.Move.Tests
 {
     [TestClass]
     public class RecycleStockPileMoveTests
     {
+        private readonly IReadOnlyList<Card> EmptyListOfCards = Array.Empty<Card>();
+        private readonly IReadOnlyDictionary<Suit, IReadOnlyList<Card>> EmptyFoundation = new Dictionary<Suit, IReadOnlyList<Card>>()
+        {
+            { Suit.Club, Array.Empty<Card>() },
+            { Suit.Diamond, Array.Empty<Card>() },
+            { Suit.Heart, Array.Empty<Card>() },
+            { Suit.Spade, Array.Empty<Card>() },
+        };
+        private readonly IReadOnlyList<Column> EmptyColumns = new List<Column>()
+        {
+            new Column(null, null),
+            new Column(null, null),
+            new Column(null, null),
+            new Column(null, null),
+            new Column(null, null),
+            new Column(null, null),
+            new Column(null, null),
+        };
+
+        #region FindMoves
+
+        [TestMethod]
+        public void TestFindMovesEmptyStockPile()
+        {
+            Board board = new(EmptyColumns, EmptyListOfCards, 0, EmptyFoundation);
+
+            IEnumerable<RecycleStockPileMove> actual = RecycleStockPileMove.FindMoves(board);
+
+            Assert.IsFalse(actual.Any());
+        }
+
+        [TestMethod]
+        public void TestFindMovesStockPileAtBeginning()
+        {
+            List<Card> stockPile = new()
+            {
+                new Card(Value.Four, Suit.Club),
+                new Card(Value.Seven, Suit.Heart),
+                new Card(Value.Six, Suit.Heart),
+                new Card(Value.Three, Suit.Diamond),
+            };
+            Board board = new(EmptyColumns, stockPile, 0, EmptyFoundation);
+
+            IEnumerable<RecycleStockPileMove> actual = RecycleStockPileMove.FindMoves(board);
+
+            Assert.IsFalse(actual.Any());
+        }
+
+        [TestMethod]
+        public void TestFindMovesStockPileInMiddle()
+        {
+            List<Card> stockPile = new()
+            {
+                new Card(Value.Four, Suit.Club),
+                new Card(Value.Seven, Suit.Heart),
+                new Card(Value.Six, Suit.Heart),
+                new Card(Value.Three, Suit.Diamond),
+            };
+            Board board = new(EmptyColumns, stockPile, 2, EmptyFoundation);
+
+            IEnumerable<RecycleStockPileMove> actual = RecycleStockPileMove.FindMoves(board);
+
+            Assert.IsFalse(actual.Any());
+        }
+
+        [TestMethod]
+        public void TestFindMovesStockPileAtEnd()
+        {
+            List<Card> stockPile = new()
+            {
+                new Card(Value.Four, Suit.Club),
+                new Card(Value.Seven, Suit.Heart),
+                new Card(Value.Six, Suit.Heart),
+                new Card(Value.Three, Suit.Diamond),
+            };
+            Board board = new(EmptyColumns, stockPile, 4, EmptyFoundation);
+
+            IEnumerable<RecycleStockPileMove> actual = RecycleStockPileMove.FindMoves(board);
+
+            IEnumerable<RecycleStockPileMove> expected = new List<RecycleStockPileMove>(1)
+            {
+                new RecycleStockPileMove(4),
+            };
+            CollectionAssert.AreEquivalent(expected.ToList(), actual.ToList());
+        }
+
+        #endregion
+
         [TestMethod]
         public void TestSourceIndex()
         {

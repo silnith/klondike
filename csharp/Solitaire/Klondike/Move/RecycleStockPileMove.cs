@@ -20,18 +20,18 @@ namespace Silnith.Game.Klondike.Move
         /// </remarks>
         /// <param name="board">The board to examine.</param>
         /// <returns>An enumerable of moves.</returns>
-        public static IEnumerable<ISolitaireMove> FindAllMovesForBoard(Board board)
+        public static IEnumerable<RecycleStockPileMove> FindMoves(Board board)
         {
             if (board.CanRecycleStockPile())
             {
-                return new List<ISolitaireMove>(1)
+                return new List<RecycleStockPileMove>(1)
                 {
                     new RecycleStockPileMove(board),
                 };
             }
             else
             {
-                return Array.Empty<ISolitaireMove>();
+                return Array.Empty<RecycleStockPileMove>();
             }
         }
 
