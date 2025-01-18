@@ -1,14 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Silnith.Game.Deck.Tests
 {
     [TestClass]
+    [SuppressMessage("Design", "MSTEST0032:Assertion condition is always true", Justification = "The unit test is making sure the enum is defined properly.")]
     public class ValueTests
     {
         [TestMethod]
