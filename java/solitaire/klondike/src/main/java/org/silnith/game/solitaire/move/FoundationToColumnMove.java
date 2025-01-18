@@ -1,8 +1,10 @@
 package org.silnith.game.solitaire.move;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import org.silnith.deck.Card;
@@ -20,6 +22,34 @@ import org.silnith.util.Pair;
  * a run.</p>
  */
 public class FoundationToColumnMove implements SolitaireMove {
+	
+	/**
+	 * Finds all moves from the foundation to a column run.
+	 * 
+	 * @param board the board to examine
+	 * @return a collection of moves
+	 */
+	public static Collection<FoundationToColumnMove> findMoves(final Board board) {
+		final Collection<FoundationToColumnMove> moves = new ArrayList<>();
+		final Map<Suit, List<Card>> foundation = board.getFoundation();
+		final List<Column> columns = board.getColumns();
+		for (final Suit suit : Suit.values()) {
+			final List<Card> foundationForSuit = foundation.get(suit);
+			if (!foundationForSuit.isEmpty()) {
+				final Card topOfFoundation = foundationForSuit.get(foundationForSuit.size() - 1);
+				final List<Card> run = Collections.singletonList(topOfFoundation);
+				final ListIterator<Column> iter = columns.listIterator();
+				while (iter.hasNext()) {
+					final int i = iter.nextIndex();
+					final Column column = iter.next();
+					if (column.canAddRun(run)) {
+						moves.add(new FoundationToColumnMove(i, topOfFoundation));
+					}
+				}
+			}
+		}
+		return moves;
+	}
     
     /**
      * The index in the board of the destination column for the card.

@@ -17,6 +17,53 @@ namespace Silnith.Game.Klondike.Move
     public class FoundationToColumnMove : ISolitaireMove, IEquatable<FoundationToColumnMove?>
     {
         /// <summary>
+        /// The equivalent of the Java values() provided for enumerations.
+        /// </summary>
+        private static readonly IEnumerable<Suit> suits = new List<Suit>()
+        {
+            Suit.Club,
+            Suit.Diamond,
+            Suit.Heart,
+            Suit.Spade,
+        };
+
+        /// <summary>
+        /// Finds all moves of a card from the foundation to a column run.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// </para>
+        /// </remarks>
+        /// <param name="board">The board to examine.</param>
+        /// <returns>An enumerable of moves.</returns>
+        public static IEnumerable<FoundationToColumnMove> FindMoves(Board board)
+        {
+            List<FoundationToColumnMove> moves = new List<FoundationToColumnMove>();
+            foreach (Suit suit in suits)
+            {
+                IReadOnlyList<Card> foundationForSuit = board.Foundation[suit];
+                int suitCount = foundationForSuit.Count;
+                if (suitCount > 0)
+                {
+                    Card topOfFoundation = foundationForSuit[suitCount - 1];
+                    List<Card> run = new List<Card>()
+                    {
+                        topOfFoundation,
+                    };
+                    for (int i = 0; i < board.Columns.Count; i++)
+                    {
+                        Column column = board.Columns[i];
+                        if (column.CanAddRun(run))
+                        {
+                            moves.Add(new FoundationToColumnMove(i, topOfFoundation));
+                        }
+                    }
+                }
+            }
+            return moves;
+        }
+
+        /// <summary>
         /// The index in the board of the destination column for the card.
         /// </summary>
         public int DestinationColumn

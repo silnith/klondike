@@ -28,6 +28,84 @@ namespace Silnith.Game.Klondike.Move.Tests
             new Column(null, null),
         };
 
+        #region FindMoves
+
+        [TestMethod]
+        public void TestFindMoves()
+        {
+            List<Column> columns = new(EmptyColumns)
+            {
+                [3] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Six, Suit.Club),
+                        new Card(Value.Five, Suit.Diamond),
+                        new Card(Value.Four, Suit.Club),
+                    }),
+                [4] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        // Please ignore that this card is duplicated.
+                        new Card(Value.Four, Suit.Spade),
+                    }),
+            };
+            Dictionary<Suit, IReadOnlyList<Card>> foundation = new(EmptyFoundation)
+            {
+                [Suit.Club] = new List<Card>()
+                {
+                },
+                [Suit.Diamond] = new List<Card>()
+                {
+                    new Card(Value.Ace, Suit.Diamond),
+                    new Card(Value.Two, Suit.Diamond),
+                    new Card(Value.Three, Suit.Diamond),
+                },
+                [Suit.Heart] = new List<Card>()
+                {
+                    new Card(Value.Ace, Suit.Heart),
+                    new Card(Value.Two, Suit.Heart),
+                    new Card(Value.Three, Suit.Heart),
+                },
+                [Suit.Spade] = new List<Card>()
+                {
+                    new Card(Value.Ace, Suit.Spade),
+                    new Card(Value.Two, Suit.Spade),
+                    new Card(Value.Three, Suit.Spade),
+                    new Card(Value.Four, Suit.Spade),
+                    new Card(Value.Five, Suit.Spade),
+                    new Card(Value.Six, Suit.Spade),
+                    new Card(Value.Seven, Suit.Spade),
+                    new Card(Value.Eight, Suit.Spade),
+                    new Card(Value.Nine, Suit.Spade),
+                    new Card(Value.Ten, Suit.Spade),
+                    new Card(Value.Jack, Suit.Spade),
+                    new Card(Value.Queen, Suit.Spade),
+                    new Card(Value.King, Suit.Spade),
+                },
+            };
+            Board board = new(columns, EmptyListOfCards, 0, foundation);
+
+            IEnumerable<FoundationToColumnMove> actual = FoundationToColumnMove.FindMoves(board);
+
+            IEnumerable<FoundationToColumnMove> expected = new List<FoundationToColumnMove>()
+            {
+                new FoundationToColumnMove(0, new Card(Value.King, Suit.Spade)),
+                new FoundationToColumnMove(1, new Card(Value.King, Suit.Spade)),
+                new FoundationToColumnMove(2, new Card(Value.King, Suit.Spade)),
+                new FoundationToColumnMove(3, new Card(Value.Three, Suit.Diamond)),
+                new FoundationToColumnMove(3, new Card(Value.Three, Suit.Heart)),
+                new FoundationToColumnMove(4, new Card(Value.Three, Suit.Diamond)),
+                new FoundationToColumnMove(4, new Card(Value.Three, Suit.Heart)),
+                new FoundationToColumnMove(5, new Card(Value.King, Suit.Spade)),
+                new FoundationToColumnMove(6, new Card(Value.King, Suit.Spade)),
+            };
+            CollectionAssert.AreEquivalent(expected.ToList(), actual.ToList());
+        }
+
+        #endregion
+
         [TestMethod]
         public void TestConstructorEmptyFoundation()
         {

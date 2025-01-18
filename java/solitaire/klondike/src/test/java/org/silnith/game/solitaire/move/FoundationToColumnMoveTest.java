@@ -21,8 +21,10 @@ import static org.silnith.deck.Value.TWO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +50,56 @@ public class FoundationToColumnMoveTest {
         for (final Suit suit : Suit.values()) {
             this.emptyFoundation.put(suit, emptyListOfCards);
         }
+    }
+    
+    @Test
+    public void testFindMoves() {
+    	final List<Column> columns = new ArrayList<>(emptyColumns);
+    	columns.set(3, new Column(null, Arrays.asList(
+    			new Card(SIX, CLUB),
+    			new Card(FIVE, DIAMOND),
+    			new Card(FOUR, CLUB))));
+    	columns.set(4, new Column(null, Arrays.asList(
+    			// Please ignore that this card is duplicated.
+    			new Card(FOUR, SPADE))));
+    	final Map<Suit, List<Card>> foundation = new EnumMap<>(emptyFoundation);
+    	foundation.put(DIAMOND, Arrays.asList(
+    			new Card(ACE, DIAMOND),
+    			new Card(TWO, DIAMOND),
+    			new Card(THREE, DIAMOND)));
+    	foundation.put(HEART, Arrays.asList(
+    			new Card(ACE, HEART),
+    			new Card(TWO, HEART),
+    			new Card(THREE, HEART)));
+    	foundation.put(SPADE, Arrays.asList(
+    			new Card(ACE, SPADE),
+    			new Card(TWO, SPADE),
+    			new Card(THREE, SPADE),
+    			new Card(FOUR, SPADE),
+    			new Card(FIVE, SPADE),
+    			new Card(SIX, SPADE),
+    			new Card(SEVEN, SPADE),
+    			new Card(EIGHT, SPADE),
+    			new Card(NINE, SPADE),
+    			new Card(TEN, SPADE),
+    			new Card(JACK, SPADE),
+    			new Card(QUEEN, SPADE),
+    			new Card(KING, SPADE)));
+    	final Board board = new Board(columns, emptyListOfCards, 0, foundation);
+    	
+    	final Collection<FoundationToColumnMove> actual = FoundationToColumnMove.findMoves(board);
+    	
+    	final Collection<FoundationToColumnMove> expected = Arrays.asList(
+    			new FoundationToColumnMove(0, new Card(KING, SPADE)),
+    			new FoundationToColumnMove(1, new Card(KING, SPADE)),
+    			new FoundationToColumnMove(2, new Card(KING, SPADE)),
+    			new FoundationToColumnMove(3, new Card(THREE, DIAMOND)),
+    			new FoundationToColumnMove(3, new Card(THREE, HEART)),
+    			new FoundationToColumnMove(4, new Card(THREE, DIAMOND)),
+    			new FoundationToColumnMove(4, new Card(THREE, HEART)),
+    			new FoundationToColumnMove(5, new Card(KING, SPADE)),
+    			new FoundationToColumnMove(6, new Card(KING, SPADE)));
+    	assertEquals(new HashSet<>(expected), new HashSet<>(actual));
     }
 
     @Test
