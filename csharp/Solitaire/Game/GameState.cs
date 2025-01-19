@@ -56,7 +56,7 @@ namespace Silnith.Game
         /// </summary>
         /// <param name="initialMove">The initial move.  This is often a form of "deal deck".</param>
         /// <param name="initialBoard">The initial board.</param>
-        public GameState(M initialMove, B initialBoard) : base(new LinkedNode<M>(initialMove), new LinkedNode<B>(initialBoard))
+        public GameState(M initialMove, B initialBoard) : this(new LinkedNode<M>(initialMove), new LinkedNode<B>(initialBoard))
         {
         }
 
@@ -76,7 +76,7 @@ namespace Silnith.Game
         /// </summary>
         /// <param name="parent">The previous game state.</param>
         /// <param name="move">The new move to apply to the game state.</param>
-        public GameState(GameState<M, B> parent, M move) : this(parent, move, move.Apply(parent.Boards[0]))
+        public GameState(GameState<M, B> parent, M move) : this(parent, move, move.Apply(parent.Boards.Value))
         {
         }
     }

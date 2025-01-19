@@ -64,7 +64,7 @@ public class GameState<M extends Move<B>, B> extends Pair<LinkedNode<M>, LinkedN
      * @param move the new move to apply to the game state
      */
     public GameState(final GameState<M, B> parent, final M move) {
-        this(parent, move, move.apply(parent.getBoards().get(0)));
+        this(parent, move, move.apply(parent.getBoards().getFirst()));
     }
     
     /**
