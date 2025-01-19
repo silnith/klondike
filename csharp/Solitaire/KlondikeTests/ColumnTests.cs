@@ -634,10 +634,81 @@ namespace Silnith.Game.Klondike.Tests
 
         #endregion
 
-        #region GetWithoutTopCards
+        #region ExtractCard
 
         [TestMethod]
-        public void TestGetWithoutTopCardsOverflow()
+        public void TestExtractCardEmpty()
+        {
+            Column column = new(null, null);
+
+            Assert.ThrowsException<ArgumentException>(() =>
+            {
+                _ = column.ExtractCard();
+            });
+        }
+
+        [TestMethod]
+        public void TestExtractCardCard()
+        {
+            IReadOnlyList<Card>? faceDown = new List<Card>()
+            {
+                new Card(Value.Four, Suit.Spade),
+                new Card(Value.Jack, Suit.Heart),
+                new Card(Value.Ace, Suit.Heart),
+            };
+            IReadOnlyList<Card>? faceUp = new List<Card>()
+            {
+                new Card(Value.King, Suit.Club),
+                new Card(Value.Queen, Suit.Diamond),
+                new Card(Value.Jack, Suit.Club),
+                new Card(Value.Ten, Suit.Diamond),
+            };
+            Column column = new(faceDown, faceUp);
+
+            Tuple<Card, Column> tuple = column.ExtractCard();
+            Card actual = tuple.Item1;
+
+            Card expected = new(Value.Ten, Suit.Diamond);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestExtractCardColumn()
+        {
+            IReadOnlyList<Card>? faceDown = new List<Card>()
+            {
+                new Card(Value.Four, Suit.Spade),
+                new Card(Value.Jack, Suit.Heart),
+                new Card(Value.Ace, Suit.Heart),
+            };
+            IReadOnlyList<Card>? faceUp = new List<Card>()
+            {
+                new Card(Value.King, Suit.Club),
+                new Card(Value.Queen, Suit.Diamond),
+                new Card(Value.Jack, Suit.Club),
+                new Card(Value.Ten, Suit.Diamond),
+            };
+            Column column = new(faceDown, faceUp);
+
+            Tuple<Card, Column> tuple = column.ExtractCard();
+            Column actual = tuple.Item2;
+
+            List<Card> expectedFaceUp = new()
+            {
+                new Card(Value.King, Suit.Club),
+                new Card(Value.Queen, Suit.Diamond),
+                new Card(Value.Jack, Suit.Club),
+            };
+            Column expected = new(faceDown, expectedFaceUp);
+            Assert.AreEqual(expected, actual);
+        }
+
+        #endregion
+
+        #region ExtractRun
+
+        [TestMethod]
+        public void TestExtractRunOverflow()
         {
             IReadOnlyList<Card>? faceDown = new List<Card>()
             {
@@ -656,12 +727,12 @@ namespace Silnith.Game.Klondike.Tests
             Column column = new(faceDown, faceUp);
 
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => {
-                _ = column.GetWithoutTopCards(5);
+                _ = column.ExtractRun(5);
             });
         }
 
         [TestMethod]
-        public void TestGetWithoutTopCards4()
+        public void TestExtractRun4Run()
         {
             IReadOnlyList<Card>? faceDown = new List<Card>()
             {
@@ -679,7 +750,40 @@ namespace Silnith.Game.Klondike.Tests
 
             Column column = new(faceDown, faceUp);
 
-            Column actual = column.GetWithoutTopCards(4);
+            Tuple<IReadOnlyList<Card>, Column> tuple = column.ExtractRun(4);
+            IReadOnlyList<Card> actual = tuple.Item1;
+
+            IReadOnlyList<Card> expected = new List<Card>()
+            {
+                new Card(Value.King, Suit.Club),
+                new Card(Value.Queen, Suit.Diamond),
+                new Card(Value.Jack, Suit.Club),
+                new Card(Value.Ten, Suit.Diamond),
+            };
+            CollectionAssert.AreEqual(expected.ToList(), actual.ToList());
+        }
+
+        [TestMethod]
+        public void TestExtractRun4Column()
+        {
+            IReadOnlyList<Card>? faceDown = new List<Card>()
+            {
+                new Card(Value.Four, Suit.Spade),
+                new Card(Value.Jack, Suit.Heart),
+                new Card(Value.Ace, Suit.Heart),
+            };
+            IReadOnlyList<Card>? faceUp = new List<Card>()
+            {
+                new Card(Value.King, Suit.Club),
+                new Card(Value.Queen, Suit.Diamond),
+                new Card(Value.Jack, Suit.Club),
+                new Card(Value.Ten, Suit.Diamond),
+            };
+
+            Column column = new(faceDown, faceUp);
+
+            Tuple<IReadOnlyList<Card>, Column> tuple = column.ExtractRun(4);
+            Column actual = tuple.Item2;
 
             IReadOnlyList<Card> expectedFaceDown = new List<Card>()
             {
@@ -695,7 +799,7 @@ namespace Silnith.Game.Klondike.Tests
         }
 
         [TestMethod]
-        public void TestGetWithoutTopCards3()
+        public void TestExtractRun3Run()
         {
             IReadOnlyList<Card>? faceDown = new List<Card>()
             {
@@ -713,18 +817,20 @@ namespace Silnith.Game.Klondike.Tests
 
             Column column = new(faceDown, faceUp);
 
-            Column actual = column.GetWithoutTopCards(3);
+            Tuple<IReadOnlyList<Card>, Column> tuple = column.ExtractRun(3);
+            IReadOnlyList<Card> actual = tuple.Item1;
 
-            IReadOnlyList<Card> expectedFaceUp = new List<Card>()
+            IReadOnlyList<Card> expected = new List<Card>()
             {
-                new Card(Value.King, Suit.Club),
+                new Card(Value.Queen, Suit.Diamond),
+                new Card(Value.Jack, Suit.Club),
+                new Card(Value.Ten, Suit.Diamond),
             };
-            Column expected = new(faceDown, expectedFaceUp);
-            Assert.AreEqual(expected, actual);
+            CollectionAssert.AreEqual(expected.ToList(), actual.ToList());
         }
 
         [TestMethod]
-        public void TestGetWithoutTopCards2()
+        public void TestExtractRun3Column()
         {
             IReadOnlyList<Card>? faceDown = new List<Card>()
             {
@@ -742,19 +848,19 @@ namespace Silnith.Game.Klondike.Tests
 
             Column column = new(faceDown, faceUp);
 
-            Column actual = column.GetWithoutTopCards(2);
+            Tuple<IReadOnlyList<Card>, Column> tuple = column.ExtractRun(3);
+            Column actual = tuple.Item2;
 
             IReadOnlyList<Card> expectedFaceUp = new List<Card>()
             {
                 new Card(Value.King, Suit.Club),
-                new Card(Value.Queen, Suit.Diamond),
             };
             Column expected = new(faceDown, expectedFaceUp);
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestGetWithoutTopCards1()
+        public void TestExtractRun2Run()
         {
             IReadOnlyList<Card>? faceDown = new List<Card>()
             {
@@ -772,7 +878,98 @@ namespace Silnith.Game.Klondike.Tests
 
             Column column = new(faceDown, faceUp);
 
-            Column actual = column.GetWithoutTopCards(1);
+            Tuple<IReadOnlyList<Card>, Column> tuple = column.ExtractRun(2);
+            IReadOnlyList<Card> actual = tuple.Item1;
+
+            IReadOnlyList<Card> expected = new List<Card>()
+            {
+                new Card(Value.Jack, Suit.Club),
+                new Card(Value.Ten, Suit.Diamond),
+            };
+            CollectionAssert.AreEqual(expected.ToList(), actual.ToList());
+        }
+
+        [TestMethod]
+        public void TestExtractRun2Column()
+        {
+            IReadOnlyList<Card>? faceDown = new List<Card>()
+            {
+                new Card(Value.Four, Suit.Spade),
+                new Card(Value.Jack, Suit.Heart),
+                new Card(Value.Ace, Suit.Heart),
+            };
+            IReadOnlyList<Card>? faceUp = new List<Card>()
+            {
+                new Card(Value.King, Suit.Club),
+                new Card(Value.Queen, Suit.Diamond),
+                new Card(Value.Jack, Suit.Club),
+                new Card(Value.Ten, Suit.Diamond),
+            };
+
+            Column column = new(faceDown, faceUp);
+
+            Tuple<IReadOnlyList<Card>, Column> tuple = column.ExtractRun(2);
+            Column actual = tuple.Item2;
+
+            IReadOnlyList<Card> expectedFaceUp = new List<Card>()
+            {
+                new Card(Value.King, Suit.Club),
+                new Card(Value.Queen, Suit.Diamond),
+            };
+            Column expected = new(faceDown, expectedFaceUp);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestExtractRun1Run()
+        {
+            IReadOnlyList<Card>? faceDown = new List<Card>()
+            {
+                new Card(Value.Four, Suit.Spade),
+                new Card(Value.Jack, Suit.Heart),
+                new Card(Value.Ace, Suit.Heart),
+            };
+            IReadOnlyList<Card>? faceUp = new List<Card>()
+            {
+                new Card(Value.King, Suit.Club),
+                new Card(Value.Queen, Suit.Diamond),
+                new Card(Value.Jack, Suit.Club),
+                new Card(Value.Ten, Suit.Diamond),
+            };
+
+            Column column = new(faceDown, faceUp);
+
+            Tuple<IReadOnlyList<Card>, Column> tuple = column.ExtractRun(1);
+            IReadOnlyList<Card> actual = tuple.Item1;
+
+            IReadOnlyList<Card> expected = new List<Card>()
+            {
+                new Card(Value.Ten, Suit.Diamond),
+            };
+            CollectionAssert.AreEqual(expected.ToList(), actual.ToList());
+        }
+
+        [TestMethod]
+        public void TestExtractRun1Column()
+        {
+            IReadOnlyList<Card>? faceDown = new List<Card>()
+            {
+                new Card(Value.Four, Suit.Spade),
+                new Card(Value.Jack, Suit.Heart),
+                new Card(Value.Ace, Suit.Heart),
+            };
+            IReadOnlyList<Card>? faceUp = new List<Card>()
+            {
+                new Card(Value.King, Suit.Club),
+                new Card(Value.Queen, Suit.Diamond),
+                new Card(Value.Jack, Suit.Club),
+                new Card(Value.Ten, Suit.Diamond),
+            };
+
+            Column column = new(faceDown, faceUp);
+
+            Tuple<IReadOnlyList<Card>, Column> tuple = column.ExtractRun(1);
+            Column actual = tuple.Item2;
 
             IReadOnlyList<Card> expectedFaceUp = new List<Card>()
             {
@@ -785,7 +982,7 @@ namespace Silnith.Game.Klondike.Tests
         }
 
         [TestMethod]
-        public void TestGetWithoutTopCardsUnderflow()
+        public void TestExtractRunUnderflow()
         {
             IReadOnlyList<Card>? faceDown = new List<Card>()
             {
@@ -804,14 +1001,14 @@ namespace Silnith.Game.Klondike.Tests
             Column column = new(faceDown, faceUp);
 
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => {
-                _ = column.GetWithoutTopCards(0);
+                _ = column.ExtractRun(0);
             });
         }
 
         #endregion
 
         [TestMethod]
-        public void TestGetWithCard()
+        public void TestWithCard()
         {
             IReadOnlyList<Card>? faceDown = new List<Card>()
             {
@@ -829,7 +1026,7 @@ namespace Silnith.Game.Klondike.Tests
 
             Column column = new(faceDown, faceUp);
 
-            Column actual = column.GetWithCard(new Card(Value.Nine, Suit.Club));
+            Column actual = column.WithCard(new Card(Value.Nine, Suit.Club));
 
             IReadOnlyList<Card> expectedFaceUp = new List<Card>()
             {
@@ -843,10 +1040,10 @@ namespace Silnith.Game.Klondike.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        #region GetWithCards
+        #region WithCards
 
         [TestMethod]
-        public void TestGetWithCards1()
+        public void TestWithCards1()
         {
             IReadOnlyList<Card>? faceDown = new List<Card>()
             {
@@ -868,7 +1065,7 @@ namespace Silnith.Game.Klondike.Tests
             {
                 new Card(Value.Nine, Suit.Club),
             };
-            Column actual = column.GetWithCards(run);
+            Column actual = column.WithCards(run);
 
             IReadOnlyList<Card> expectedFaceUp = new List<Card>()
             {
@@ -883,7 +1080,7 @@ namespace Silnith.Game.Klondike.Tests
         }
 
         [TestMethod]
-        public void TestGetWithCards3()
+        public void TestWithCards3()
         {
             IReadOnlyList<Card>? faceDown = new List<Card>()
             {
@@ -907,7 +1104,7 @@ namespace Silnith.Game.Klondike.Tests
                 new Card(Value.Eight, Suit.Diamond),
                 new Card(Value.Seven, Suit.Club),
             };
-            Column actual = column.GetWithCards(run);
+            Column actual = column.WithCards(run);
 
             IReadOnlyList<Card> expectedFaceUp = new List<Card>()
             {
@@ -924,7 +1121,7 @@ namespace Silnith.Game.Klondike.Tests
         }
 
         [TestMethod]
-        public void TestGetWithCardsEmpty()
+        public void TestWithCardsEmpty()
         {
             IReadOnlyList<Card>? faceDown = new List<Card>()
             {
@@ -945,7 +1142,7 @@ namespace Silnith.Game.Klondike.Tests
             IEnumerable<Card> run = Array.Empty<Card>();
 
             Assert.ThrowsException<ArgumentException>(() => {
-                _ = column.GetWithCards(run);
+                _ = column.WithCards(run);
             });
         }
 

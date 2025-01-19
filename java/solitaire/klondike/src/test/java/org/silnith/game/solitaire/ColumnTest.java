@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.silnith.deck.Card;
+import org.silnith.util.Pair;
 
 
 public class ColumnTest {
@@ -507,7 +508,69 @@ public class ColumnTest {
     }
     
     @Test
-    public void testGetWithoutTopCardsOverflow() {
+    public void testExtractCardEmpty() {
+		final Column column = new Column(null, null);
+                        
+        assertThrows(IllegalArgumentException.class, () -> {
+        	column.extractCard();
+        });
+    }
+    
+    @Test
+    public void testExtractCardCard() {
+        final List<Card> faceDown = Arrays.asList(
+        		new Card(FOUR, SPADE),
+        		new Card(JACK, HEART),
+        		new Card(ACE, HEART));
+		final List<Card> faceUp = Arrays.asList(
+				new Card(KING, CLUB),
+				new Card(QUEEN, DIAMOND),
+				new Card(JACK, CLUB),
+		        new Card(TEN, DIAMOND));
+		final Column column = new Column(faceDown, faceUp);
+        
+		final Pair<Card, Column> pair = column.extractCard();
+		final Card actual = pair.getFirst();
+
+		final Card expected = new Card(TEN, DIAMOND);
+		assertEquals(expected, actual);
+    }
+    
+    @Test
+    public void testExtractCardColumn() {
+        final List<Card> faceDown = Arrays.asList(
+        		new Card(FOUR, SPADE),
+        		new Card(JACK, HEART),
+        		new Card(ACE, HEART));
+		final List<Card> faceUp = Arrays.asList(
+				new Card(KING, CLUB),
+				new Card(QUEEN, DIAMOND),
+				new Card(JACK, CLUB),
+		        new Card(TEN, DIAMOND));
+		final Column column = new Column(faceDown, faceUp);
+        
+		final Pair<Card, Column> pair = column.extractCard();
+        final Column actual = pair.getSecond();
+
+        final List<Card> expectedFaceUp = Arrays.asList(
+        		new Card(KING, CLUB),
+        		new Card(QUEEN, DIAMOND),
+        		new Card(JACK, CLUB));
+		final Column expected = new Column(faceDown, expectedFaceUp);
+		assertEquals(expected, actual);
+    }
+    
+    @Test
+    public void testExtractRunEmpty() {
+    	final Column column = new Column(null, null);
+    	
+    	assertThrows(IllegalArgumentException.class, () -> {
+    		column.extractRun(1);
+    	});
+    }
+    
+    @Test
+    public void testExtractRunOverflow() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -520,12 +583,12 @@ public class ColumnTest {
 		final Column column = new Column(faceDown, faceUp);
               
         assertThrows(IllegalArgumentException.class, () -> {
-        	column.getWithoutTopCards(5);
+        	column.extractRun(5);
         });
     }
     
     @Test
-    public void testGetWithoutTopCards4() {
+    public void testExtractRun4Run() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -537,7 +600,32 @@ public class ColumnTest {
 		        new Card(TEN, DIAMOND));
 		final Column column = new Column(faceDown, faceUp);
         
-        final Column actual = column.getWithoutTopCards(4);
+		final Pair<List<Card>, Column> pair = column.extractRun(4);
+		final List<Card> actual = pair.getFirst();
+        
+        final List<Card> expected = Arrays.asList(
+				new Card(KING, CLUB),
+				new Card(QUEEN, DIAMOND),
+				new Card(JACK, CLUB),
+		        new Card(TEN, DIAMOND));
+        assertEquals(expected, actual);
+    }
+    
+    @Test
+    public void testExtractRun4Column() {
+        final List<Card> faceDown = Arrays.asList(
+        		new Card(FOUR, SPADE),
+        		new Card(JACK, HEART),
+        		new Card(ACE, HEART));
+		final List<Card> faceUp = Arrays.asList(
+				new Card(KING, CLUB),
+				new Card(QUEEN, DIAMOND),
+				new Card(JACK, CLUB),
+		        new Card(TEN, DIAMOND));
+		final Column column = new Column(faceDown, faceUp);
+        
+		final Pair<List<Card>, Column> pair = column.extractRun(4);
+        final Column actual = pair.getSecond();
         
         final List<Card> expectedFaceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
@@ -549,7 +637,7 @@ public class ColumnTest {
     }
     
     @Test
-    public void testGetWithoutTopCards3() {
+    public void testExtractRun3Run() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -561,7 +649,31 @@ public class ColumnTest {
 		        new Card(TEN, DIAMOND));
 		final Column column = new Column(faceDown, faceUp);
 		
-        final Column actual = column.getWithoutTopCards(3);
+		final Pair<List<Card>, Column> pair = column.extractRun(3);
+		final List<Card> actual = pair.getFirst();
+        
+        final List<Card> expected = Arrays.asList(
+				new Card(QUEEN, DIAMOND),
+				new Card(JACK, CLUB),
+		        new Card(TEN, DIAMOND));
+        assertEquals(expected, actual);
+    }
+    
+    @Test
+    public void testExtractRun3Column() {
+        final List<Card> faceDown = Arrays.asList(
+        		new Card(FOUR, SPADE),
+        		new Card(JACK, HEART),
+        		new Card(ACE, HEART));
+		final List<Card> faceUp = Arrays.asList(
+				new Card(KING, CLUB),
+				new Card(QUEEN, DIAMOND),
+				new Card(JACK, CLUB),
+		        new Card(TEN, DIAMOND));
+		final Column column = new Column(faceDown, faceUp);
+		
+		final Pair<List<Card>, Column> pair = column.extractRun(3);
+        final Column actual = pair.getSecond();
         
         final List<Card> expectedFaceUp = Collections.singletonList(
         		new Card(KING, CLUB));
@@ -570,7 +682,7 @@ public class ColumnTest {
     }
     
     @Test
-    public void testGetWithoutTopCards2() {
+    public void testExtractRun2Run() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -582,8 +694,31 @@ public class ColumnTest {
 		        new Card(TEN, DIAMOND));
 		final Column column = new Column(faceDown, faceUp);
         
-        final Column actual = column.getWithoutTopCards(2);
+		final Pair<List<Card>, Column> pair = column.extractRun(2);
+		final List<Card> actualRun = pair.getFirst();
+
+		final List<Card> expectedRun = Arrays.asList(
+				new Card(JACK, CLUB),
+		        new Card(TEN, DIAMOND));
+		assertEquals(expectedRun, actualRun);
+    }
+    
+    @Test
+    public void testExtractRun2Column() {
+        final List<Card> faceDown = Arrays.asList(
+        		new Card(FOUR, SPADE),
+        		new Card(JACK, HEART),
+        		new Card(ACE, HEART));
+		final List<Card> faceUp = Arrays.asList(
+				new Card(KING, CLUB),
+				new Card(QUEEN, DIAMOND),
+				new Card(JACK, CLUB),
+		        new Card(TEN, DIAMOND));
+		final Column column = new Column(faceDown, faceUp);
         
+		final Pair<List<Card>, Column> pair = column.extractRun(2);
+        final Column actual = pair.getSecond();
+
         final List<Card> expectedFaceUp = Arrays.asList(
         		new Card(KING, CLUB),
         		new Card(QUEEN, DIAMOND));
@@ -592,7 +727,7 @@ public class ColumnTest {
     }
     
     @Test
-    public void testGetWithoutTopCards1() {
+    public void testExtractRun1Run() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -604,8 +739,30 @@ public class ColumnTest {
 		        new Card(TEN, DIAMOND));
 		final Column column = new Column(faceDown, faceUp);
         
-        final Column actual = column.getWithoutTopCards(1);
+		final Pair<List<Card>, Column> pair = column.extractRun(1);
+		final List<Card> actual = pair.getFirst();
+
+		final List<Card> expected = Arrays.asList(
+		        new Card(TEN, DIAMOND));
+		assertEquals(expected, actual);
+    }
+    
+    @Test
+    public void testExtractRun1Column() {
+        final List<Card> faceDown = Arrays.asList(
+        		new Card(FOUR, SPADE),
+        		new Card(JACK, HEART),
+        		new Card(ACE, HEART));
+		final List<Card> faceUp = Arrays.asList(
+				new Card(KING, CLUB),
+				new Card(QUEEN, DIAMOND),
+				new Card(JACK, CLUB),
+		        new Card(TEN, DIAMOND));
+		final Column column = new Column(faceDown, faceUp);
         
+		final Pair<List<Card>, Column> pair = column.extractRun(1);
+        final Column actual = pair.getSecond();
+
         final List<Card> expectedFaceUp = Arrays.asList(
         		new Card(KING, CLUB),
         		new Card(QUEEN, DIAMOND),
@@ -615,7 +772,7 @@ public class ColumnTest {
     }
     
     @Test
-    public void testGetWithoutTopCardsUnderflow() {
+    public void testExtractRunUnderflow() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -628,12 +785,12 @@ public class ColumnTest {
 		final Column column = new Column(faceDown, faceUp);
                         
         assertThrows(IllegalArgumentException.class, () -> {
-        	column.getWithoutTopCards(0);
+        	column.extractRun(0);
         });
     }
     
     @Test
-    public void testGetWithCard() {
+    public void testWithCard() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -645,7 +802,7 @@ public class ColumnTest {
 		        new Card(TEN, DIAMOND));
 		final Column column = new Column(faceDown, faceUp);
                         
-        final Column actual = column.getWithCard(new Card(NINE, CLUB));
+        final Column actual = column.withCard(new Card(NINE, CLUB));
         
         final List<Card> expectedFaceUp = Arrays.asList(
         		new Card(KING, CLUB),
@@ -658,7 +815,7 @@ public class ColumnTest {
     }
     
     @Test
-    public void testGetWithCardNull() {
+    public void testWithCardNull() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -671,12 +828,12 @@ public class ColumnTest {
 		final Column column = new Column(faceDown, faceUp);
 
         assertThrows(RuntimeException.class, () -> {
-        	column.getWithCard(null);
+        	column.withCard(null);
         });
     }
     
     @Test
-    public void testGetWithCards1() {
+    public void testWithCards1() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -690,7 +847,7 @@ public class ColumnTest {
                         
         final List<Card> run = Collections.singletonList(
         		new Card(NINE, CLUB));
-		final Column actual = column.getWithCards(run);
+		final Column actual = column.withCards(run);
         
         final List<Card> expectedFaceUp = Arrays.asList(
         		new Card(KING, CLUB),
@@ -703,7 +860,7 @@ public class ColumnTest {
     }
     
     @Test
-    public void testGetWithCards3() {
+    public void testWithCards3() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -719,7 +876,7 @@ public class ColumnTest {
         		new Card(NINE, CLUB),
         		new Card(EIGHT, DIAMOND),
         		new Card(SEVEN, CLUB));
-		final Column actual = originalColumn.getWithCards(run);
+		final Column actual = originalColumn.withCards(run);
 
         final List<Card> expectedFaceUp = Arrays.asList(
         		new Card(KING, CLUB),
@@ -734,7 +891,7 @@ public class ColumnTest {
     }
     
     @Test
-    public void testGetWithCardsEmpty() {
+    public void testWithCardsEmpty() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -749,12 +906,12 @@ public class ColumnTest {
 		final Column column = new Column(faceDown, faceUp);
 		
         assertThrows(IllegalArgumentException.class, () -> {
-        	column.getWithCards(Collections.emptyList());
+        	column.withCards(Collections.emptyList());
         });
     }
     
     @Test
-    public void testGetWithCardsNull() {
+    public void testWithCardsNull() {
         final List<Card> faceDown = Arrays.asList(
         		new Card(FOUR, SPADE),
         		new Card(JACK, HEART),
@@ -769,7 +926,7 @@ public class ColumnTest {
 		final Column column = new Column(faceDown, faceUp);
                        
         assertThrows(IllegalArgumentException.class, () -> {
-        	column.getWithCards(null);
+        	column.withCards(null);
         });
     }
     

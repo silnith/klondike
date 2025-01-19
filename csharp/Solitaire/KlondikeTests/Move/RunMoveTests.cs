@@ -28,6 +28,66 @@ namespace Silnith.Game.Klondike.Move.Tests
             new Column(null, null),
         };
 
+        #region FindMoves
+
+        [TestMethod]
+        public void TestFindMovesKing()
+        {
+            List<Card> run = new()
+            {
+                new Card(Value.King, Suit.Spade),
+            };
+            List<Column> columns = new(EmptyColumns)
+            {
+                [3] = new Column(null, run),
+            };
+            Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
+
+            IEnumerable<RunMove> actual = RunMove.FindMoves(board);
+
+            IEnumerable<RunMove> expected = new List<RunMove>()
+            {
+                new RunMove(3, 0, run.Count, run),
+                new RunMove(3, 1, run.Count, run),
+                new RunMove(3, 2, run.Count, run),
+                new RunMove(3, 4, run.Count, run),
+                new RunMove(3, 5, run.Count, run),
+                new RunMove(3, 6, run.Count, run),
+            };
+            CollectionAssert.AreEquivalent(expected.ToList(), actual.ToList());
+        }
+
+        [TestMethod]
+        public void TestFindMovesKingRun()
+        {
+            List<Card> run = new()
+            {
+                new Card(Value.King, Suit.Spade),
+                new Card(Value.Queen, Suit.Heart),
+                new Card(Value.Jack, Suit.Spade),
+            };
+            List<Column> columns = new(EmptyColumns)
+            {
+                [3] = new Column(null, run),
+            };
+            Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
+
+            IEnumerable<RunMove> actual = RunMove.FindMoves(board);
+
+            IEnumerable<RunMove> expected = new List<RunMove>()
+            {
+                new RunMove(3, 0, run.Count, run),
+                new RunMove(3, 1, run.Count, run),
+                new RunMove(3, 2, run.Count, run),
+                new RunMove(3, 4, run.Count, run),
+                new RunMove(3, 5, run.Count, run),
+                new RunMove(3, 6, run.Count, run),
+            };
+            CollectionAssert.AreEquivalent(expected.ToList(), actual.ToList());
+        }
+
+        #endregion
+
         [TestMethod]
         public void TestSourceAndDestinationSame()
         {
@@ -429,7 +489,7 @@ namespace Silnith.Game.Klondike.Move.Tests
                 new Card(Value.Ace, Suit.Club),
             };
             RunMove move1 = new(2, 5, 3, run);
-            RunMove move2 = new(2, 5, 3, run);
+            RunMove move2 = new(2, 5, 3, run.ToList());
 
             Assert.AreEqual(move1, move2);
         }
@@ -444,7 +504,7 @@ namespace Silnith.Game.Klondike.Move.Tests
                 new Card(Value.Ace, Suit.Club),
             };
             RunMove move1 = new(2, 5, 3, run);
-            RunMove move2 = new(2, 5, 3, run);
+            RunMove move2 = new(2, 5, 3, run.ToList());
 
             Assert.AreEqual(move1.GetHashCode(), move2.GetHashCode());
         }

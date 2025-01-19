@@ -138,7 +138,7 @@ public class StockPileToColumnMove implements SolitaireMove {
 		
 		final List<Column> columns = board.getColumns();
 		final Column column = columns.get(destinationColumn);
-		final Column newColumn = column.getWithCard(card);
+		final Column newColumn = column.withCard(card);
 		
 		final List<Column> newColumns = new ArrayList<>(columns);
 		newColumns.set(destinationColumn, newColumn);

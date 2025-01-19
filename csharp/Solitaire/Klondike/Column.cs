@@ -167,26 +167,47 @@ namespace Silnith.Game.Klondike
         }
 
         /// <summary>
-        /// Returns a copy of this column with a run of cards removed.
+        /// Returns a tuple containing the top card from the column,
+        /// and a copy of the column missing that card.
         /// </summary>
-        /// <param name="numberOfCards">The number of cards to take from the current column run.</param>
-        /// <returns>A copy of the current column, with a run of the requested size removed.
-        /// This may end up causing a face-down card to be flipped.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="numberOfCards"/> is less than <c>1</c>,
-        /// or exceeds the number of face-up cards.</exception>
-        public Column GetWithoutTopCards(int numberOfCards)
+        /// <returns>The card and a new column.</returns>
+        /// <exception cref="ArgumentException">If the column does not have any cards.</exception>
+        public Tuple<Card, Column> ExtractCard()
         {
-            if (numberOfCards < 1)
+            if (!HasFaceUpCards())
             {
-                throw new ArgumentOutOfRangeException(nameof(numberOfCards), "Cannot be less than one.");
+                throw new ArgumentException("No card available in the column.");
             }
-            if (numberOfCards > FaceUp.Count)
+
+            int index = FaceUp.Count - 1;
+            Card card = FaceUp[index];
+            Column column = new Column(FaceDown, FaceUp.Take(index).ToList());
+            return new Tuple<Card, Column>(card, column);
+        }
+
+        /// <summary>
+        /// Returns a tuple containing the top <paramref name="count"/> cards from the column,
+        /// and a copy of the column missing those cards.
+        /// </summary>
+        /// <param name="count">The number of cards to take from the current column run.</param>
+        /// <returns>The run and a new column.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="count"/> is less than <c>1</c>,
+        /// or greater than the number of face-up cards.</exception>
+        public Tuple<IReadOnlyList<Card>, Column> ExtractRun(int count)
+        {
+            if (count < 1)
             {
-                throw new ArgumentOutOfRangeException(nameof(numberOfCards), "Greater than number of face-up cards.");
+                throw new ArgumentOutOfRangeException(nameof(count), "Cannot be less than one.");
             }
-            int end = FaceUp.Count;
-            int start = end - numberOfCards;
-            return new Column(FaceDown, FaceUp.Take(start).ToList());
+            if (count > FaceUp.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(count), "Greater than number of face-up cards.");
+            }
+
+            int runStart = FaceUp.Count - count;
+            IReadOnlyList<Card> run = FaceUp.Skip(runStart).ToList();
+            Column column = new Column(FaceDown, FaceUp.Take(runStart).ToList());
+            return new Tuple<IReadOnlyList<Card>, Column>(run, column);
         }
 
         /// <summary>
@@ -195,7 +216,7 @@ namespace Silnith.Game.Klondike
         /// <param name="newCards">The new run of cards.</param>
         /// <returns>A copy of the column with the new run of cards added.</returns>
         /// <exception cref="ArgumentException">If <paramref name="newCards"/> is empty.</exception>
-        public Column GetWithCards(IEnumerable<Card> newCards)
+        public Column WithCards(IEnumerable<Card> newCards)
         {
             if (!newCards.Any())
             {
@@ -211,7 +232,7 @@ namespace Silnith.Game.Klondike
         /// </summary>
         /// <param name="newCard">The card to add.</param>
         /// <returns>A copy of the column with the added card.</returns>
-        public Column GetWithCard(Card newCard)
+        public Column WithCard(Card newCard)
         {
             IReadOnlyList<Card> newFaceUp = FaceUp.Append(newCard).ToList();
             return new Column(FaceDown, newFaceUp);
@@ -243,7 +264,7 @@ namespace Silnith.Game.Klondike
             Card firstCardOfRunToAdd = run[0];
             if (HasFaceUpCards())
             {
-                Card topCardOfColumn = GetTopCard();
+                Card topCardOfColumn = FaceUp[FaceUp.Count - 1];
                 return topCardOfColumn.Value.GetValue() == 1 + firstCardOfRunToAdd.Value.GetValue()
                     && topCardOfColumn.Suit.GetColor() != firstCardOfRunToAdd.Suit.GetColor();
             }

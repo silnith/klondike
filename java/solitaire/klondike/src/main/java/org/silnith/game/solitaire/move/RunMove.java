@@ -8,6 +8,7 @@ import org.silnith.deck.Card;
 import org.silnith.deck.Suit;
 import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.Column;
+import org.silnith.util.Pair;
 
 
 /**
@@ -125,9 +126,10 @@ public class RunMove implements SolitaireMove {
 		
 		final Column fromColumn = columns.get(sourceColumn);
 		final Column toColumn = columns.get(destinationColumn);
-		final List<Card> stackToMove = fromColumn.getTopCards(numberOfCards);
-		final Column newFromColumn = fromColumn.getWithoutTopCards(numberOfCards);
-		final Column newToColumn = toColumn.getWithCards(stackToMove);
+		final Pair<List<Card>, Column> pair = fromColumn.extractRun(numberOfCards);
+		final List<Card> run = pair.getFirst();
+		final Column newFromColumn = pair.getSecond();
+		final Column newToColumn = toColumn.withCards(run);
 		
 		final List<Column> newColumns = new ArrayList<>(columns);
 		newColumns.set(sourceColumn, newFromColumn);

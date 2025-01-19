@@ -179,7 +179,7 @@ namespace Silnith.Game.Klondike.Move.Tests
 
             ColumnToFoundationMove move = new(2, new Card(Value.Ace, Suit.Club));
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => {
+            Assert.ThrowsException<ArgumentException>(() => {
                 _ = move.Apply(board);
             });
         }

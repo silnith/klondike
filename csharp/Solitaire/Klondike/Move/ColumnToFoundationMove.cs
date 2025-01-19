@@ -100,9 +100,9 @@ namespace Silnith.Game.Klondike.Move
         public Board Apply(Board board)
         {
             IReadOnlyList<Column> columns = board.Columns;
-            Column column = columns[SourceColumn];
-            Card card = column.GetTopCard();
-            Column newColumn = column.GetWithoutTopCards(1);
+            Tuple<Card, Column> tuple = columns[SourceColumn].ExtractCard();
+            Card card = tuple.Item1;
+            Column newColumn = tuple.Item2;
 
             IReadOnlyList<Column> newColumns = new List<Column>(columns)
             {

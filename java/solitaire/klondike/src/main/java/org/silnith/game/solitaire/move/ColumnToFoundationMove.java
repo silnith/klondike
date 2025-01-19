@@ -10,6 +10,7 @@ import org.silnith.deck.Card;
 import org.silnith.deck.Suit;
 import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.Column;
+import org.silnith.util.Pair;
 
 
 /**
@@ -112,8 +113,9 @@ public class ColumnToFoundationMove implements SolitaireMove {
     public Board apply(final Board board) {
         final List<Column> columns = board.getColumns();
 		final Column column = columns.get(sourceColumn);
-		final Card card = column.getTopCard();
-		final Column newColumn = column.getWithoutTopCards(1);
+		final Pair<Card, Column> pair = column.extractCard();
+		final Card card = pair.getFirst();
+		final Column newColumn = pair.getSecond();
 		
 		final List<Column> newColumns = new ArrayList<>(columns);
 		newColumns.set(sourceColumn, newColumn);

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.silnith.deck.Card;
 import org.silnith.deck.Value;
+import org.silnith.util.Pair;
 
 
 /**
@@ -123,8 +124,9 @@ public class Column {
      */
     public Card getTopCard() {
     	if (faceUp.isEmpty()) {
-    		throw new IllegalArgumentException("No face-up cards in the column.");
+    		throw new IllegalArgumentException("No card available in the column.");
     	}
+    	
     	return faceUp.get(faceUp.size() - 1);
     }
     
@@ -137,40 +139,62 @@ public class Column {
      *         or exceeds the number of face-up cards
      */
     public List<Card> getTopCards(final int numberOfCards) {
-        if (numberOfCards < 1) {
-            throw new IllegalArgumentException();
-        }
-        if (numberOfCards > faceUp.size()) {
-            throw new IllegalArgumentException();
-        }
-        
-        final int end = faceUp.size();
-        final int start = end - numberOfCards;
-        assert start >= 0;
-        return faceUp.subList(start, end);
+    	if (numberOfCards < 1) {
+    		throw new IllegalArgumentException("Must take at least one card.");
+    	}
+    	final int end = faceUp.size();
+		if (numberOfCards > end) {
+    		throw new IllegalArgumentException("Not enough cards available in the column.");
+    	}
+    	
+    	final int start = end - numberOfCards;
+    	assert start >= 0;
+    	return new ArrayList<>(faceUp.subList(start, end));
     }
     
     /**
-     * Returns a copy of this column with a run of cards removed.
+     * Returns a pair containing the top card from the column,
+     * and a copy of the column missing that card.
+     * 
+     * @return a pair of the card and a new column
+     * @throws IllegalArgumentException if the column does not have any cards
+     */
+    public Pair<Card, Column> extractCard() {
+    	if (faceUp.isEmpty()) {
+    		throw new IllegalArgumentException("No card available in the column.");
+    	}
+    	final int end = faceUp.size();
+    	
+    	final int index = end - 1;
+    	assert index >= 0;
+    	final Card card = faceUp.get(index);
+    	final Column newColumn = new Column(faceDown, faceUp.subList(0, index));
+    	return new Pair<>(card, newColumn);
+    }
+    
+    /**
+     * Returns a pair containing the top {@code numberOfCards} cards from the column,
+     * and a copy of the column missing those cards.
      * 
      * @param numberOfCards the number of cards to take from the current column run
-     * @return a copy of the current column, with a run of the requested size removed.
-     *         This may end up causing a face-down card to be flipped.
-     * @throws IllegalArgumentException if the number of cards is less than {@code 1},
-     *         or exceeds the number of face-up cards
+     * @return a pair of the run and a new column
+     * @throws IllegalArgumentException if the column does not have {@code numberOfCards}
+     *         available in the current run
      */
-    public Column getWithoutTopCards(final int numberOfCards) {
-        if (numberOfCards < 1) {
-            throw new IllegalArgumentException();
-        }
-        if (numberOfCards > faceUp.size()) {
-            throw new IllegalArgumentException();
-        }
-        
-        final int end = faceUp.size();
-        final int start = end - numberOfCards;
-        assert start >= 0;
-        return new Column(faceDown, faceUp.subList(0, start));
+    public Pair<List<Card>, Column> extractRun(final int numberOfCards) {
+    	if (numberOfCards < 1) {
+    		throw new IllegalArgumentException("Must take at least one card.");
+    	}
+    	final int end = faceUp.size();
+		if (numberOfCards > end) {
+    		throw new IllegalArgumentException("Not enough cards available in the column.");
+    	}
+    	
+    	final int start = end - numberOfCards;
+    	assert start >= 0;
+    	final List<Card> run = new ArrayList<>(faceUp.subList(start, end));
+    	final Column newColumn = new Column(faceDown, faceUp.subList(0, start));
+    	return new Pair<>(run, newColumn);
     }
     
     /**
@@ -180,7 +204,7 @@ public class Column {
      * @return a copy of the column with the new run of cards added
      * @throws IllegalArgumentException if the run is {@code null} or empty
      */
-    public Column getWithCards(final List<Card> newCards) {
+    public Column withCards(final List<Card> newCards) {
         if (newCards == null || newCards.isEmpty()) {
             throw new IllegalArgumentException();
         }
@@ -197,7 +221,7 @@ public class Column {
      * @return a copy of the column with the added card
      * @throws IllegalArgumentException if the card is {@code null}
      */
-    public Column getWithCard(final Card newCard) {
+    public Column withCard(final Card newCard) {
         if (newCard == null) {
             throw new IllegalArgumentException();
         }
