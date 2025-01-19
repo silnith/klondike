@@ -24,42 +24,42 @@ namespace Silnith.Game.Klondike.Move
         public static IEnumerable<RunMove> FindMoves(Board board)
         {
             List<RunMove> moves = new List<RunMove>();
-            for (int i = 0; i < board.Columns.Count; i++)
+            for (int sourceIndex = 0; sourceIndex < board.Columns.Count; sourceIndex++)
             {
-                Column sourceColumn = board.Columns[i];
+                Column sourceColumn = board.Columns[sourceIndex];
                 if (!sourceColumn.HasFaceUpCards())
                 {
                     continue;
                 }
-                IReadOnlyList<Card> sourceFaceUpCards = sourceColumn.FaceUp;
-                int sourceRunCount = sourceFaceUpCards.Count;
-                Card sourceTopCard = sourceFaceUpCards[sourceRunCount - 1];
-                Card sourceBottomCard = sourceFaceUpCards[0];
-                int sourceRunMinimumValue = sourceTopCard.Value.GetValue();
-                int sourceRunMaximumValue = sourceBottomCard.Value.GetValue();
-                for (int j = 0; j < board.Columns.Count; j++)
+                IReadOnlyList<Card> sourceRun = sourceColumn.FaceUp;
+                int sourceRunCount = sourceRun.Count;
+                Card sourceTopCard = sourceRun[sourceRunCount - 1];
+                Card sourceBottomCard = sourceRun[0];
+                int sourceRunMinValue = sourceTopCard.Value.GetValue();
+                int sourceRunMaxValue = sourceBottomCard.Value.GetValue();
+                for (int destinationIndex = 0; destinationIndex < board.Columns.Count; destinationIndex++)
                 {
-                    if (i == 0)
+                    if (sourceIndex == 0)
                     {
                         // Cannot move from a column to itself.
                         continue;
                     }
 
-                    Column destinationColumn = board.Columns[j];
+                    Column destinationColumn = board.Columns[destinationIndex];
                     if (destinationColumn.HasFaceUpCards())
                     {
                         // Destination has cards already.
                         Card destinationTopCard = destinationColumn.GetTopCard();
-                        int neededRunStartValue = destinationTopCard.Value.GetValue() - 1;
+                        int runStartValue = destinationTopCard.Value.GetValue() - 1;
 
-                        if (sourceRunMinimumValue <= neededRunStartValue && sourceRunMaximumValue >= neededRunStartValue)
+                        if (sourceRunMinValue <= runStartValue && sourceRunMaxValue >= runStartValue)
                         {
-                            int runCount = neededRunStartValue - sourceRunMinimumValue + 1;
+                            int runCount = runStartValue - sourceRunMinValue + 1;
 
-                            IReadOnlyList<Card> runToMove = sourceColumn.GetTopCards(runCount);
-                            if (destinationTopCard.Suit.GetColor() != runToMove[0].Suit.GetColor())
+                            IReadOnlyList<Card> run = sourceColumn.GetTopCards(runCount);
+                            if (destinationTopCard.Suit.GetColor() != run[0].Suit.GetColor())
                             {
-                                moves.Add(new RunMove(i, j, runCount, runToMove));
+                                moves.Add(new RunMove(sourceIndex, destinationIndex, runCount, run));
                             }
                         }
                     }
@@ -68,7 +68,7 @@ namespace Silnith.Game.Klondike.Move
                         // Destination is empty, only a King may be moved to it.
                         if (sourceBottomCard.Value == Value.King)
                         {
-                            moves.Add(new RunMove(i, j, sourceRunCount, sourceFaceUpCards));
+                            moves.Add(new RunMove(sourceIndex, destinationIndex, sourceRunCount, sourceRun));
                         }
                     }
                 }

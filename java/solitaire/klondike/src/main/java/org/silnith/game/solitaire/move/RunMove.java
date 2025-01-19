@@ -33,45 +33,45 @@ public class RunMove implements SolitaireMove {
 		final List<Column> columns = board.getColumns();
 		final ListIterator<Column> outerIterator = columns.listIterator();
 		while (outerIterator.hasNext()) {
-			final int i = outerIterator.nextIndex();
+			final int sourceIndex = outerIterator.nextIndex();
 			final Column sourceColumn = outerIterator.next();
 			if (!sourceColumn.hasFaceUpCards()) {
 				continue;
 			}
-			final List<Card> sourceFaceUpCards = sourceColumn.getFaceUpCards();
-			final int sourceRunCount = sourceFaceUpCards.size();
-			final Card sourceTopCard = sourceFaceUpCards.get(sourceRunCount - 1);
-			final Card sourceBottomCard = sourceFaceUpCards.get(0);
-			final int sourceRunMinimumValue = sourceTopCard.getValue().getValue();
-			final int sourceRunMaximumValue = sourceBottomCard.getValue().getValue();
+			final List<Card> sourceRun = sourceColumn.getFaceUpCards();
+			final int sourceRunLength = sourceRun.size();
+			final Card sourceTopCard = sourceRun.get(sourceRunLength - 1);
+			final Card sourceBottomCard = sourceRun.get(0);
+			final int sourceRunMinValue = sourceTopCard.getValue().getValue();
+			final int sourceRunMaxValue = sourceBottomCard.getValue().getValue();
 			
 			final ListIterator<Column> innerIterator = columns.listIterator();
 			while (innerIterator.hasNext()) {
-				final int j = innerIterator.nextIndex();
+				final int destinationIndex = innerIterator.nextIndex();
 				final Column destinationColumn = innerIterator.next();
-				if (i == j) {
+				// Note that this must be tested after the call to iterator.next().
+				if (sourceIndex == destinationIndex) {
 					// Cannot move from a column to itself.
 					continue;
-					// Note that this must be tested after the call to iterator.next().
 				}
 				
 				if (destinationColumn.hasFaceUpCards()) {
 					// Destination has cards already.
 					final Card destinationTopCard = destinationColumn.getTopCard();
-					final int neededRunStartValue = destinationTopCard.getValue().getValue() - 1;
+					final int runStartValue = destinationTopCard.getValue().getValue() - 1;
 					
-					if (sourceRunMinimumValue <= neededRunStartValue && sourceRunMaximumValue >= neededRunStartValue) {
-						final int runCount = neededRunStartValue - sourceRunMinimumValue + 1;
+					if (sourceRunMinValue <= runStartValue && sourceRunMaxValue >= runStartValue) {
+						final int runLength = runStartValue - sourceRunMinValue + 1;
 						
-						final List<Card> runToMove = sourceColumn.getTopCards(runCount);
-						if (destinationTopCard.getSuit().getColor() != runToMove.get(0).getSuit().getColor()) {
-							moves.add(new RunMove(i, j, runCount, runToMove));
+						final List<Card> run = sourceColumn.getTopCards(runLength);
+						if (destinationTopCard.getSuit().getColor() != run.get(0).getSuit().getColor()) {
+							moves.add(new RunMove(sourceIndex, destinationIndex, runLength, run));
 						}
 					}
 				} else {
 					// Destination is empty, only a King may be moved to it.
 					if (sourceBottomCard.getValue() == Value.KING) {
-						moves.add(new RunMove(i, j, sourceRunCount, sourceFaceUpCards));
+						moves.add(new RunMove(sourceIndex, destinationIndex, sourceRunLength, sourceRun));
 					}
 				}
 			}
