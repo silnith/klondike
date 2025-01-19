@@ -1,11 +1,14 @@
 package org.silnith.game.solitaire.move;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import org.silnith.deck.Card;
 import org.silnith.deck.Suit;
+import org.silnith.deck.Value;
 import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.Column;
 import org.silnith.util.Pair;
@@ -18,6 +21,63 @@ import org.silnith.util.Pair;
  * <p>A run can consist of a single card, or it can consist of many cards.</p>
  */
 public class RunMove implements SolitaireMove {
+	
+	/**
+	 * Finds all moves where a run is moved from one column to another.
+	 * 
+	 * @param board the board to examine
+	 * @return a collection of moves
+	 */
+	public static Collection<RunMove> findMoves(final Board board) {
+		final Collection<RunMove> moves = new ArrayList<>();
+		final List<Column> columns = board.getColumns();
+		final ListIterator<Column> outerIterator = columns.listIterator();
+		while (outerIterator.hasNext()) {
+			final int i = outerIterator.nextIndex();
+			final Column sourceColumn = outerIterator.next();
+			if (!sourceColumn.hasFaceUpCards()) {
+				continue;
+			}
+			final List<Card> sourceFaceUpCards = sourceColumn.getFaceUpCards();
+			final int sourceRunCount = sourceFaceUpCards.size();
+			final Card sourceTopCard = sourceFaceUpCards.get(sourceRunCount - 1);
+			final Card sourceBottomCard = sourceFaceUpCards.get(0);
+			final int sourceRunMinimumValue = sourceTopCard.getValue().getValue();
+			final int sourceRunMaximumValue = sourceBottomCard.getValue().getValue();
+			
+			final ListIterator<Column> innerIterator = columns.listIterator();
+			while (innerIterator.hasNext()) {
+				final int j = innerIterator.nextIndex();
+				final Column destinationColumn = innerIterator.next();
+				if (i == j) {
+					// Cannot move from a column to itself.
+					continue;
+					// Note that this must be tested after the call to iterator.next().
+				}
+				
+				if (destinationColumn.hasFaceUpCards()) {
+					// Destination has cards already.
+					final Card destinationTopCard = destinationColumn.getTopCard();
+					final int neededRunStartValue = destinationTopCard.getValue().getValue() - 1;
+					
+					if (sourceRunMinimumValue <= neededRunStartValue && sourceRunMaximumValue >= neededRunStartValue) {
+						final int runCount = neededRunStartValue - sourceRunMinimumValue + 1;
+						
+						final List<Card> runToMove = sourceColumn.getTopCards(runCount);
+						if (destinationTopCard.getSuit().getColor() != runToMove.get(0).getSuit().getColor()) {
+							moves.add(new RunMove(i, j, runCount, runToMove));
+						}
+					}
+				} else {
+					// Destination is empty, only a King may be moved to it.
+					if (sourceBottomCard.getValue() == Value.KING) {
+						moves.add(new RunMove(i, j, sourceRunCount, sourceFaceUpCards));
+					}
+				}
+			}
+		}
+		return moves;
+	}
     
     /**
      * The index into the board of the source column.

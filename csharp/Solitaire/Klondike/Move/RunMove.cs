@@ -19,10 +19,6 @@ namespace Silnith.Game.Klondike.Move
         /// <summary>
         /// Finds all moves for a given board where a run is moved from one column to another.
         /// </summary>
-        /// <remarks>
-        /// <para>
-        /// </para>
-        /// </remarks>
         /// <param name="board">The board to examine.</param>
         /// <returns>An enumerable of moves.</returns>
         public static IEnumerable<RunMove> FindMoves(Board board)

@@ -6,6 +6,7 @@ import static org.silnith.deck.Suit.DIAMOND;
 import static org.silnith.deck.Suit.HEART;
 import static org.silnith.deck.Suit.SPADE;
 import static org.silnith.deck.Value.ACE;
+import static org.silnith.deck.Value.EIGHT;
 import static org.silnith.deck.Value.FIVE;
 import static org.silnith.deck.Value.FOUR;
 import static org.silnith.deck.Value.JACK;
@@ -20,8 +21,10 @@ import static org.silnith.deck.Value.TWO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +53,216 @@ public class RunMoveTest {
     }
     
     @Test
-    public void testSourceAndDestinationSame() {
+    public void testFindMovesKing() {
+    	final List<Card> run = Arrays.asList(
+    			new Card(KING, SPADE));
+    	final List<Column> columns = new ArrayList<Column>(emptyColumns);
+    	columns.set(3, new Column(null, run));
+    	final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
+    	
+    	final Collection<RunMove> actual = RunMove.findMoves(board);
+    	
+    	final Collection<RunMove> expected = Arrays.asList(
+    			new RunMove(3, 0, run.size(), run),
+    			new RunMove(3, 1, run.size(), run),
+    			new RunMove(3, 2, run.size(), run),
+    			new RunMove(3, 4, run.size(), run),
+    			new RunMove(3, 5, run.size(), run),
+    			new RunMove(3, 6, run.size(), run));
+    	assertEquals(new HashSet<>(expected), new HashSet<>(actual));
+    }
+    
+    @Test
+    public void testFindMovesKingRun() {
+    	final List<Card> run = Arrays.asList(
+    			new Card(KING, SPADE),
+    			new Card(QUEEN, HEART),
+    			new Card(JACK, SPADE));
+    	final List<Column> columns = new ArrayList<Column>(emptyColumns);
+    	columns.set(3, new Column(null, run));
+    	final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
+    	
+    	final Collection<RunMove> actual = RunMove.findMoves(board);
+    	
+    	final Collection<RunMove> expected = Arrays.asList(
+    			new RunMove(3, 0, run.size(), run),
+    			new RunMove(3, 1, run.size(), run),
+    			new RunMove(3, 2, run.size(), run),
+    			new RunMove(3, 4, run.size(), run),
+    			new RunMove(3, 5, run.size(), run),
+    			new RunMove(3, 6, run.size(), run));
+    	assertEquals(new HashSet<>(expected), new HashSet<>(actual));
+    }
+    
+    @Test
+    public void testFindMovesAdjoining() {
+    	final List<Column> columns = new ArrayList<Column>(emptyColumns);
+    	columns.set(1, new Column(null, Arrays.asList(
+    			new Card(TEN, CLUB),
+    			new Card(NINE, DIAMOND),
+    			new Card(EIGHT, CLUB))));
+    	columns.set(2, new Column(null, Arrays.asList(
+    			new Card(SEVEN, HEART),
+    			new Card(SIX, SPADE),
+    			new Card(FIVE, HEART))));
+    	final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
+    	
+    	final Collection<RunMove> actual = RunMove.findMoves(board);
+    	
+    	final Collection<RunMove> expected = Arrays.asList(
+    			new RunMove(2, 1, 3, Arrays.asList(
+    					new Card(SEVEN, HEART),
+    					new Card(SIX, SPADE),
+    					new Card(FIVE, HEART))));
+    	assertEquals(new HashSet<>(expected), new HashSet<>(actual));
+    }
+    
+    @Test
+    public void testFindMovesAdjoiningWrongColor() {
+    	final List<Column> columns = new ArrayList<Column>(emptyColumns);
+    	columns.set(1, new Column(null, Arrays.asList(
+    			new Card(TEN, CLUB),
+    			new Card(NINE, DIAMOND),
+    			new Card(EIGHT, CLUB))));
+    	columns.set(2, new Column(null, Arrays.asList(
+    			new Card(SEVEN, SPADE),
+    			new Card(SIX, HEART),
+    			new Card(FIVE, SPADE))));
+    	final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
+    	
+    	final Collection<RunMove> actual = RunMove.findMoves(board);
+    	
+    	final Collection<RunMove> expected = Collections.emptySet();
+    	assertEquals(new HashSet<>(expected), new HashSet<>(actual));
+    }
+    
+    @Test
+    public void testFindMovesAdjoiningMultipleDestination() {
+    	final List<Column> columns = new ArrayList<Column>(emptyColumns);
+    	columns.set(1, new Column(null, Arrays.asList(
+    			new Card(TEN, CLUB),
+    			new Card(NINE, DIAMOND),
+    			new Card(EIGHT, CLUB))));
+    	columns.set(2, new Column(null, Arrays.asList(
+    			new Card(SEVEN, HEART),
+    			new Card(SIX, SPADE),
+    			new Card(FIVE, HEART))));
+    	columns.set(3, new Column(null, Arrays.asList(
+    			new Card(TEN, SPADE),
+    			new Card(NINE, HEART),
+    			new Card(EIGHT, SPADE))));
+    	final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
+    	
+    	final Collection<RunMove> actual = RunMove.findMoves(board);
+    	
+    	final Collection<RunMove> expected = Arrays.asList(
+    			new RunMove(2, 1, 3, Arrays.asList(
+    					new Card(SEVEN, HEART),
+    					new Card(SIX, SPADE),
+    					new Card(FIVE, HEART))),
+    			new RunMove(2, 3, 3, Arrays.asList(
+    					new Card(SEVEN, HEART),
+    					new Card(SIX, SPADE),
+    					new Card(FIVE, HEART))));
+    	assertEquals(new HashSet<>(expected), new HashSet<>(actual));
+    }
+    
+    @Test
+    public void testFindMovesAdjoiningMultipleSource() {
+    	final List<Column> columns = new ArrayList<Column>(emptyColumns);
+    	columns.set(1, new Column(null, Arrays.asList(
+    			new Card(TEN, CLUB),
+    			new Card(NINE, DIAMOND),
+    			new Card(EIGHT, CLUB))));
+    	columns.set(2, new Column(null, Arrays.asList(
+    			new Card(SEVEN, HEART),
+    			new Card(SIX, SPADE),
+    			new Card(FIVE, HEART))));
+    	columns.set(4, new Column(null, Arrays.asList(
+    			new Card(SEVEN, DIAMOND),
+    			new Card(SIX, CLUB),
+    			new Card(FIVE, DIAMOND))));
+    	final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
+    	
+    	final Collection<RunMove> actual = RunMove.findMoves(board);
+    	
+    	final Collection<RunMove> expected = Arrays.asList(
+    			new RunMove(2, 1, 3, Arrays.asList(
+    					new Card(SEVEN, HEART),
+    					new Card(SIX, SPADE),
+    					new Card(FIVE, HEART))),
+    			new RunMove(4, 1, 3, Arrays.asList(
+    					new Card(SEVEN, DIAMOND),
+    	    			new Card(SIX, CLUB),
+    	    			new Card(FIVE, DIAMOND))));
+    	assertEquals(new HashSet<>(expected), new HashSet<>(actual));
+    }
+    
+    @Test
+    public void testFindMovesOverlapping() {
+    	final List<Column> columns = new ArrayList<Column>(emptyColumns);
+    	columns.set(1, new Column(null, Arrays.asList(
+    			new Card(TEN, CLUB),
+    			new Card(NINE, DIAMOND),
+    			new Card(EIGHT, CLUB))));
+    	columns.set(2, new Column(null, Arrays.asList(
+    			new Card(EIGHT, SPADE),
+    			new Card(SEVEN, HEART),
+    			new Card(SIX, SPADE),
+    			new Card(FIVE, HEART))));
+    	final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
+    	
+    	final Collection<RunMove> actual = RunMove.findMoves(board);
+    	
+    	final Collection<RunMove> expected = Arrays.asList(
+    			new RunMove(2, 1, 3, Arrays.asList(
+    					new Card(SEVEN, HEART),
+    					new Card(SIX, SPADE),
+    					new Card(FIVE, HEART))));
+    	assertEquals(new HashSet<>(expected), new HashSet<>(actual));
+    }
+    
+    @Test
+    public void testFindMovesOverlappingWrongColor() {
+    	final List<Column> columns = new ArrayList<Column>(emptyColumns);
+    	columns.set(1, new Column(null, Arrays.asList(
+    			new Card(TEN, CLUB),
+    			new Card(NINE, DIAMOND),
+    			new Card(EIGHT, CLUB))));
+    	columns.set(2, new Column(null, Arrays.asList(
+    			new Card(EIGHT, HEART),
+    			new Card(SEVEN, SPADE),
+    			new Card(SIX, HEART),
+    			new Card(FIVE, SPADE))));
+    	final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
+    	
+    	final Collection<RunMove> actual = RunMove.findMoves(board);
+    	
+    	final Collection<RunMove> expected = Collections.emptySet();
+    	assertEquals(new HashSet<>(expected), new HashSet<>(actual));
+    }
+    
+    @Test
+    public void testFindMovesDisjoint() {
+    	final List<Column> columns = new ArrayList<Column>(emptyColumns);
+    	columns.set(1, new Column(null, Arrays.asList(
+    			new Card(TEN, CLUB),
+    			new Card(NINE, DIAMOND),
+    			new Card(EIGHT, CLUB))));
+    	columns.set(2, new Column(null, Arrays.asList(
+    			new Card(SIX, HEART),
+    			new Card(FIVE, SPADE),
+    			new Card(FOUR, HEART))));
+    	final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
+    	
+    	final Collection<RunMove> actual = RunMove.findMoves(board);
+    	
+    	final Collection<RunMove> expected = Collections.emptySet();
+    	assertEquals(new HashSet<>(expected), new HashSet<>(actual));
+    }
+    
+    @Test
+    public void testConstructorSourceAndDestinationSame() {
     	final List<Card> run = Arrays.asList(
     			new Card(ACE, CLUB));
     	

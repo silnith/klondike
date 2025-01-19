@@ -86,6 +86,275 @@ namespace Silnith.Game.Klondike.Move.Tests
             CollectionAssert.AreEquivalent(expected.ToList(), actual.ToList());
         }
 
+        [TestMethod]
+        public void TestFindMovesAdjoining()
+        {
+            List<Column> columns = new(EmptyColumns)
+            {
+                [1] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Ten, Suit.Club),
+                        new Card(Value.Nine, Suit.Diamond),
+                        new Card(Value.Eight, Suit.Club),
+                    }),
+                [2] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Seven, Suit.Heart),
+                        new Card(Value.Six, Suit.Spade),
+                        new Card(Value.Five, Suit.Heart),
+                    }),
+            };
+            Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
+
+            IEnumerable<RunMove> actual = RunMove.FindMoves(board);
+
+            IEnumerable<RunMove> expected = new List<RunMove>()
+            {
+                new RunMove(2, 1, 3, new List<Card>()
+                {
+                    new Card(Value.Seven, Suit.Heart),
+                    new Card(Value.Six, Suit.Spade),
+                    new Card(Value.Five, Suit.Heart),
+                }),
+            };
+            CollectionAssert.AreEquivalent(expected.ToList(), actual.ToList());
+        }
+
+        [TestMethod]
+        public void TestFindMovesAdjoiningWrongColor()
+        {
+            List<Column> columns = new(EmptyColumns)
+            {
+                [1] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Ten, Suit.Club),
+                        new Card(Value.Nine, Suit.Diamond),
+                        new Card(Value.Eight, Suit.Club),
+                    }),
+                [2] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Seven, Suit.Spade),
+                        new Card(Value.Six, Suit.Heart),
+                        new Card(Value.Five, Suit.Spade),
+                    }),
+            };
+            Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
+
+            IEnumerable<RunMove> actual = RunMove.FindMoves(board);
+
+            Assert.IsFalse(actual.Any());
+        }
+
+        [TestMethod]
+        public void TestFindMovesAdjoiningMultipleDestination()
+        {
+            List<Column> columns = new(EmptyColumns)
+            {
+                [1] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Ten, Suit.Club),
+                        new Card(Value.Nine, Suit.Diamond),
+                        new Card(Value.Eight, Suit.Club),
+                    }),
+                [2] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Seven, Suit.Heart),
+                        new Card(Value.Six, Suit.Spade),
+                        new Card(Value.Five, Suit.Heart),
+                    }),
+                [3] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Ten, Suit.Spade),
+                        new Card(Value.Nine, Suit.Heart),
+                        new Card(Value.Eight, Suit.Spade),
+                    }),
+            };
+            Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
+
+            IEnumerable<RunMove> actual = RunMove.FindMoves(board);
+
+            IEnumerable<RunMove> expected = new List<RunMove>()
+            {
+                new RunMove(2, 1, 3, new List<Card>()
+                {
+                    new Card(Value.Seven, Suit.Heart),
+                    new Card(Value.Six, Suit.Spade),
+                    new Card(Value.Five, Suit.Heart),
+                }),
+                new RunMove(2, 3, 3, new List<Card>()
+                {
+                    new Card(Value.Seven, Suit.Heart),
+                    new Card(Value.Six, Suit.Spade),
+                    new Card(Value.Five, Suit.Heart),
+                }),
+            };
+            CollectionAssert.AreEquivalent(expected.ToList(), actual.ToList());
+        }
+
+        [TestMethod]
+        public void TestFindMovesAdjoiningMultipleSource()
+        {
+            List<Column> columns = new(EmptyColumns)
+            {
+                [1] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Ten, Suit.Club),
+                        new Card(Value.Nine, Suit.Diamond),
+                        new Card(Value.Eight, Suit.Club),
+                    }),
+                [2] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Seven, Suit.Heart),
+                        new Card(Value.Six, Suit.Spade),
+                        new Card(Value.Five, Suit.Heart),
+                    }),
+                [4] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Seven, Suit.Diamond),
+                        new Card(Value.Six, Suit.Club),
+                        new Card(Value.Five, Suit.Diamond),
+                    }),
+            };
+            Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
+
+            IEnumerable<RunMove> actual = RunMove.FindMoves(board);
+
+            IEnumerable<RunMove> expected = new List<RunMove>()
+            {
+                new RunMove(2, 1, 3, new List<Card>()
+                {
+                    new Card(Value.Seven, Suit.Heart),
+                    new Card(Value.Six, Suit.Spade),
+                    new Card(Value.Five, Suit.Heart),
+                }),
+                new RunMove(4, 1, 3, new List<Card>()
+                {
+                    new Card(Value.Seven, Suit.Diamond),
+                    new Card(Value.Six, Suit.Club),
+                    new Card(Value.Five, Suit.Diamond),
+                }),
+            };
+            CollectionAssert.AreEquivalent(expected.ToList(), actual.ToList());
+        }
+
+        [TestMethod]
+        public void TestFindMovesOverlapping()
+        {
+            List<Column> columns = new(EmptyColumns)
+            {
+                [1] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Ten, Suit.Club),
+                        new Card(Value.Nine, Suit.Diamond),
+                        new Card(Value.Eight, Suit.Club),
+                    }),
+                [2] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Eight, Suit.Spade),
+                        new Card(Value.Seven, Suit.Heart),
+                        new Card(Value.Six, Suit.Spade),
+                        new Card(Value.Five, Suit.Heart),
+                    }),
+            };
+            Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
+
+            IEnumerable<RunMove> actual = RunMove.FindMoves(board);
+
+            IEnumerable<RunMove> expected = new List<RunMove>()
+            {
+                new RunMove(2, 1, 3, new List<Card>()
+                {
+                    new Card(Value.Seven, Suit.Heart),
+                    new Card(Value.Six, Suit.Spade),
+                    new Card(Value.Five, Suit.Heart),
+                }),
+            };
+            CollectionAssert.AreEquivalent(expected.ToList(), actual.ToList());
+        }
+
+        [TestMethod]
+        public void TestFindMovesOverlappingWrongColor()
+        {
+            List<Column> columns = new(EmptyColumns)
+            {
+                [1] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Ten, Suit.Club),
+                        new Card(Value.Nine, Suit.Diamond),
+                        new Card(Value.Eight, Suit.Club),
+                    }),
+                [2] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Eight, Suit.Heart),
+                        new Card(Value.Seven, Suit.Spade),
+                        new Card(Value.Six, Suit.Heart),
+                        new Card(Value.Five, Suit.Spade),
+                    }),
+            };
+            Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
+
+            IEnumerable<RunMove> actual = RunMove.FindMoves(board);
+
+            Assert.IsFalse(actual.Any());
+        }
+
+        [TestMethod]
+        public void TestFindMovesDisjoint()
+        {
+            List<Column> columns = new(EmptyColumns)
+            {
+                [1] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Ten, Suit.Club),
+                        new Card(Value.Nine, Suit.Diamond),
+                        new Card(Value.Eight, Suit.Club),
+                    }),
+                [2] = new Column(
+                    null,
+                    new List<Card>()
+                    {
+                        new Card(Value.Six, Suit.Heart),
+                        new Card(Value.Five, Suit.Spade),
+                        new Card(Value.Four, Suit.Heart),
+                    }),
+            };
+            Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
+
+            IEnumerable<RunMove> actual = RunMove.FindMoves(board);
+
+            Assert.IsFalse(actual.Any());
+        }
+
         #endregion
 
         [TestMethod]
