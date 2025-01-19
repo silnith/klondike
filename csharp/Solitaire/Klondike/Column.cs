@@ -161,8 +161,7 @@ namespace Silnith.Game.Klondike
                 throw new ArgumentOutOfRangeException(nameof(count), "Larger than the available cards.");
             }
 
-            int end = FaceUp.Count;
-            int start = end - count;
+            int start = FaceUp.Count - count;
             return FaceUp.Skip(start).ToList();
         }
 
