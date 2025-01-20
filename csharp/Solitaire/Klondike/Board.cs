@@ -212,6 +212,67 @@ namespace Silnith.Game.Klondike
             return card.Value.GetValue() == 1 + Foundation[card.Suit].Count;
         }
 
+        private void PrintCardTo(Card card)
+        {
+            Console.Write("{0,2}{1}", card.Value.ToSymbol(), card.Suit.ToSymbol());
+        }
+
+        public void PrintTo()
+        {
+            foreach (KeyValuePair<Suit, IReadOnlyList<Card>> keyValuePair in Foundation)
+            {
+                Console.Write("{0,2}", string.Empty);
+                IReadOnlyList<Card> cards = keyValuePair.Value;
+                if (cards.Any())
+                {
+                    PrintCardTo(cards[cards.Count - 1]);
+                }
+                else
+                {
+                    Console.Write("{0,3}", "--");
+                }
+            }
+            Console.Write("{0,3}", string.Empty);
+            Console.Write("({0,2:D}/{1,2:D})", StockPileIndex, StockPile.Count);
+            Console.Write("{0,2}", string.Empty);
+            if (StockPileIndex > 0)
+            {
+                PrintCardTo(StockPile[StockPileIndex - 1]);
+            }
+            else
+            {
+                Console.Write("{0,3}", string.Empty);
+            }
+            Console.WriteLine();
+            List<IEnumerator<Card>> enumerators = new List<IEnumerator<Card>>(Columns.Count);
+            foreach (Column column in Columns)
+            {
+                Console.Write("{0,2}", string.Empty);
+                Console.Write("({0:D})", column.GetCountOfFaceDownCards());
+                enumerators.Add(column.FaceUp.GetEnumerator());
+            }
+            Console.WriteLine();
+            bool printedSomething;
+            do
+            {
+                printedSomething = false;
+                foreach (IEnumerator<Card> enumerator in enumerators)
+                {
+                    Console.Write("{0,2}", string.Empty);
+                    if (enumerator.MoveNext())
+                    {
+                        PrintCardTo(enumerator.Current);
+                        printedSomething = true;
+                    }
+                    else
+                    {
+                        Console.Write("{0,3}", string.Empty);
+                    }
+                }
+                Console.WriteLine();
+            } while (printedSomething);
+        }
+
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {

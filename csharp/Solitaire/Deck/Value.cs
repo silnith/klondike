@@ -93,7 +93,7 @@ namespace Silnith.Game.Deck
                 Value.Jack => "J",
                 Value.Queen => "Q",
                 Value.King => "K",
-                _ => Convert.ToString(value),
+                _ => $"{value:D}",
             };
         }
     }

@@ -1,8 +1,11 @@
 package org.silnith.game.solitaire;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.silnith.deck.Card;
@@ -217,6 +220,53 @@ public class Board {
     	return card.getValue().getValue() == 1 + foundation.get(card.getSuit()).size();
     }
     
+    private void printCardTo(final PrintStream out, final Card card) {
+    	out.format(Locale.US, "%2s%s", card.getValue().toSymbol(), card.getSuit().toSymbol());
+    }
+    
+    public void printTo(final PrintStream out) {
+    	for (final Map.Entry<Suit, List<Card>> entry : foundation.entrySet()) {
+    		out.format(Locale.US, "%2s", "");
+    		final List<Card> cards = entry.getValue();
+    		if (cards.isEmpty()) {
+    			out.format(Locale.US, "%3s", "--");
+    		} else {
+    			printCardTo(out, cards.get(cards.size() - 1));
+    		}
+    	}
+    	out.format(Locale.US, "%3s", "");
+    	out.format(Locale.US, "(%2d/%2d)", stockPileIndex, stockPile.size());
+    	out.format(Locale.US, "%2s", "");
+    	if (stockPileIndex > 0) {
+    		printCardTo(out, stockPile.get(stockPileIndex - 1));
+    	} else {
+    		out.format(Locale.US, "%3s", "");
+    	}
+    	out.println();
+    	final List<Iterator<Card>> iterators = new ArrayList<Iterator<Card>>(columns.size());
+    	for (final Column column : columns) {
+        	out.format(Locale.US, "%2s", "");
+        	out.format(Locale.US, "(%d)", column.getNumberOfFaceDownCards());
+    		iterators.add(column.getFaceUpCards().iterator());
+    	}
+    	out.println();
+    	boolean printedSomething;
+    	do {
+    		printedSomething = false;
+    		for (final Iterator<Card> iterator : iterators) {
+    			out.format(Locale.US, "%2s", "");
+    			if (iterator.hasNext()) {
+    				final Card card = iterator.next();
+    				printCardTo(out, card);
+    				printedSomething = true;
+    			} else {
+    				out.format(Locale.US, "%3s", "");
+    			}
+    		}
+    		out.println();
+    	} while (printedSomething);
+    }
+    
     @Override
     public int hashCode() {
         return 0xc284f7a1 ^ columns.hashCode() ^ Integer.rotateLeft(stockPile.hashCode(), 8)
@@ -227,6 +277,10 @@ public class Board {
     public boolean equals(final Object obj) {
         if (obj instanceof Board) {
             final Board board = (Board) obj;
+            // Put stockPileIndex first since it changes a lot.
+            if (stockPileIndex != board.stockPileIndex) {
+            	return false;
+            }
             if (stockPile.size() != board.stockPile.size()) {
                 return false;
             }
@@ -235,8 +289,8 @@ public class Board {
                     return false;
                 }
             }
-            // Put stockPileIndex first since it changes a lot.
-            return stockPileIndex == board.stockPileIndex && columns.equals(board.columns) && foundation.equals(board.foundation)
+            return columns.equals(board.columns)
+            		&& foundation.equals(board.foundation)
                     && stockPile.equals(board.stockPile);
         } else {
             return false;
