@@ -86,14 +86,7 @@ public class LinkedNode<E> extends AbstractSequentialList<E> {
     
     private final LinkedNode<E> next;
     
-    /*
-     * I removed the pre-calculation of the list size because the inherited equals()
-     * implementation does not check it, so it did not impact the overall performance
-     * of my program.
-     * 
-     * I may change my mind later.
-     */
-//    private final int size;
+    private final int size;
     
     /**
      * Creates a new list with one element.
@@ -114,15 +107,15 @@ public class LinkedNode<E> extends AbstractSequentialList<E> {
         super();
         this.value = e;
         this.next = list;
-//        if (list == null) {
-//            this.size = 1;
-//        } else {
-//            if (list.size == Integer.MAX_VALUE) {
-//                this.size = Integer.MAX_VALUE;
-//            } else {
-//                this.size = list.size + 1;
-//            }
-//        }
+        if (list == null) {
+            this.size = 1;
+        } else {
+            if (list.size == Integer.MAX_VALUE) {
+                this.size = Integer.MAX_VALUE;
+            } else {
+                this.size = list.size + 1;
+            }
+        }
     }
     
     /**
@@ -149,12 +142,6 @@ public class LinkedNode<E> extends AbstractSequentialList<E> {
     
     @Override
     public int size() {
-        int size = 1;
-        LinkedNode<E> next = this.next;
-        while (next != null && size < Integer.MAX_VALUE) {
-            size++ ;
-            next = next.next;
-        }
         return size;
     }
     

@@ -45,17 +45,7 @@ namespace Silnith.Game
         /// <inheritdoc cref="IReadOnlyCollection{T}.Count"/>
         public int Count
         {
-            get
-            {
-                int size = 1;
-                LinkedNode<E>? next = Next;
-                while (!(next is null))
-                {
-                    size++;
-                    next = next.Next;
-                }
-                return size;
-            }
+            get;
         }
 
         /// <inheritdoc cref="P:System.Collections.Generic.IReadOnlyList`1.Item(System.Int32)"/>
@@ -98,6 +88,21 @@ namespace Silnith.Game
         {
             Value = e;
             Next = list;
+            if (list is null)
+            {
+                Count = 1;
+            }
+            else
+            {
+                if (list.Count == int.MaxValue)
+                {
+                    Count = int.MaxValue;
+                }
+                else
+                {
+                    Count = list.Count + 1;
+                }
+            }
         }
 
         /// <inheritdoc/>
