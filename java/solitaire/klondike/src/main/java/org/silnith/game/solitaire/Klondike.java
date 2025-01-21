@@ -6,12 +6,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.silnith.deck.Card;
 import org.silnith.deck.Suit;
 import org.silnith.deck.Value;
 import org.silnith.game.Game;
 import org.silnith.game.GameState;
+import org.silnith.game.search.SequentialDepthFirstSearch;
+import org.silnith.game.search.WorkerThreadBreadthFirstSearch;
+import org.silnith.game.search.WorkerThreadDepthFirstSearch;
 import org.silnith.game.solitaire.move.AdvanceStockPileMove;
 import org.silnith.game.solitaire.move.ColumnToFoundationMove;
 import org.silnith.game.solitaire.move.DealMove;
@@ -156,8 +162,8 @@ public class Klondike implements Game<SolitaireMove, Board> {
 		
 		return state;
 	}
-
-	public static void main(final String[] args) {
+	
+	public static void main(final String[] args) throws InterruptedException {
 		final List<Card> deck = new ArrayList<>(52);
 		for (final Suit suit : Suit.values()) {
 			for (final Value value : Value.values()) {
@@ -175,20 +181,27 @@ public class Klondike implements Game<SolitaireMove, Board> {
 		final GameState<SolitaireMove, Board> initialState = new GameState<>(deal, board);
 		
 		board.printTo(System.out);
+
+		final int availableProcessors = Runtime.getRuntime().availableProcessors();
+		System.out.format(Locale.US, "Runtime processors: %d", availableProcessors);
 		
+		//sequentialDFS(klondike, initialState);
+		parallelDFS(klondike, initialState, Math.max(availableProcessors - 2, 1));
+		//parallelDFS(klondike, initialState, 1);
+	}
+
+	private static void runSearch0(final Game<SolitaireMove, Board> game, final GameState<SolitaireMove, Board> initialState) {
 		final ConcurrentLinkedDeque<GameState<SolitaireMove, Board>> deque = new ConcurrentLinkedDeque<>();
 		final ConcurrentLinkedDeque<GameState<SolitaireMove, Board>> wins = new ConcurrentLinkedDeque<>();
 		deque.add(initialState);
-		
-		System.out.format(Locale.US, "Runtime processors: %d", Runtime.getRuntime().availableProcessors());
 		
 		long nodesExamined = 0;
 		long gameStatesPruned = 0;
 		GameState<SolitaireMove, Board> currentGameState = deque.poll();
 		while (currentGameState != null) {
 			nodesExamined++;
-			for (final SolitaireMove move : klondike.findAllMoves(currentGameState)) {
-				final GameState<SolitaireMove, Board> gameState = klondike.pruneGameState(new GameState<>(currentGameState, move));
+			for (final SolitaireMove move : game.findAllMoves(currentGameState)) {
+				final GameState<SolitaireMove, Board> gameState = game.pruneGameState(new GameState<>(currentGameState, move));
 				if (gameState == null) {
 					gameStatesPruned++;
 					continue;
@@ -196,7 +209,7 @@ public class Klondike implements Game<SolitaireMove, Board> {
 				//System.out.println(gameState.getMoves().getFirst());
 				//gameState.getBoards().getFirst().printTo(System.out);
 				//System.out.println();
-				if (klondike.isWin(gameState.getBoards().getFirst())) {
+				if (game.isWin(gameState)) {
 					wins.add(gameState);
 				} else {
 					deque.addFirst(gameState);
@@ -221,6 +234,85 @@ public class Klondike implements Game<SolitaireMove, Board> {
 		for (final GameState<SolitaireMove, Board> gameState : wins) {
 			System.out.println(gameState);
 			gameState.getBoards().getFirst().printTo(System.out);
+		}
+	}
+
+	private static void sequentialDFS(final Game<SolitaireMove, Board> game,
+			final GameState<SolitaireMove, Board> initialState) throws InterruptedException {
+		final SequentialDepthFirstSearch<SolitaireMove, Board> searcher = new SequentialDepthFirstSearch<>(game, initialState);
+		final Runnable runnable = new Runnable() {
+			
+			@Override
+			public void run() {
+				final Future<Collection<GameState<SolitaireMove, Board>>> future = searcher.search();
+				
+				final Collection<GameState<SolitaireMove, Board>> wins;
+				try {
+					wins = future.get();
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e);
+				} catch (ExecutionException e) {
+					throw new RuntimeException(e);
+				}
+				
+				for (final GameState<SolitaireMove, Board> gameState : wins) {
+					System.out.println(gameState);
+					gameState.getBoards().getFirst().printTo(System.out);
+				}
+			}
+		};
+		final Thread thread = new Thread(runnable);
+		thread.start();
+		
+		long statesExamined = 0;
+		while (thread.isAlive()) {
+			searcher.printStatistics(System.out);
+			final long nextStatesExamined = searcher.getNumberOfGameStatesExamined();
+			final long nodesPerSecond = nextStatesExamined - statesExamined;
+			System.out.format(Locale.US, "Nodes per second: %,d\n", nodesPerSecond);
+			System.out.println();
+			statesExamined = nextStatesExamined;
+			Thread.sleep(TimeUnit.SECONDS.toMillis(1));
+		}
+	}
+
+	private static void parallelDFS(final Game<SolitaireMove, Board> game,
+			final GameState<SolitaireMove, Board> initialState,
+			final int numThreads) throws InterruptedException {
+		final WorkerThreadDepthFirstSearch<SolitaireMove, Board> searcher = new WorkerThreadDepthFirstSearch<>(game, initialState, numThreads);
+		final Runnable runnable = new Runnable() {
+			
+			@Override
+			public void run() {
+				final Future<Collection<GameState<SolitaireMove, Board>>> future = searcher.search();
+				
+				final Collection<GameState<SolitaireMove, Board>> wins;
+				try {
+					wins = future.get();
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e);
+				} catch (ExecutionException e) {
+					throw new RuntimeException(e);
+				}
+				
+				for (final GameState<SolitaireMove, Board> gameState : wins) {
+					System.out.println(gameState);
+					gameState.getBoards().getFirst().printTo(System.out);
+				}
+			}
+		};
+		final Thread thread = new Thread(runnable);
+		thread.start();
+		
+		long statesExamined = 0;
+		while (thread.isAlive()) {
+			searcher.printStatistics(System.out);
+			final long nextStatesExamined = searcher.getNumberOfGameStatesExamined();
+			final long nodesPerSecond = nextStatesExamined - statesExamined;
+			System.out.format(Locale.US, "Nodes per second: %,d\n", nodesPerSecond);
+			System.out.println();
+			statesExamined = nextStatesExamined;
+			Thread.sleep(TimeUnit.SECONDS.toMillis(1));
 		}
 	}
 

@@ -28,7 +28,8 @@ public class WorkerThreadDepthFirstSearch<M extends Move<B>, B> {
 	private final AtomicLong gameStatesPruned;
 	private volatile boolean cancelled;
 
-	public WorkerThreadDepthFirstSearch(final Game<M, B> game, final GameState<M, B> initialState, final int numThreads) {
+	public WorkerThreadDepthFirstSearch(final Game<M, B> game, final GameState<M, B> initialState,
+			final int numThreads) {
 		super();
 		if (game == null) {
 			throw new IllegalArgumentException("Game cannot be null.");
@@ -43,9 +44,9 @@ public class WorkerThreadDepthFirstSearch<M extends Move<B>, B> {
 		this.gameStatesExamined = new AtomicLong();
 		this.gameStatesPruned = new AtomicLong();
 		this.cancelled = false;
-		
+
 		this.queue.addLast(initialState);
-		
+
 		for (int i = 0; i < numThreads; i++) {
 			threads.add(new Thread(new Worker()));
 		}
@@ -54,14 +55,18 @@ public class WorkerThreadDepthFirstSearch<M extends Move<B>, B> {
 	public void printStatistics(final PrintStream out) {
 		out.printf(Locale.US,
 				"Nodes examined: %,d\n"
-				+ "Nodes pruned: %,d\n"
+		        + "Nodes pruned: %,d\n"
 				+ "Queue size: %,d\n"
-				+ "Wins: %,d\n",
+		        + "Wins: %,d\n",
 				gameStatesExamined.get(),
 				gameStatesPruned.get(),
 				queue.size(),
 				wins.size());
 		out.flush();
+	}
+	
+	public long getNumberOfGameStatesExamined() {
+		return gameStatesExamined.get();
 	}
 
 	public Future<Collection<GameState<M, B>>> search() {
@@ -70,7 +75,7 @@ public class WorkerThreadDepthFirstSearch<M extends Move<B>, B> {
 		}
 		return new Watcher();
 	}
-	
+
 	private final class Watcher implements Future<Collection<GameState<M, B>>> {
 
 		@Override
@@ -117,36 +122,42 @@ public class WorkerThreadDepthFirstSearch<M extends Move<B>, B> {
 			}
 			return wins;
 		}
-		
+
 	}
 
 	private final class Worker implements Runnable {
-		
+
 		@Override
 		public void run() {
-			GameState<M, B> gameState = queue.pollLast();
-			while (gameState != null && !cancelled) {
-				gameStatesExamined.incrementAndGet();
-				final Collection<M> moves = game.findAllMoves(gameState);
-				for (final M move : moves) {
-					final GameState<M, B> potentialGameState = new GameState<>(gameState, move);
-					final GameState<M, B> filteredGameState = game.pruneGameState(potentialGameState);
-					if (filteredGameState == null) {
-						gameStatesPruned.incrementAndGet();
-						continue;
+			do {
+				GameState<M, B> gameState = queue.pollLast();
+				while (gameState != null && !cancelled) {
+					gameStatesExamined.incrementAndGet();
+					final Collection<M> moves = game.findAllMoves(gameState);
+					for (final M move : moves) {
+						final GameState<M, B> potentialGameState = new GameState<>(gameState, move);
+						final GameState<M, B> filteredGameState = game.pruneGameState(potentialGameState);
+						if (filteredGameState == null) {
+							gameStatesPruned.incrementAndGet();
+							continue;
+						}
+
+						if (game.isWin(filteredGameState)) {
+							wins.add(filteredGameState);
+						} else {
+							queue.addLast(filteredGameState);
+						}
 					}
-					
-					if (game.isWin(filteredGameState)) {
-						wins.add(filteredGameState);
-					} else {
-						queue.addLast(filteredGameState);
-					}
+
+					gameState = queue.pollLast();
 				}
-				
-				gameState = queue.pollLast();
-			}
+				try {
+					Thread.sleep(TimeUnit.SECONDS.toMillis(1));
+				} catch (final InterruptedException e) {
+				}
+			} while (!cancelled);
 		}
-		
+
 	}
 
 }

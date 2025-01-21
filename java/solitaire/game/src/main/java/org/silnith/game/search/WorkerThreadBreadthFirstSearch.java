@@ -62,6 +62,10 @@ public class WorkerThreadBreadthFirstSearch<M extends Move<B>, B> {
 				wins.size());
 		out.flush();
 	}
+	
+	public long getNumberOfGameStatesExamined() {
+		return gameStatesExamined.get();
+	}
 
 	public Future<Collection<GameState<M, B>>> search() {
 		for (final Thread thread : threads) {
@@ -123,27 +127,33 @@ public class WorkerThreadBreadthFirstSearch<M extends Move<B>, B> {
 		
 		@Override
 		public void run() {
-			GameState<M, B> gameState = queue.poll();
-			while (gameState != null && !cancelled) {
-				gameStatesExamined.incrementAndGet();
-				final Collection<M> moves = game.findAllMoves(gameState);
-				for (final M move : moves) {
-					final GameState<M, B> potentialGameState = new GameState<>(gameState, move);
-					final GameState<M, B> filteredGameState = game.pruneGameState(potentialGameState);
-					if (filteredGameState == null) {
-						gameStatesPruned.incrementAndGet();
-						continue;
+			do {
+				GameState<M, B> gameState = queue.poll();
+				while (gameState != null && !cancelled) {
+					gameStatesExamined.incrementAndGet();
+					final Collection<M> moves = game.findAllMoves(gameState);
+					for (final M move : moves) {
+						final GameState<M, B> potentialGameState = new GameState<>(gameState, move);
+						final GameState<M, B> filteredGameState = game.pruneGameState(potentialGameState);
+						if (filteredGameState == null) {
+							gameStatesPruned.incrementAndGet();
+							continue;
+						}
+						
+						if (game.isWin(filteredGameState)) {
+							wins.add(filteredGameState);
+						} else {
+							queue.add(filteredGameState);
+						}
 					}
 					
-					if (game.isWin(filteredGameState)) {
-						wins.add(filteredGameState);
-					} else {
-						queue.add(filteredGameState);
-					}
+					gameState = queue.poll();
 				}
-				
-				gameState = queue.poll();
-			}
+				try {
+					Thread.sleep(TimeUnit.SECONDS.toMillis(1));
+				} catch (final InterruptedException e) {
+				}
+			} while (!cancelled);
 		}
 		
 	}

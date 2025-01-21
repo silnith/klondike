@@ -2,8 +2,6 @@ package org.silnith.game.ticTacToe;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutionException;
@@ -12,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.silnith.game.Game;
 import org.silnith.game.GameState;
-import org.silnith.game.search.WorkerThreadBreadthFirstSearch;
+import org.silnith.game.search.*;
 
 public class TicTacToe implements Game<Move, Board> {
 
@@ -80,7 +78,6 @@ public class TicTacToe implements Game<Move, Board> {
 	}
 
 	public static void main(final String[] args) throws InterruptedException, ExecutionException {
-		final Board emptyBoard;
 		final TicTacToe game = new TicTacToe();
 		final Move initialMove = new Move(0, 0, null);
 		final Board initialBoard = new Board(Player.X);
@@ -92,10 +89,11 @@ public class TicTacToe implements Game<Move, Board> {
 		final ConcurrentLinkedDeque<GameState<Move, Board>> wins = new ConcurrentLinkedDeque<>();
 		deque.add(initialState);
 		
-		System.out.format(Locale.US, "Runtime processors: %d", Runtime.getRuntime().availableProcessors());
+		final int availableProcessors = Runtime.getRuntime().availableProcessors();
+		System.out.format(Locale.US, "Runtime processors: %d", availableProcessors);
 		System.out.println();
 		
-		final WorkerThreadBreadthFirstSearch<Move, Board> searcher = new WorkerThreadBreadthFirstSearch<>(game, initialState, Runtime.getRuntime().availableProcessors());
+		final SequentialBreadthFirstSearch<Move, Board> searcher = new SequentialBreadthFirstSearch<>(game, initialState);
 		final Future<Collection<GameState<Move, Board>>> future = searcher.search();
 		
 		while (!future.isDone()) {

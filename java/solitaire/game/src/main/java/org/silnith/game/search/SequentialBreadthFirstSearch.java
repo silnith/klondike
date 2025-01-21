@@ -51,6 +51,10 @@ public class SequentialBreadthFirstSearch<M extends Move<B>, B> {
 				wins.size());
 		out.flush();
 	}
+	
+	public long getNumberOfGameStatesExamined() {
+		return gameStatesExamined.get();
+	}
 
 	public Future<Collection<GameState<M, B>>> search() {
 		GameState<M, B> gameState = queue.poll();
