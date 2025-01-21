@@ -15,15 +15,15 @@ import org.silnith.game.move.Move;
  * @author <a href="mailto:silnith@gmail.com">Kent Rosenkoetter</a>
  */
 public interface Game<M extends Move<B>, B> {
-    
+
     /**
-     * Returns whether the given board is a winning game state for this game.
+     * Returns whether the given game state is a winning game state for this game.
      * 
-     * @param board the board to check
-     * @return {@code true} if the board represents a win
+     * @param state the game state to check
+     * @return {@code true} if the game state represents a win
      */
-    boolean isWin(B board);
-    
+    boolean isWin(GameState<M, B> state);
+
     /**
      * Returns all the legal moves for the provided game state. The current game
      * board can be retrieved using {@code state.getBoards().get(0)}.
@@ -35,7 +35,7 @@ public interface Game<M extends Move<B>, B> {
      * @return a collection of legal moves for the given game state
      */
     Collection<M> findAllMoves(GameState<M, B> state);
-    
+
     /**
      * Possibly prunes or modifies the given game state based on the state
      * history.  The returned value may be a different object than the input,
@@ -46,5 +46,5 @@ public interface Game<M extends Move<B>, B> {
      *         state. This might not be the same game state as the parameter.
      */
     GameState<M, B> pruneGameState(GameState<M, B> state);
-    
+
 }

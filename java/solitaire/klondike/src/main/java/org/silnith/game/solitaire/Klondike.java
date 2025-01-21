@@ -76,9 +76,14 @@ public class Klondike implements Game<SolitaireMove, Board> {
 	public int getDrawAdvance() {
 		return drawAdvance;
 	}
-
-	@Override
-	public boolean isWin(Board board) {
+	
+    /**
+     * Returns whether the given board is a winning game state for this game.
+     * 
+     * @param board the board to check
+     * @return {@code true} if the board represents a win
+     */
+	public boolean isWin(final Board board) {
 		for (final Suit suit : Suit.values()) {
 			if (board.getFoundation().get(suit).size() < Value.values().length) {
 				return false;
@@ -86,7 +91,12 @@ public class Klondike implements Game<SolitaireMove, Board> {
 		}
 		return true;
 	}
-	
+
+	@Override
+	public boolean isWin(final GameState<SolitaireMove, Board> state) {
+		return isWin(state.getBoards().getFirst());
+	}
+
 	/**
 	 * Returns all the legal moves for the given board.
 	 * 

@@ -11,11 +11,11 @@ namespace Silnith.Game
     public interface IGame<M, B> where M : IMove<B>
     {
         /// <summary>
-        /// Returns whether the given board is a winning game state for this game.
+        /// Returns whether the given game state is a winning game state for this game.
         /// </summary>
-        /// <param name="board">The board to check.</param>
-        /// <returns><see langword="true"/> if the board represents a win.</returns>
-        bool IsWin(B board);
+        /// <param name="state">The game state to check.</param>
+        /// <returns><see langword="true"/> if the game state represents a win.</returns>
+        bool IsWin(GameState<M, B> state);
 
         /// <summary>
         /// Returns all the legal moves for the provided game state.  The current game
