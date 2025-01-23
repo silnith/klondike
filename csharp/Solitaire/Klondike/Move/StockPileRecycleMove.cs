@@ -8,7 +8,7 @@ namespace Silnith.Game.Klondike.Move
     /// A move that recycles the stock pile.  This sets the current index into the
     /// stock pile back to zero.
     /// </summary>
-    public class RecycleStockPileMove : ISolitaireMove, IEquatable<RecycleStockPileMove?>
+    public class StockPileRecycleMove : ISolitaireMove, IEquatable<StockPileRecycleMove?>
     {
         /// <summary>
         /// Finds all recycle stock pile moves for a given board.
@@ -20,18 +20,18 @@ namespace Silnith.Game.Klondike.Move
         /// </remarks>
         /// <param name="board">The board to examine.</param>
         /// <returns>An enumerable of moves.</returns>
-        public static IEnumerable<RecycleStockPileMove> FindMoves(Board board)
+        public static IEnumerable<StockPileRecycleMove> FindMoves(Board board)
         {
             if (board.CanRecycleStockPile())
             {
-                return new List<RecycleStockPileMove>(1)
+                return new List<StockPileRecycleMove>(1)
                 {
-                    new RecycleStockPileMove(board),
+                    new StockPileRecycleMove(board),
                 };
             }
             else
             {
-                return Array.Empty<RecycleStockPileMove>();
+                return Array.Empty<StockPileRecycleMove>();
             }
         }
 
@@ -70,7 +70,7 @@ namespace Silnith.Game.Klondike.Move
         /// Constructs a new move that recycles the stock pile.
         /// </summary>
         /// <param name="sourceIndex">The index into the stock pile before the move.</param>
-        public RecycleStockPileMove(int sourceIndex)
+        public StockPileRecycleMove(int sourceIndex)
         {
             SourceIndex = sourceIndex;
         }
@@ -79,7 +79,7 @@ namespace Silnith.Game.Klondike.Move
         /// Constructs a new move that recycles the stock pile.
         /// </summary>
         /// <param name="board">The board from which to get the stock pile index.</param>
-        public RecycleStockPileMove(Board board) : this(board.StockPileIndex)
+        public StockPileRecycleMove(Board board) : this(board.StockPileIndex)
         {
         }
 
@@ -92,11 +92,11 @@ namespace Silnith.Game.Klondike.Move
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
-            return Equals(obj as RecycleStockPileMove);
+            return Equals(obj as StockPileRecycleMove);
         }
 
         /// <inheritdoc/>
-        public bool Equals(RecycleStockPileMove? other)
+        public bool Equals(StockPileRecycleMove? other)
         {
             return other != null &&
                    SourceIndex == other.SourceIndex;

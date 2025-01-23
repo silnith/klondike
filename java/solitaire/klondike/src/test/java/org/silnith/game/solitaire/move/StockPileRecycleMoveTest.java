@@ -27,7 +27,7 @@ import org.silnith.deck.Value;
 import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.Column;
 
-public class RecycleStockPileMoveTest {
+public class StockPileRecycleMoveTest {
 
     private final List<Card> emptyListOfCards = Collections.emptyList();
     
@@ -35,7 +35,7 @@ public class RecycleStockPileMoveTest {
     
     private final List<Column> emptyColumns = new ArrayList<Column>(7);
     
-    public RecycleStockPileMoveTest() {
+    public StockPileRecycleMoveTest() {
         for (int i = 0; i < 7; i++ ) {
             this.emptyColumns.add(new Column(emptyListOfCards, emptyListOfCards));
         }
@@ -48,7 +48,7 @@ public class RecycleStockPileMoveTest {
 	public void testFindMovesEmptyStockPile() {
 		final Board board = new Board(emptyColumns, emptyListOfCards, 0, emptyFoundation);
 		
-		final Collection<RecycleStockPileMove> actual = RecycleStockPileMove.findMoves(board);
+		final Collection<StockPileRecycleMove> actual = StockPileRecycleMove.findMoves(board);
 		
 		assertTrue(actual.isEmpty());
 	}
@@ -62,7 +62,7 @@ public class RecycleStockPileMoveTest {
 				new Card(THREE, DIAMOND));
 		final Board board = new Board(emptyColumns, stockPile, 0, emptyFoundation);
 		
-		final Collection<RecycleStockPileMove> actual = RecycleStockPileMove.findMoves(board);
+		final Collection<StockPileRecycleMove> actual = StockPileRecycleMove.findMoves(board);
 		
 		assertTrue(actual.isEmpty());
 	}
@@ -76,7 +76,7 @@ public class RecycleStockPileMoveTest {
 				new Card(THREE, DIAMOND));
 		final Board board = new Board(emptyColumns, stockPile, 2, emptyFoundation);
 		
-		final Collection<RecycleStockPileMove> actual = RecycleStockPileMove.findMoves(board);
+		final Collection<StockPileRecycleMove> actual = StockPileRecycleMove.findMoves(board);
 		
 		assertTrue(actual.isEmpty());
 	}
@@ -90,23 +90,23 @@ public class RecycleStockPileMoveTest {
 				new Card(THREE, DIAMOND));
 		final Board board = new Board(emptyColumns, stockPile, 4, emptyFoundation);
 		
-		final Collection<RecycleStockPileMove> actual = RecycleStockPileMove.findMoves(board);
+		final Collection<StockPileRecycleMove> actual = StockPileRecycleMove.findMoves(board);
 		
-		final Collection<RecycleStockPileMove> expected = Collections.singleton(
-				new RecycleStockPileMove(4));
+		final Collection<StockPileRecycleMove> expected = Collections.singleton(
+				new StockPileRecycleMove(4));
 		assertEquals(new HashSet<>(expected), new HashSet<>(actual));
 	}
 
 	@Test
 	public void testGetSourceIndex() {
-		final RecycleStockPileMove move = new RecycleStockPileMove(5);
+		final StockPileRecycleMove move = new StockPileRecycleMove(5);
 		
 		assertEquals(5, move.getSourceIndex());
 	}
 
 	@Test
 	public void testHasCards() {
-		final RecycleStockPileMove move = new RecycleStockPileMove(5);
+		final StockPileRecycleMove move = new StockPileRecycleMove(5);
 		
 		assertFalse(move.hasCards());
 	}
@@ -137,7 +137,7 @@ public class RecycleStockPileMoveTest {
 		
 		final Board board = new Board(columns, stockPile, stockPileIndex, foundation);
 		
-		final RecycleStockPileMove move = new RecycleStockPileMove(stockPileIndex);
+		final StockPileRecycleMove move = new StockPileRecycleMove(stockPileIndex);
 		
 		final Board actual = move.apply(board);
 		
@@ -150,24 +150,24 @@ public class RecycleStockPileMoveTest {
 
 	@Test
 	public void testEquals() {
-		final RecycleStockPileMove move1 = new RecycleStockPileMove(5);
-		final RecycleStockPileMove move2 = new RecycleStockPileMove(5);
+		final StockPileRecycleMove move1 = new StockPileRecycleMove(5);
+		final StockPileRecycleMove move2 = new StockPileRecycleMove(5);
 		
 		assertTrue(move1.equals(move2));
 	}
 
 	@Test
 	public void testHashCode() {
-		final RecycleStockPileMove move1 = new RecycleStockPileMove(5);
-		final RecycleStockPileMove move2 = new RecycleStockPileMove(5);
+		final StockPileRecycleMove move1 = new StockPileRecycleMove(5);
+		final StockPileRecycleMove move2 = new StockPileRecycleMove(5);
 		
 		assertEquals(move1.hashCode(), move2.hashCode());
 	}
 
 	@Test
 	public void testEqualsDifferentIndex() {
-		final RecycleStockPileMove move1 = new RecycleStockPileMove(5);
-		final RecycleStockPileMove move2 = new RecycleStockPileMove(4);
+		final StockPileRecycleMove move1 = new StockPileRecycleMove(5);
+		final StockPileRecycleMove move2 = new StockPileRecycleMove(4);
 		
 		assertFalse(move1.equals(move2));
 	}

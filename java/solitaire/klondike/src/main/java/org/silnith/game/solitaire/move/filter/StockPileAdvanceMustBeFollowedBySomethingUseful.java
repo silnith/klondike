@@ -3,7 +3,7 @@ package org.silnith.game.solitaire.move.filter;
 import org.silnith.game.GameState;
 import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.move.StockPileAdvanceMove;
-import org.silnith.game.solitaire.move.RecycleStockPileMove;
+import org.silnith.game.solitaire.move.StockPileRecycleMove;
 import org.silnith.game.solitaire.move.SolitaireMove;
 import org.silnith.game.solitaire.move.StockPileToColumnMove;
 import org.silnith.game.solitaire.move.StockPileToFoundationMove;
@@ -25,7 +25,7 @@ public class StockPileAdvanceMustBeFollowedBySomethingUseful implements Solitair
 		if (previousMove instanceof StockPileAdvanceMove) {
 			// check stuff
 			if (currentMove instanceof StockPileAdvanceMove
-					|| currentMove instanceof RecycleStockPileMove
+					|| currentMove instanceof StockPileRecycleMove
 					|| currentMove instanceof StockPileToColumnMove
 					|| currentMove instanceof StockPileToFoundationMove) {
 				// This is fine.

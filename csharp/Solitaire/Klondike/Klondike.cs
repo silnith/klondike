@@ -60,7 +60,7 @@ namespace Silnith.Game.Klondike
                 .Concat(FoundationToColumnMove.FindMoves(board))
                 .Concat(RunMove.FindMoves(board))
                 .Concat(StockPileAdvanceMove.FindMoves(DrawAdvance, board))
-                .Concat(RecycleStockPileMove.FindMoves(board));
+                .Concat(StockPileRecycleMove.FindMoves(board));
         }
 
         /// <inheritdoc/>

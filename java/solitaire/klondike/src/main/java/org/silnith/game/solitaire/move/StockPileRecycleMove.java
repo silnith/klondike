@@ -12,7 +12,7 @@ import org.silnith.game.solitaire.Board;
  * A move that recycles the stock pile.  This sets the current index into the
  * stock pile back to zero.
  */
-public class RecycleStockPileMove implements SolitaireMove {
+public class StockPileRecycleMove implements SolitaireMove {
 	
 	/**
 	 * Finds all recycle stock pile moves for a given board.
@@ -22,9 +22,9 @@ public class RecycleStockPileMove implements SolitaireMove {
 	 * @param board the board to examine
 	 * @return a collection of moves
 	 */
-	public static Collection<RecycleStockPileMove> findMoves(final Board board) {
+	public static Collection<StockPileRecycleMove> findMoves(final Board board) {
 		if (board.canRecycleStockPile()) {
-			return Collections.singleton(new RecycleStockPileMove(board.getStockPileIndex()));
+			return Collections.singleton(new StockPileRecycleMove(board.getStockPileIndex()));
 		} else {
 			return Collections.emptySet();
 		}
@@ -42,7 +42,7 @@ public class RecycleStockPileMove implements SolitaireMove {
      * 
      * @param sourceIndex the index into the stock pile before the move
      */
-    public RecycleStockPileMove(final int sourceIndex) {
+    public StockPileRecycleMove(final int sourceIndex) {
         super();
         this.sourceIndex = sourceIndex;
     }
@@ -78,8 +78,8 @@ public class RecycleStockPileMove implements SolitaireMove {
     
     @Override
     public boolean equals(final Object obj) {
-        if (obj instanceof RecycleStockPileMove) {
-            final RecycleStockPileMove move = (RecycleStockPileMove) obj;
+        if (obj instanceof StockPileRecycleMove) {
+            final StockPileRecycleMove move = (StockPileRecycleMove) obj;
             return sourceIndex == move.sourceIndex;
         } else {
             return false;

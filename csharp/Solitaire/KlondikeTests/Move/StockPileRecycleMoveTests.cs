@@ -7,7 +7,7 @@ using System.Linq;
 namespace Silnith.Game.Klondike.Move.Tests
 {
     [TestClass]
-    public class RecycleStockPileMoveTests
+    public class StockPileRecycleMoveTests
     {
         private readonly IReadOnlyList<Card> EmptyListOfCards = Array.Empty<Card>();
         private readonly IReadOnlyDictionary<Suit, IReadOnlyList<Card>> EmptyFoundation = new Dictionary<Suit, IReadOnlyList<Card>>()
@@ -35,7 +35,7 @@ namespace Silnith.Game.Klondike.Move.Tests
         {
             Board board = new(EmptyColumns, EmptyListOfCards, 0, EmptyFoundation);
 
-            IEnumerable<RecycleStockPileMove> actual = RecycleStockPileMove.FindMoves(board);
+            IEnumerable<StockPileRecycleMove> actual = StockPileRecycleMove.FindMoves(board);
 
             Assert.IsFalse(actual.Any());
         }
@@ -52,7 +52,7 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(EmptyColumns, stockPile, 0, EmptyFoundation);
 
-            IEnumerable<RecycleStockPileMove> actual = RecycleStockPileMove.FindMoves(board);
+            IEnumerable<StockPileRecycleMove> actual = StockPileRecycleMove.FindMoves(board);
 
             Assert.IsFalse(actual.Any());
         }
@@ -69,7 +69,7 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(EmptyColumns, stockPile, 2, EmptyFoundation);
 
-            IEnumerable<RecycleStockPileMove> actual = RecycleStockPileMove.FindMoves(board);
+            IEnumerable<StockPileRecycleMove> actual = StockPileRecycleMove.FindMoves(board);
 
             Assert.IsFalse(actual.Any());
         }
@@ -86,11 +86,11 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(EmptyColumns, stockPile, 4, EmptyFoundation);
 
-            IEnumerable<RecycleStockPileMove> actual = RecycleStockPileMove.FindMoves(board);
+            IEnumerable<StockPileRecycleMove> actual = StockPileRecycleMove.FindMoves(board);
 
-            IEnumerable<RecycleStockPileMove> expected = new List<RecycleStockPileMove>(1)
+            IEnumerable<StockPileRecycleMove> expected = new List<StockPileRecycleMove>(1)
             {
-                new RecycleStockPileMove(4),
+                new StockPileRecycleMove(4),
             };
             CollectionAssert.AreEquivalent(expected.ToList(), actual.ToList());
         }
@@ -100,7 +100,7 @@ namespace Silnith.Game.Klondike.Move.Tests
         [TestMethod]
         public void TestSourceIndex()
         {
-            RecycleStockPileMove move = new(5);
+            StockPileRecycleMove move = new(5);
 
             Assert.AreEqual(5, move.SourceIndex);
         }
@@ -108,7 +108,7 @@ namespace Silnith.Game.Klondike.Move.Tests
         [TestMethod]
         public void TestHasCards()
         {
-            RecycleStockPileMove move = new(5);
+            StockPileRecycleMove move = new(5);
 
             Assert.IsFalse(move.HasCards);
         }
@@ -165,7 +165,7 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(columns, stockPile, stockPileIndex, foundation);
 
-            RecycleStockPileMove move = new(stockPileIndex);
+            StockPileRecycleMove move = new(stockPileIndex);
 
             Board actual = move.Apply(board);
 
@@ -183,8 +183,8 @@ namespace Silnith.Game.Klondike.Move.Tests
         [TestMethod]
         public void TestEquals()
         {
-            RecycleStockPileMove move1 = new(5);
-            RecycleStockPileMove move2 = new(5);
+            StockPileRecycleMove move1 = new(5);
+            StockPileRecycleMove move2 = new(5);
 
             Assert.AreEqual(move1, move2);
         }
@@ -192,8 +192,8 @@ namespace Silnith.Game.Klondike.Move.Tests
         [TestMethod]
         public void TestGetHashCode()
         {
-            RecycleStockPileMove move1 = new(5);
-            RecycleStockPileMove move2 = new(5);
+            StockPileRecycleMove move1 = new(5);
+            StockPileRecycleMove move2 = new(5);
 
             Assert.AreEqual(move1.GetHashCode(), move2.GetHashCode());
         }
@@ -201,8 +201,8 @@ namespace Silnith.Game.Klondike.Move.Tests
         [TestMethod]
         public void TestEqualsDifferentIndex()
         {
-            RecycleStockPileMove move1 = new(5);
-            RecycleStockPileMove move2 = new(4);
+            StockPileRecycleMove move1 = new(5);
+            StockPileRecycleMove move2 = new(4);
 
             Assert.AreNotEqual(move1, move2);
         }

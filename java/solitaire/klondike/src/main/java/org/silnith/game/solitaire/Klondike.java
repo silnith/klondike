@@ -22,7 +22,7 @@ import org.silnith.game.solitaire.move.StockPileAdvanceMove;
 import org.silnith.game.solitaire.move.ColumnToFoundationMove;
 import org.silnith.game.solitaire.move.DealMove;
 import org.silnith.game.solitaire.move.FoundationToColumnMove;
-import org.silnith.game.solitaire.move.RecycleStockPileMove;
+import org.silnith.game.solitaire.move.StockPileRecycleMove;
 import org.silnith.game.solitaire.move.RunMove;
 import org.silnith.game.solitaire.move.SolitaireMove;
 import org.silnith.game.solitaire.move.StockPileToColumnMove;
@@ -121,7 +121,7 @@ public class Klondike implements Game<SolitaireMove, Board> {
 	 */
 	public Collection<SolitaireMove> findAllMoves(final Board board) {
 		final Collection<SolitaireMove> moves = new ArrayList<>();
-		moves.addAll(RecycleStockPileMove.findMoves(board));
+		moves.addAll(StockPileRecycleMove.findMoves(board));
 		moves.addAll(StockPileAdvanceMove.findMoves(drawAdvance, board));
 		moves.addAll(FoundationToColumnMove.findMoves(board));
 		moves.addAll(RunMove.findMoves(board));
