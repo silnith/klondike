@@ -1,0 +1,1 @@
+package org.silnith.game.solitaire.move.filter;

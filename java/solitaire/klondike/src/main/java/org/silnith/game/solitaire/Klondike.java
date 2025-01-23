@@ -1,6 +1,7 @@
 package org.silnith.game.solitaire;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +17,6 @@ import org.silnith.deck.Value;
 import org.silnith.game.Game;
 import org.silnith.game.GameState;
 import org.silnith.game.search.SequentialDepthFirstSearch;
-import org.silnith.game.search.WorkerThreadBreadthFirstSearch;
 import org.silnith.game.search.WorkerThreadDepthFirstSearch;
 import org.silnith.game.solitaire.move.AdvanceStockPileMove;
 import org.silnith.game.solitaire.move.ColumnToFoundationMove;
@@ -27,6 +27,16 @@ import org.silnith.game.solitaire.move.RunMove;
 import org.silnith.game.solitaire.move.SolitaireMove;
 import org.silnith.game.solitaire.move.StockPileToColumnMove;
 import org.silnith.game.solitaire.move.StockPileToFoundationMove;
+import org.silnith.game.solitaire.move.filter.BoardCycleFilter;
+import org.silnith.game.solitaire.move.filter.DrawFromStockPileFilter;
+import org.silnith.game.solitaire.move.filter.KingMoveMustExposeFaceDownCardFilter;
+import org.silnith.game.solitaire.move.filter.LockFoundationFilter;
+import org.silnith.game.solitaire.move.filter.MoveCapFilter;
+import org.silnith.game.solitaire.move.filter.RedundantStackMoveFilter;
+import org.silnith.game.solitaire.move.filter.RunMoveMustBeFollowedBySomethingUsefulFilter;
+import org.silnith.game.solitaire.move.filter.SolitaireMoveFilter;
+import org.silnith.game.solitaire.move.filter.StockPileAdvanceMustBeFollowedBySomethingUseful;
+import org.silnith.game.solitaire.move.filter.StockPileRecycleMustBeFollowedByAdvance;
 import org.silnith.util.LinkedNode;
 
 /**
@@ -111,13 +121,13 @@ public class Klondike implements Game<SolitaireMove, Board> {
 	 */
 	public Collection<SolitaireMove> findAllMoves(final Board board) {
 		final Collection<SolitaireMove> moves = new ArrayList<>();
-		moves.addAll(StockPileToFoundationMove.findMoves(board));
-		moves.addAll(StockPileToColumnMove.findMoves(board));
-		moves.addAll(ColumnToFoundationMove.findMoves(board));
+		moves.addAll(RecycleStockPileMove.findMoves(board));
+		moves.addAll(AdvanceStockPileMove.findMoves(drawAdvance, board));
 		moves.addAll(FoundationToColumnMove.findMoves(board));
 		moves.addAll(RunMove.findMoves(board));
-		moves.addAll(AdvanceStockPileMove.findMoves(drawAdvance, board));
-		moves.addAll(RecycleStockPileMove.findMoves(board));
+		moves.addAll(StockPileToColumnMove.findMoves(board));
+		moves.addAll(ColumnToFoundationMove.findMoves(board));
+		moves.addAll(StockPileToFoundationMove.findMoves(board));
 		return moves;
 	}
 
@@ -125,44 +135,30 @@ public class Klondike implements Game<SolitaireMove, Board> {
 	public Collection<SolitaireMove> findAllMoves(final GameState<SolitaireMove, Board> state) {
 		return findAllMoves(state.getBoards().get(0));
 	}
+	
+	// RunMove cannot follow stock pile advance or recycle.
+	private static final Collection<SolitaireMoveFilter> filters = Arrays.asList(
+			new MoveCapFilter(150),
+			new KingMoveMustExposeFaceDownCardFilter(),
+			new StockPileRecycleMustBeFollowedByAdvance(),
+			new StockPileAdvanceMustBeFollowedBySomethingUseful(),
+			//new RedundantStackMoveFilter(),
+			new DrawFromStockPileFilter(),
+			new LockFoundationFilter(),
+			new RunMoveMustBeFollowedBySomethingUsefulFilter(),
+			new BoardCycleFilter());
 
 	@Override
 	public GameState<SolitaireMove, Board> pruneGameState(final GameState<SolitaireMove, Board> state) {
-		final SolitaireMove currentMove = state.getMoves().getFirst();
-		final LinkedNode<SolitaireMove> moveHistory = state.getMoves().getNext();
-		final Board currentBoard = state.getBoards().getFirst();
-		final LinkedNode<Board> boardHistory = state.getBoards().getNext();
-		
-		if (moveHistory == null || boardHistory == null) {
-			// No past history to check, allow the search.
-			return state;
-		}
-
-		if (boardHistory.size() > 150) {
-			return null;
-		}
-		
-		if (boardHistory.contains(currentBoard)) {
-			// The move introduces a cycle into the search tree.
-			return null;
-		}
-		
-		final SolitaireMove previousMove = moveHistory.getFirst();
-		@SuppressWarnings("unused")
-		final Board previousBoard = boardHistory.getFirst();
-		
-		if (currentMove.hasCards() && previousMove.hasCards()
-				&& currentMove.getCards().equals(previousMove.getCards())) {
-			/*
-			 * If two consecutive moves are moving the same stack of cards,
-			 * they are redundant and the search tree should be pruned.
-			 */
-			return null;
+		for (final SolitaireMoveFilter filter : filters) {
+			if (filter.test(state)) {
+				return null;
+			}
 		}
 		
 		return state;
 	}
-	
+
 	public static void main(final String[] args) throws InterruptedException {
 		final List<Card> deck = new ArrayList<>(52);
 		for (final Suit suit : Suit.values()) {
@@ -185,8 +181,9 @@ public class Klondike implements Game<SolitaireMove, Board> {
 		final int availableProcessors = Runtime.getRuntime().availableProcessors();
 		System.out.format(Locale.US, "Runtime processors: %d", availableProcessors);
 		
+		runSearch0(klondike, initialState);
 		//sequentialDFS(klondike, initialState);
-		parallelDFS(klondike, initialState, Math.max(availableProcessors - 2, 1));
+		//parallelDFS(klondike, initialState, Math.max(availableProcessors - 2, 1));
 		//parallelDFS(klondike, initialState, 1);
 	}
 
@@ -200,7 +197,39 @@ public class Klondike implements Game<SolitaireMove, Board> {
 		GameState<SolitaireMove, Board> currentGameState = deque.poll();
 		while (currentGameState != null) {
 			nodesExamined++;
-			for (final SolitaireMove move : game.findAllMoves(currentGameState)) {
+			final Collection<SolitaireMove> moves = game.findAllMoves(currentGameState);
+			
+			System.out.println();
+			System.out.println("Scenario:");
+			final List<SolitaireMove> moveHistory = new ArrayList<>(currentGameState.getMoves());
+			Collections.reverse(moveHistory);
+			for (final SolitaireMove move : moveHistory) {
+				System.out.println(move);
+			}
+			System.out.format(Locale.US, "Moves made: %,d\n", moveHistory.size());
+			System.out.format(Locale.US, "Game states to examine: %,d\n", deque.size());
+			final Board currentBoard = currentGameState.getBoards().getFirst();
+			currentBoard.printTo(System.out);
+			System.out.println("Choices:");
+			for (final SolitaireMove move : moves) {
+				System.out.print(move);
+				for (final SolitaireMoveFilter filter : filters) {
+					if (filter.test(new GameState<>(currentGameState, move))) {
+						System.out.print(" (filtered by ");
+						System.out.print(filter.getClass().getSimpleName());
+						System.out.print(")");
+					}
+				}
+				System.out.println();
+			}
+			System.out.println();
+			/*
+			 * If moving out of foundation, it must be followed by a move onto
+			 * the card pulled from the foundation, or by another move out of
+			 * the foundation.
+			 */
+			
+			for (final SolitaireMove move : moves) {
 				final GameState<SolitaireMove, Board> gameState = game.pruneGameState(new GameState<>(currentGameState, move));
 				if (gameState == null) {
 					gameStatesPruned++;
