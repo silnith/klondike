@@ -7,7 +7,7 @@ using System.Linq;
 namespace Silnith.Game.Klondike.Move.Tests
 {
     [TestClass]
-    public class RunMoveTests
+    public class ColumnToColumnMoveTests
     {
         private readonly IReadOnlyList<Card> EmptyListOfCards = Array.Empty<Card>();
         private readonly IReadOnlyDictionary<Suit, IReadOnlyList<Card>> EmptyFoundation = new Dictionary<Suit, IReadOnlyList<Card>>()
@@ -43,16 +43,16 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
 
-            IEnumerable<RunMove> actual = RunMove.FindMoves(board);
+            IEnumerable<ColumnToColumnMove> actual = ColumnToColumnMove.FindMoves(board);
 
-            IEnumerable<RunMove> expected = new List<RunMove>()
+            IEnumerable<ColumnToColumnMove> expected = new List<ColumnToColumnMove>()
             {
-                new RunMove(3, 0, run.Count, run),
-                new RunMove(3, 1, run.Count, run),
-                new RunMove(3, 2, run.Count, run),
-                new RunMove(3, 4, run.Count, run),
-                new RunMove(3, 5, run.Count, run),
-                new RunMove(3, 6, run.Count, run),
+                new ColumnToColumnMove(3, 0, run.Count, run),
+                new ColumnToColumnMove(3, 1, run.Count, run),
+                new ColumnToColumnMove(3, 2, run.Count, run),
+                new ColumnToColumnMove(3, 4, run.Count, run),
+                new ColumnToColumnMove(3, 5, run.Count, run),
+                new ColumnToColumnMove(3, 6, run.Count, run),
             };
             CollectionAssert.AreEquivalent(expected.ToList(), actual.ToList());
         }
@@ -72,16 +72,16 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
 
-            IEnumerable<RunMove> actual = RunMove.FindMoves(board);
+            IEnumerable<ColumnToColumnMove> actual = ColumnToColumnMove.FindMoves(board);
 
-            IEnumerable<RunMove> expected = new List<RunMove>()
+            IEnumerable<ColumnToColumnMove> expected = new List<ColumnToColumnMove>()
             {
-                new RunMove(3, 0, run.Count, run),
-                new RunMove(3, 1, run.Count, run),
-                new RunMove(3, 2, run.Count, run),
-                new RunMove(3, 4, run.Count, run),
-                new RunMove(3, 5, run.Count, run),
-                new RunMove(3, 6, run.Count, run),
+                new ColumnToColumnMove(3, 0, run.Count, run),
+                new ColumnToColumnMove(3, 1, run.Count, run),
+                new ColumnToColumnMove(3, 2, run.Count, run),
+                new ColumnToColumnMove(3, 4, run.Count, run),
+                new ColumnToColumnMove(3, 5, run.Count, run),
+                new ColumnToColumnMove(3, 6, run.Count, run),
             };
             CollectionAssert.AreEquivalent(expected.ToList(), actual.ToList());
         }
@@ -110,11 +110,11 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
 
-            IEnumerable<RunMove> actual = RunMove.FindMoves(board);
+            IEnumerable<ColumnToColumnMove> actual = ColumnToColumnMove.FindMoves(board);
 
-            IEnumerable<RunMove> expected = new List<RunMove>()
+            IEnumerable<ColumnToColumnMove> expected = new List<ColumnToColumnMove>()
             {
-                new RunMove(2, 1, 3, new List<Card>()
+                new ColumnToColumnMove(2, 1, 3, new List<Card>()
                 {
                     new Card(Value.Seven, Suit.Heart),
                     new Card(Value.Six, Suit.Spade),
@@ -148,7 +148,7 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
 
-            IEnumerable<RunMove> actual = RunMove.FindMoves(board);
+            IEnumerable<ColumnToColumnMove> actual = ColumnToColumnMove.FindMoves(board);
 
             Assert.IsFalse(actual.Any());
         }
@@ -185,17 +185,17 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
 
-            IEnumerable<RunMove> actual = RunMove.FindMoves(board);
+            IEnumerable<ColumnToColumnMove> actual = ColumnToColumnMove.FindMoves(board);
 
-            IEnumerable<RunMove> expected = new List<RunMove>()
+            IEnumerable<ColumnToColumnMove> expected = new List<ColumnToColumnMove>()
             {
-                new RunMove(2, 1, 3, new List<Card>()
+                new ColumnToColumnMove(2, 1, 3, new List<Card>()
                 {
                     new Card(Value.Seven, Suit.Heart),
                     new Card(Value.Six, Suit.Spade),
                     new Card(Value.Five, Suit.Heart),
                 }),
-                new RunMove(2, 3, 3, new List<Card>()
+                new ColumnToColumnMove(2, 3, 3, new List<Card>()
                 {
                     new Card(Value.Seven, Suit.Heart),
                     new Card(Value.Six, Suit.Spade),
@@ -237,17 +237,17 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
 
-            IEnumerable<RunMove> actual = RunMove.FindMoves(board);
+            IEnumerable<ColumnToColumnMove> actual = ColumnToColumnMove.FindMoves(board);
 
-            IEnumerable<RunMove> expected = new List<RunMove>()
+            IEnumerable<ColumnToColumnMove> expected = new List<ColumnToColumnMove>()
             {
-                new RunMove(2, 1, 3, new List<Card>()
+                new ColumnToColumnMove(2, 1, 3, new List<Card>()
                 {
                     new Card(Value.Seven, Suit.Heart),
                     new Card(Value.Six, Suit.Spade),
                     new Card(Value.Five, Suit.Heart),
                 }),
-                new RunMove(4, 1, 3, new List<Card>()
+                new ColumnToColumnMove(4, 1, 3, new List<Card>()
                 {
                     new Card(Value.Seven, Suit.Diamond),
                     new Card(Value.Six, Suit.Club),
@@ -282,11 +282,11 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
 
-            IEnumerable<RunMove> actual = RunMove.FindMoves(board);
+            IEnumerable<ColumnToColumnMove> actual = ColumnToColumnMove.FindMoves(board);
 
-            IEnumerable<RunMove> expected = new List<RunMove>()
+            IEnumerable<ColumnToColumnMove> expected = new List<ColumnToColumnMove>()
             {
-                new RunMove(2, 1, 3, new List<Card>()
+                new ColumnToColumnMove(2, 1, 3, new List<Card>()
                 {
                     new Card(Value.Seven, Suit.Heart),
                     new Card(Value.Six, Suit.Spade),
@@ -321,7 +321,7 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
 
-            IEnumerable<RunMove> actual = RunMove.FindMoves(board);
+            IEnumerable<ColumnToColumnMove> actual = ColumnToColumnMove.FindMoves(board);
 
             Assert.IsFalse(actual.Any());
         }
@@ -350,7 +350,7 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
 
-            IEnumerable<RunMove> actual = RunMove.FindMoves(board);
+            IEnumerable<ColumnToColumnMove> actual = ColumnToColumnMove.FindMoves(board);
 
             Assert.IsFalse(actual.Any());
         }
@@ -367,7 +367,7 @@ namespace Silnith.Game.Klondike.Move.Tests
 
             Assert.ThrowsException<ArgumentException>(() =>
             {
-                _ = new RunMove(2, 2, 1, run);
+                _ = new ColumnToColumnMove(2, 2, 1, run);
             });
         }
 
@@ -380,7 +380,7 @@ namespace Silnith.Game.Klondike.Move.Tests
                 new Card(Value.Two, Suit.Diamond),
                 new Card(Value.Ace, Suit.Club),
             };
-            RunMove move = new(2, 5, 3, run);
+            ColumnToColumnMove move = new(2, 5, 3, run);
 
             Assert.AreEqual(2, move.SourceColumn);
         }
@@ -394,7 +394,7 @@ namespace Silnith.Game.Klondike.Move.Tests
                 new Card(Value.Two, Suit.Diamond),
                 new Card(Value.Ace, Suit.Club),
             };
-            RunMove move = new(2, 5, 3, run);
+            ColumnToColumnMove move = new(2, 5, 3, run);
 
             Assert.AreEqual(5, move.DestinationColumn);
         }
@@ -408,7 +408,7 @@ namespace Silnith.Game.Klondike.Move.Tests
                 new Card(Value.Two, Suit.Diamond),
                 new Card(Value.Ace, Suit.Club),
             };
-            RunMove move = new(2, 5, 3, run);
+            ColumnToColumnMove move = new(2, 5, 3, run);
 
             Assert.AreEqual(3, move.CardCount);
         }
@@ -422,7 +422,7 @@ namespace Silnith.Game.Klondike.Move.Tests
                 new Card(Value.Two, Suit.Diamond),
                 new Card(Value.Ace, Suit.Club),
             };
-            RunMove move = new(2, 5, 3, run);
+            ColumnToColumnMove move = new(2, 5, 3, run);
 
             Assert.IsTrue(run.SequenceEqual(move.Cards));
         }
@@ -441,7 +441,7 @@ namespace Silnith.Game.Klondike.Move.Tests
                 [2] = new Column(null, run),
             };
             Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
-            RunMove move = new(2, 5, 3, board);
+            ColumnToColumnMove move = new(2, 5, 3, board);
 
             Assert.IsTrue(run.SequenceEqual(move.Cards));
         }
@@ -462,7 +462,7 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
 
-            RunMove move = new(0, 1, 1, board);
+            ColumnToColumnMove move = new(0, 1, 1, board);
 
             Board actual = move.Apply(board);
 
@@ -488,7 +488,7 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
 
-            RunMove move = new(0, 1, 2, run);
+            ColumnToColumnMove move = new(0, 1, 2, run);
 
             Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
             {
@@ -510,7 +510,7 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
 
-            RunMove move = new(0, 1, 0, run);
+            ColumnToColumnMove move = new(0, 1, 0, run);
 
             Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
             {
@@ -536,7 +536,7 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
 
-            RunMove move = new(0, 1, 5, board);
+            ColumnToColumnMove move = new(0, 1, 5, board);
 
             Board actual = move.Apply(board);
 
@@ -578,7 +578,7 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
 
-            RunMove move = new(4, 2, 3, board);
+            ColumnToColumnMove move = new(4, 2, 3, board);
 
             Board actual = move.Apply(board);
 
@@ -625,7 +625,7 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(columns, EmptyListOfCards, 0, EmptyFoundation);
 
-            RunMove move = new(1, 5, 3, board);
+            ColumnToColumnMove move = new(1, 5, 3, board);
 
             Board actual = move.Apply(board);
 
@@ -659,7 +659,7 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(columns, stockPile, 0, EmptyFoundation);
 
-            RunMove move = new(0, 1, 1, board);
+            ColumnToColumnMove move = new(0, 1, 1, board);
 
             Board actual = move.Apply(board);
 
@@ -692,7 +692,7 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(columns, stockPile, 4, EmptyFoundation);
 
-            RunMove move = new(0, 1, 1, board);
+            ColumnToColumnMove move = new(0, 1, 1, board);
 
             Board actual = move.Apply(board);
 
@@ -732,7 +732,7 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             Board board = new(columns, EmptyListOfCards, 0, foundation);
 
-            RunMove move = new(0, 1, 1, board);
+            ColumnToColumnMove move = new(0, 1, 1, board);
 
             Board actual = move.Apply(board);
 
@@ -757,8 +757,8 @@ namespace Silnith.Game.Klondike.Move.Tests
                 new Card(Value.Two, Suit.Diamond),
                 new Card(Value.Ace, Suit.Club),
             };
-            RunMove move1 = new(2, 5, 3, run);
-            RunMove move2 = new(2, 5, 3, run.ToList());
+            ColumnToColumnMove move1 = new(2, 5, 3, run);
+            ColumnToColumnMove move2 = new(2, 5, 3, run.ToList());
 
             Assert.AreEqual(move1, move2);
         }
@@ -772,8 +772,8 @@ namespace Silnith.Game.Klondike.Move.Tests
                 new Card(Value.Two, Suit.Diamond),
                 new Card(Value.Ace, Suit.Club),
             };
-            RunMove move1 = new(2, 5, 3, run);
-            RunMove move2 = new(2, 5, 3, run.ToList());
+            ColumnToColumnMove move1 = new(2, 5, 3, run);
+            ColumnToColumnMove move2 = new(2, 5, 3, run.ToList());
 
             Assert.AreEqual(move1.GetHashCode(), move2.GetHashCode());
         }
@@ -787,8 +787,8 @@ namespace Silnith.Game.Klondike.Move.Tests
                 new Card(Value.Two, Suit.Diamond),
                 new Card(Value.Ace, Suit.Club),
             };
-            RunMove move1 = new(2, 5, 3, run);
-            RunMove move2 = new(1, 5, 3, run);
+            ColumnToColumnMove move1 = new(2, 5, 3, run);
+            ColumnToColumnMove move2 = new(1, 5, 3, run);
 
             Assert.AreNotEqual(move1, move2);
         }
@@ -802,8 +802,8 @@ namespace Silnith.Game.Klondike.Move.Tests
                 new Card(Value.Two, Suit.Diamond),
                 new Card(Value.Ace, Suit.Club),
             };
-            RunMove move1 = new(2, 5, 3, run);
-            RunMove move2 = new(2, 4, 3, run);
+            ColumnToColumnMove move1 = new(2, 5, 3, run);
+            ColumnToColumnMove move2 = new(2, 4, 3, run);
 
             Assert.AreNotEqual(move1, move2);
         }
@@ -817,9 +817,9 @@ namespace Silnith.Game.Klondike.Move.Tests
                 new Card(Value.Two, Suit.Diamond),
                 new Card(Value.Ace, Suit.Club),
             };
-            RunMove move1 = new(2, 5, 3, run);
+            ColumnToColumnMove move1 = new(2, 5, 3, run);
             // Note that the card count and the run length differ.
-            RunMove move2 = new(2, 5, 2, run);
+            ColumnToColumnMove move2 = new(2, 5, 2, run);
 
             Assert.AreNotEqual(move1, move2);
         }
@@ -839,8 +839,8 @@ namespace Silnith.Game.Klondike.Move.Tests
                 new Card(Value.Two, Suit.Diamond),
                 new Card(Value.Ace, Suit.Club),
             };
-            RunMove move1 = new(2, 5, 3, run1);
-            RunMove move2 = new(2, 5, 3, run2);
+            ColumnToColumnMove move1 = new(2, 5, 3, run1);
+            ColumnToColumnMove move2 = new(2, 5, 3, run2);
 
             Assert.AreNotEqual(move1, move2);
         }

@@ -14,16 +14,16 @@ namespace Silnith.Game.Klondike.Move
     /// A run can consists of a single card, or it can consist of many cards.
     /// </para>
     /// </remarks>
-    public class RunMove : ISolitaireMove, IEquatable<RunMove?>
+    public class ColumnToColumnMove : ISolitaireMove, IEquatable<ColumnToColumnMove?>
     {
         /// <summary>
         /// Finds all moves for a given board where a run is moved from one column to another.
         /// </summary>
         /// <param name="board">The board to examine.</param>
         /// <returns>An enumerable of moves.</returns>
-        public static IEnumerable<RunMove> FindMoves(Board board)
+        public static IEnumerable<ColumnToColumnMove> FindMoves(Board board)
         {
-            List<RunMove> moves = new List<RunMove>();
+            List<ColumnToColumnMove> moves = new List<ColumnToColumnMove>();
             for (int sourceIndex = 0; sourceIndex < board.Columns.Count; sourceIndex++)
             {
                 Column sourceColumn = board.Columns[sourceIndex];
@@ -59,7 +59,7 @@ namespace Silnith.Game.Klondike.Move
                             IReadOnlyList<Card> run = sourceColumn.GetTopCards(runCount);
                             if (destinationTopCard.Suit.GetColor() != run[0].Suit.GetColor())
                             {
-                                moves.Add(new RunMove(sourceIndex, destinationIndex, runCount, run));
+                                moves.Add(new ColumnToColumnMove(sourceIndex, destinationIndex, runCount, run));
                             }
                         }
                     }
@@ -68,7 +68,7 @@ namespace Silnith.Game.Klondike.Move
                         // Destination is empty, only a King may be moved to it.
                         if (sourceBottomCard.Value == Value.King)
                         {
-                            moves.Add(new RunMove(sourceIndex, destinationIndex, sourceRunCount, sourceRun));
+                            moves.Add(new ColumnToColumnMove(sourceIndex, destinationIndex, sourceRunCount, sourceRun));
                         }
                     }
                 }
@@ -123,7 +123,7 @@ namespace Silnith.Game.Klondike.Move
         /// <param name="cardCount">The number of cards being moved.</param>
         /// <param name="cards">The cards being moved.</param>
         /// <exception cref="ArgumentException">If <paramref name="sourceColumn"/> equals <paramref name="destinationColumn"/>.</exception>
-        public RunMove(int sourceColumn, int destinationColumn, int cardCount, IReadOnlyList<Card> cards)
+        public ColumnToColumnMove(int sourceColumn, int destinationColumn, int cardCount, IReadOnlyList<Card> cards)
         {
             if (sourceColumn == destinationColumn)
             {
@@ -145,7 +145,7 @@ namespace Silnith.Game.Klondike.Move
         /// <param name="board">The board from which to get the cards being moved.</param>
         /// <exception cref="ArgumentOutOfRangeException">If the number of cards is less than <c>1</c>,
         /// or exceeds the available cards, or the source column is out of bounds.</exception>
-        public RunMove(int sourceColumn, int destinationColumn, int cardCount, Board board)
+        public ColumnToColumnMove(int sourceColumn, int destinationColumn, int cardCount, Board board)
             : this(sourceColumn, destinationColumn, cardCount, board.Columns[sourceColumn].GetTopCards(cardCount))
         {
         }
@@ -171,11 +171,11 @@ namespace Silnith.Game.Klondike.Move
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
-            return Equals(obj as RunMove);
+            return Equals(obj as ColumnToColumnMove);
         }
 
         /// <inheritdoc/>
-        public bool Equals(RunMove? other)
+        public bool Equals(ColumnToColumnMove? other)
         {
             return other != null
                 && SourceColumn == other.SourceColumn

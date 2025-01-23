@@ -20,7 +20,7 @@ import org.silnith.util.Pair;
  * 
  * <p>A run can consist of a single card, or it can consist of many cards.</p>
  */
-public class RunMove implements SolitaireMove {
+public class ColumnToColumnMove implements SolitaireMove {
 	
 	/**
 	 * Finds all moves where a run is moved from one column to another.
@@ -28,8 +28,8 @@ public class RunMove implements SolitaireMove {
 	 * @param board the board to examine
 	 * @return a collection of moves
 	 */
-	public static Collection<RunMove> findMoves(final Board board) {
-		final Collection<RunMove> moves = new ArrayList<>();
+	public static Collection<ColumnToColumnMove> findMoves(final Board board) {
+		final Collection<ColumnToColumnMove> moves = new ArrayList<>();
 		final List<Column> columns = board.getColumns();
 		final ListIterator<Column> outerIterator = columns.listIterator();
 		while (outerIterator.hasNext()) {
@@ -65,13 +65,13 @@ public class RunMove implements SolitaireMove {
 						
 						final List<Card> run = sourceColumn.getTopCards(runLength);
 						if (destinationTopCard.getSuit().getColor() != run.get(0).getSuit().getColor()) {
-							moves.add(new RunMove(sourceIndex, destinationIndex, runLength, run));
+							moves.add(new ColumnToColumnMove(sourceIndex, destinationIndex, runLength, run));
 						}
 					}
 				} else {
 					// Destination is empty, only a King may be moved to it.
 					if (sourceBottomCard.getValue() == Value.KING) {
-						moves.add(new RunMove(sourceIndex, destinationIndex, sourceRunLength, sourceRun));
+						moves.add(new ColumnToColumnMove(sourceIndex, destinationIndex, sourceRunLength, sourceRun));
 					}
 				}
 			}
@@ -108,7 +108,7 @@ public class RunMove implements SolitaireMove {
      * @param cards the cards being moved
      * @throws IllegalArgumentException if the source and destination columns are the same
      */
-    public RunMove(final int sourceColumn, final int destinationColumn, final int numberOfCards, final List<Card> cards) {
+    public ColumnToColumnMove(final int sourceColumn, final int destinationColumn, final int numberOfCards, final List<Card> cards) {
         super();
         if (sourceColumn == destinationColumn) {
 		    throw new IllegalArgumentException("Source and destination column are the same.");
@@ -131,7 +131,7 @@ public class RunMove implements SolitaireMove {
      *         or exceeds the available cards
      * @throws IndexOutOfBoundsException if the source column is out of bounds
      */
-    public RunMove(final int sourceColumn, final int destinationColumn, final int numberOfCards, final Board board) {
+    public ColumnToColumnMove(final int sourceColumn, final int destinationColumn, final int numberOfCards, final Board board) {
     	this(sourceColumn, destinationColumn, numberOfCards, board.getColumns().get(sourceColumn).getTopCards(numberOfCards));
     }
     
@@ -205,8 +205,8 @@ public class RunMove implements SolitaireMove {
     
     @Override
     public boolean equals(final Object obj) {
-        if (obj instanceof RunMove) {
-            final RunMove move = (RunMove) obj;
+        if (obj instanceof ColumnToColumnMove) {
+            final ColumnToColumnMove move = (ColumnToColumnMove) obj;
             return sourceColumn == move.sourceColumn && destinationColumn == move.destinationColumn
                     && numberOfCards == move.numberOfCards && cards.equals(move.cards);
         } else {

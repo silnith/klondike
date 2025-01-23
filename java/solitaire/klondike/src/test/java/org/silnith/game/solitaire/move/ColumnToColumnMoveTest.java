@@ -35,7 +35,7 @@ import org.silnith.deck.Value;
 import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.Column;
 
-public class RunMoveTest {
+public class ColumnToColumnMoveTest {
 
     private final List<Card> emptyListOfCards = Collections.emptyList();
 
@@ -43,7 +43,7 @@ public class RunMoveTest {
 
     private final List<Column> emptyColumns = new ArrayList<>(7);
     
-    public RunMoveTest() {
+    public ColumnToColumnMoveTest() {
         for (int i = 0; i < 7; i++ ) {
             this.emptyColumns.add(new Column(emptyListOfCards, emptyListOfCards));
         }
@@ -60,15 +60,15 @@ public class RunMoveTest {
     	columns.set(3, new Column(null, run));
     	final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
     	
-    	final Collection<RunMove> actual = RunMove.findMoves(board);
+    	final Collection<ColumnToColumnMove> actual = ColumnToColumnMove.findMoves(board);
     	
-    	final Collection<RunMove> expected = Arrays.asList(
-    			new RunMove(3, 0, run.size(), run),
-    			new RunMove(3, 1, run.size(), run),
-    			new RunMove(3, 2, run.size(), run),
-    			new RunMove(3, 4, run.size(), run),
-    			new RunMove(3, 5, run.size(), run),
-    			new RunMove(3, 6, run.size(), run));
+    	final Collection<ColumnToColumnMove> expected = Arrays.asList(
+    			new ColumnToColumnMove(3, 0, run.size(), run),
+    			new ColumnToColumnMove(3, 1, run.size(), run),
+    			new ColumnToColumnMove(3, 2, run.size(), run),
+    			new ColumnToColumnMove(3, 4, run.size(), run),
+    			new ColumnToColumnMove(3, 5, run.size(), run),
+    			new ColumnToColumnMove(3, 6, run.size(), run));
     	assertEquals(new HashSet<>(expected), new HashSet<>(actual));
     }
     
@@ -82,15 +82,15 @@ public class RunMoveTest {
     	columns.set(3, new Column(null, run));
     	final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
     	
-    	final Collection<RunMove> actual = RunMove.findMoves(board);
+    	final Collection<ColumnToColumnMove> actual = ColumnToColumnMove.findMoves(board);
     	
-    	final Collection<RunMove> expected = Arrays.asList(
-    			new RunMove(3, 0, run.size(), run),
-    			new RunMove(3, 1, run.size(), run),
-    			new RunMove(3, 2, run.size(), run),
-    			new RunMove(3, 4, run.size(), run),
-    			new RunMove(3, 5, run.size(), run),
-    			new RunMove(3, 6, run.size(), run));
+    	final Collection<ColumnToColumnMove> expected = Arrays.asList(
+    			new ColumnToColumnMove(3, 0, run.size(), run),
+    			new ColumnToColumnMove(3, 1, run.size(), run),
+    			new ColumnToColumnMove(3, 2, run.size(), run),
+    			new ColumnToColumnMove(3, 4, run.size(), run),
+    			new ColumnToColumnMove(3, 5, run.size(), run),
+    			new ColumnToColumnMove(3, 6, run.size(), run));
     	assertEquals(new HashSet<>(expected), new HashSet<>(actual));
     }
     
@@ -107,10 +107,10 @@ public class RunMoveTest {
     			new Card(FIVE, HEART))));
     	final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
     	
-    	final Collection<RunMove> actual = RunMove.findMoves(board);
+    	final Collection<ColumnToColumnMove> actual = ColumnToColumnMove.findMoves(board);
     	
-    	final Collection<RunMove> expected = Arrays.asList(
-    			new RunMove(2, 1, 3, Arrays.asList(
+    	final Collection<ColumnToColumnMove> expected = Arrays.asList(
+    			new ColumnToColumnMove(2, 1, 3, Arrays.asList(
     					new Card(SEVEN, HEART),
     					new Card(SIX, SPADE),
     					new Card(FIVE, HEART))));
@@ -130,9 +130,9 @@ public class RunMoveTest {
     			new Card(FIVE, SPADE))));
     	final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
     	
-    	final Collection<RunMove> actual = RunMove.findMoves(board);
+    	final Collection<ColumnToColumnMove> actual = ColumnToColumnMove.findMoves(board);
     	
-    	final Collection<RunMove> expected = Collections.emptySet();
+    	final Collection<ColumnToColumnMove> expected = Collections.emptySet();
     	assertEquals(new HashSet<>(expected), new HashSet<>(actual));
     }
     
@@ -153,14 +153,14 @@ public class RunMoveTest {
     			new Card(EIGHT, SPADE))));
     	final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
     	
-    	final Collection<RunMove> actual = RunMove.findMoves(board);
+    	final Collection<ColumnToColumnMove> actual = ColumnToColumnMove.findMoves(board);
     	
-    	final Collection<RunMove> expected = Arrays.asList(
-    			new RunMove(2, 1, 3, Arrays.asList(
+    	final Collection<ColumnToColumnMove> expected = Arrays.asList(
+    			new ColumnToColumnMove(2, 1, 3, Arrays.asList(
     					new Card(SEVEN, HEART),
     					new Card(SIX, SPADE),
     					new Card(FIVE, HEART))),
-    			new RunMove(2, 3, 3, Arrays.asList(
+    			new ColumnToColumnMove(2, 3, 3, Arrays.asList(
     					new Card(SEVEN, HEART),
     					new Card(SIX, SPADE),
     					new Card(FIVE, HEART))));
@@ -184,14 +184,14 @@ public class RunMoveTest {
     			new Card(FIVE, DIAMOND))));
     	final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
     	
-    	final Collection<RunMove> actual = RunMove.findMoves(board);
+    	final Collection<ColumnToColumnMove> actual = ColumnToColumnMove.findMoves(board);
     	
-    	final Collection<RunMove> expected = Arrays.asList(
-    			new RunMove(2, 1, 3, Arrays.asList(
+    	final Collection<ColumnToColumnMove> expected = Arrays.asList(
+    			new ColumnToColumnMove(2, 1, 3, Arrays.asList(
     					new Card(SEVEN, HEART),
     					new Card(SIX, SPADE),
     					new Card(FIVE, HEART))),
-    			new RunMove(4, 1, 3, Arrays.asList(
+    			new ColumnToColumnMove(4, 1, 3, Arrays.asList(
     					new Card(SEVEN, DIAMOND),
     	    			new Card(SIX, CLUB),
     	    			new Card(FIVE, DIAMOND))));
@@ -212,10 +212,10 @@ public class RunMoveTest {
     			new Card(FIVE, HEART))));
     	final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
     	
-    	final Collection<RunMove> actual = RunMove.findMoves(board);
+    	final Collection<ColumnToColumnMove> actual = ColumnToColumnMove.findMoves(board);
     	
-    	final Collection<RunMove> expected = Arrays.asList(
-    			new RunMove(2, 1, 3, Arrays.asList(
+    	final Collection<ColumnToColumnMove> expected = Arrays.asList(
+    			new ColumnToColumnMove(2, 1, 3, Arrays.asList(
     					new Card(SEVEN, HEART),
     					new Card(SIX, SPADE),
     					new Card(FIVE, HEART))));
@@ -236,9 +236,9 @@ public class RunMoveTest {
     			new Card(FIVE, SPADE))));
     	final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
     	
-    	final Collection<RunMove> actual = RunMove.findMoves(board);
+    	final Collection<ColumnToColumnMove> actual = ColumnToColumnMove.findMoves(board);
     	
-    	final Collection<RunMove> expected = Collections.emptySet();
+    	final Collection<ColumnToColumnMove> expected = Collections.emptySet();
     	assertEquals(new HashSet<>(expected), new HashSet<>(actual));
     }
     
@@ -255,9 +255,9 @@ public class RunMoveTest {
     			new Card(FOUR, HEART))));
     	final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
     	
-    	final Collection<RunMove> actual = RunMove.findMoves(board);
+    	final Collection<ColumnToColumnMove> actual = ColumnToColumnMove.findMoves(board);
     	
-    	final Collection<RunMove> expected = Collections.emptySet();
+    	final Collection<ColumnToColumnMove> expected = Collections.emptySet();
     	assertEquals(new HashSet<>(expected), new HashSet<>(actual));
     }
     
@@ -267,7 +267,7 @@ public class RunMoveTest {
     			new Card(ACE, CLUB));
     	
     	assertThrows(IllegalArgumentException.class, () -> {
-    		new RunMove(2, 2, 1, run);
+    		new ColumnToColumnMove(2, 2, 1, run);
     	});
     }
 
@@ -277,7 +277,7 @@ public class RunMoveTest {
 				new Card(Value.THREE, Suit.CLUB),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
-		final RunMove move = new RunMove(2, 5, 3, run);
+		final ColumnToColumnMove move = new ColumnToColumnMove(2, 5, 3, run);
 		
 		assertEquals(2, move.getSourceColumn());
 	}
@@ -288,7 +288,7 @@ public class RunMoveTest {
 				new Card(Value.THREE, Suit.CLUB),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
-		final RunMove move = new RunMove(2, 5, 3, run);
+		final ColumnToColumnMove move = new ColumnToColumnMove(2, 5, 3, run);
 		
 		assertEquals(5, move.getDestinationColumn());
 	}
@@ -299,7 +299,7 @@ public class RunMoveTest {
 				new Card(Value.THREE, Suit.CLUB),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
-		final RunMove move = new RunMove(2, 5, 3, run);
+		final ColumnToColumnMove move = new ColumnToColumnMove(2, 5, 3, run);
 		
 		assertEquals(3, move.getNumberOfCards());
 	}
@@ -310,7 +310,7 @@ public class RunMoveTest {
 				new Card(Value.THREE, Suit.CLUB),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
-		final RunMove move = new RunMove(2, 5, 3, run);
+		final ColumnToColumnMove move = new ColumnToColumnMove(2, 5, 3, run);
 		
 		assertTrue(move.hasCards());
 	}
@@ -321,7 +321,7 @@ public class RunMoveTest {
 				new Card(Value.THREE, Suit.CLUB),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
-		final RunMove move = new RunMove(2, 5, 3, run);
+		final ColumnToColumnMove move = new ColumnToColumnMove(2, 5, 3, run);
 		
 		assertEquals(run, move.getCards());
 	}
@@ -336,7 +336,7 @@ public class RunMoveTest {
 		columns.set(2, new Column(null, run));
 		final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
 		
-		final RunMove move = new RunMove(2, 5, 3, board);
+		final ColumnToColumnMove move = new ColumnToColumnMove(2, 5, 3, board);
 		
 		assertEquals(run, move.getCards());
 	}
@@ -350,7 +350,7 @@ public class RunMoveTest {
         columns.set(0, new Column(null, run));
         final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
         
-        final RunMove move = new RunMove(0, 1, 1, board);
+        final ColumnToColumnMove move = new ColumnToColumnMove(0, 1, 1, board);
         
         final Board actual = move.apply(board);
 
@@ -370,7 +370,7 @@ public class RunMoveTest {
         columns.set(0, new Column(null, run));
         final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
 
-        final RunMove move = new RunMove(0, 1, 2, run);
+        final ColumnToColumnMove move = new ColumnToColumnMove(0, 1, 2, run);
         
         assertThrows(RuntimeException.class, () -> {
         	move.apply(board);
@@ -386,7 +386,7 @@ public class RunMoveTest {
         columns.set(0, new Column(null, run));
         final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
         
-        final RunMove move = new RunMove(0, 1, 0, run);
+        final ColumnToColumnMove move = new ColumnToColumnMove(0, 1, 0, run);
         
         assertThrows(RuntimeException.class, () -> {
         	move.apply(board);
@@ -406,7 +406,7 @@ public class RunMoveTest {
         columns.set(0, new Column(null, run));
         final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
 
-        final RunMove move = new RunMove(0, 1, 5, board);
+        final ColumnToColumnMove move = new ColumnToColumnMove(0, 1, 5, board);
         
         final Board actual = move.apply(board);
 
@@ -438,7 +438,7 @@ public class RunMoveTest {
         columns.set(4, new Column(null, bottomRun));
         final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
 
-        final RunMove move = new RunMove(4, 2, 3, board);
+        final ColumnToColumnMove move = new ColumnToColumnMove(4, 2, 3, board);
         
         final Board actual = move.apply(board);
 
@@ -473,7 +473,7 @@ public class RunMoveTest {
         columns.set(1, new Column(null, bottomRun));
         final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
         
-        final RunMove move = new RunMove(1, 5, 3, board);
+        final ColumnToColumnMove move = new ColumnToColumnMove(1, 5, 3, board);
         
         final Board actual = move.apply(board);
 
@@ -499,7 +499,7 @@ public class RunMoveTest {
         columns.set(0, new Column(null, run));
         final Board board = new Board(columns, stockPile, 0, emptyFoundation);
 
-        final RunMove move = new RunMove(0, 1, 1, board);
+        final ColumnToColumnMove move = new ColumnToColumnMove(0, 1, 1, board);
         
         final Board actual = move.apply(board);
 
@@ -524,7 +524,7 @@ public class RunMoveTest {
         columns.set(0, new Column(null, run));
         final Board board = new Board(columns, stockPile, 4, emptyFoundation);
 
-        final RunMove move = new RunMove(0, 1, 1, board);
+        final ColumnToColumnMove move = new ColumnToColumnMove(0, 1, 1, board);
         
         final Board actual = move.apply(board);
 
@@ -551,7 +551,7 @@ public class RunMoveTest {
         columns.set(0, new Column(null, run));
         final Board board = new Board(columns, emptyListOfCards, 0, foundation);
 
-        final RunMove move = new RunMove(0, 1, 1, board);
+        final ColumnToColumnMove move = new ColumnToColumnMove(0, 1, 1, board);
         
         final Board actual = move.apply(board);
 
@@ -568,8 +568,8 @@ public class RunMoveTest {
 				new Card(Value.THREE, Suit.CLUB),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
-		final RunMove move1 = new RunMove(2, 5, 3, run);
-		final RunMove move2 = new RunMove(2, 5, 3, run);
+		final ColumnToColumnMove move1 = new ColumnToColumnMove(2, 5, 3, run);
+		final ColumnToColumnMove move2 = new ColumnToColumnMove(2, 5, 3, run);
 		
 		assertTrue(move1.equals(move2));
 	}
@@ -580,8 +580,8 @@ public class RunMoveTest {
 				new Card(Value.THREE, Suit.CLUB),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
-		final RunMove move1 = new RunMove(2, 5, 3, run);
-		final RunMove move2 = new RunMove(2, 5, 3, run);
+		final ColumnToColumnMove move1 = new ColumnToColumnMove(2, 5, 3, run);
+		final ColumnToColumnMove move2 = new ColumnToColumnMove(2, 5, 3, run);
 		
 		assertEquals(move1.hashCode(), move2.hashCode());
 	}
@@ -592,8 +592,8 @@ public class RunMoveTest {
 				new Card(Value.THREE, Suit.CLUB),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
-		final RunMove move1 = new RunMove(2, 5, 3, run);
-		final RunMove move2 = new RunMove(1, 5, 3, run);
+		final ColumnToColumnMove move1 = new ColumnToColumnMove(2, 5, 3, run);
+		final ColumnToColumnMove move2 = new ColumnToColumnMove(1, 5, 3, run);
 		
 		assertFalse(move1.equals(move2));
 	}
@@ -604,8 +604,8 @@ public class RunMoveTest {
 				new Card(Value.THREE, Suit.CLUB),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
-		final RunMove move1 = new RunMove(2, 5, 3, run);
-		final RunMove move2 = new RunMove(2, 4, 3, run);
+		final ColumnToColumnMove move1 = new ColumnToColumnMove(2, 5, 3, run);
+		final ColumnToColumnMove move2 = new ColumnToColumnMove(2, 4, 3, run);
 		
 		assertFalse(move1.equals(move2));
 	}
@@ -616,9 +616,9 @@ public class RunMoveTest {
 				new Card(Value.THREE, Suit.CLUB),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
-		final RunMove move1 = new RunMove(2, 5, 3, run);
+		final ColumnToColumnMove move1 = new ColumnToColumnMove(2, 5, 3, run);
 		// Note that the number of cards and the run length differ.
-		final RunMove move2 = new RunMove(2, 5, 2, run);
+		final ColumnToColumnMove move2 = new ColumnToColumnMove(2, 5, 2, run);
 		
 		assertFalse(move1.equals(move2));
 	}
@@ -633,8 +633,8 @@ public class RunMoveTest {
 				new Card(Value.THREE, Suit.SPADE),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
-		final RunMove move1 = new RunMove(2, 5, 3, run1);
-		final RunMove move2 = new RunMove(2, 5, 3, run2);
+		final ColumnToColumnMove move1 = new ColumnToColumnMove(2, 5, 3, run1);
+		final ColumnToColumnMove move2 = new ColumnToColumnMove(2, 5, 3, run2);
 		
 		assertFalse(move1.equals(move2));
 	}

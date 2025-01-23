@@ -7,7 +7,7 @@ import org.silnith.deck.Card;
 import org.silnith.game.GameState;
 import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.Column;
-import org.silnith.game.solitaire.move.RunMove;
+import org.silnith.game.solitaire.move.ColumnToColumnMove;
 import org.silnith.game.solitaire.move.SolitaireMove;
 import org.silnith.util.LinkedNode;
 
@@ -36,8 +36,8 @@ public class RunMoveMustBeFollowedBySomethingUsefulFilter implements SolitaireMo
 		 * This is the board AFTER the move has been applied!
 		 */
 		
-		if (previousMove instanceof RunMove) {
-			final RunMove previousRunMove = (RunMove) previousMove;
+		if (previousMove instanceof ColumnToColumnMove) {
+			final ColumnToColumnMove previousRunMove = (ColumnToColumnMove) previousMove;
 			// check whether the previous run move used up all the cards
 			// if it did, everything is fine
 			assert previousRunMove.hasCards();

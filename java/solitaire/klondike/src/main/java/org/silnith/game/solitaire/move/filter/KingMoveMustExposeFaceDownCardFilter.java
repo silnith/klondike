@@ -7,7 +7,7 @@ import org.silnith.deck.Value;
 import org.silnith.game.GameState;
 import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.Column;
-import org.silnith.game.solitaire.move.RunMove;
+import org.silnith.game.solitaire.move.ColumnToColumnMove;
 import org.silnith.game.solitaire.move.SolitaireMove;
 
 /**
@@ -24,8 +24,8 @@ public class KingMoveMustExposeFaceDownCardFilter implements SolitaireMoveFilter
 		assert currentMove != null;
 		assert currentBoard != null;
 		
-		if (currentMove instanceof RunMove) {
-			final RunMove runMove = (RunMove) currentMove;
+		if (currentMove instanceof ColumnToColumnMove) {
+			final ColumnToColumnMove runMove = (ColumnToColumnMove) currentMove;
 			final List<Card> run = runMove.getCards();
 			final Card firstCard = run.get(0);
 			if (firstCard.getValue() == Value.KING) {
