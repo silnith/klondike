@@ -36,7 +36,7 @@ import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.Column;
 
 
-public class AdvanceStockPileMoveTest {
+public class StockPileAdvanceMoveTest {
 
     private final List<Card> emptyListOfCards = Collections.emptyList();
     
@@ -44,7 +44,7 @@ public class AdvanceStockPileMoveTest {
     
     private final List<Column> emptyColumns = new ArrayList<>(7);
     
-    public AdvanceStockPileMoveTest() {
+    public StockPileAdvanceMoveTest() {
         for (int i = 0; i < 7; i++ ) {
             this.emptyColumns.add(new Column(emptyListOfCards, emptyListOfCards));
         }
@@ -57,9 +57,9 @@ public class AdvanceStockPileMoveTest {
     public void testFindMovesEmptyStockPile() {
     	final Board board = new Board(emptyColumns, emptyListOfCards, 0, emptyFoundation);
     	
-    	final Collection<AdvanceStockPileMove> actual = AdvanceStockPileMove.findMoves(3, board);
+    	final Collection<StockPileAdvanceMove> actual = StockPileAdvanceMove.findMoves(3, board);
     	
-    	final Collection<AdvanceStockPileMove> expected = Collections.emptySet();
+    	final Collection<StockPileAdvanceMove> expected = Collections.emptySet();
 		assertEquals(expected, new HashSet<>(actual));
     }
     
@@ -71,10 +71,10 @@ public class AdvanceStockPileMoveTest {
     			new Card(KING, SPADE));
     	final Board board = new Board(emptyColumns, stockPile, 0, emptyFoundation);
     	
-    	final Collection<AdvanceStockPileMove> actual = AdvanceStockPileMove.findMoves(3, board);
+    	final Collection<StockPileAdvanceMove> actual = StockPileAdvanceMove.findMoves(3, board);
     	
-    	final Collection<AdvanceStockPileMove> expected = Collections.singleton(
-    			new AdvanceStockPileMove(0, 3));
+    	final Collection<StockPileAdvanceMove> expected = Collections.singleton(
+    			new StockPileAdvanceMove(0, 3));
     	assertEquals(expected, new HashSet<>(actual));
     }
     
@@ -86,10 +86,10 @@ public class AdvanceStockPileMoveTest {
     			new Card(KING, SPADE));
     	final Board board = new Board(emptyColumns, stockPile, 2, emptyFoundation);
     	
-    	final Collection<AdvanceStockPileMove> actual = AdvanceStockPileMove.findMoves(3, board);
+    	final Collection<StockPileAdvanceMove> actual = StockPileAdvanceMove.findMoves(3, board);
     	
-    	final Collection<AdvanceStockPileMove> expected = Collections.singleton(
-    			new AdvanceStockPileMove(2, 3));
+    	final Collection<StockPileAdvanceMove> expected = Collections.singleton(
+    			new StockPileAdvanceMove(2, 3));
     	assertEquals(expected, new HashSet<>(actual));
     }
     
@@ -101,77 +101,77 @@ public class AdvanceStockPileMoveTest {
     			new Card(KING, SPADE));
     	final Board board = new Board(emptyColumns, stockPile, 3, emptyFoundation);
     	
-    	final Collection<AdvanceStockPileMove> actual = AdvanceStockPileMove.findMoves(3, board);
+    	final Collection<StockPileAdvanceMove> actual = StockPileAdvanceMove.findMoves(3, board);
     	
-    	final Collection<AdvanceStockPileMove> expected = Collections.emptySet();
+    	final Collection<StockPileAdvanceMove> expected = Collections.emptySet();
     	assertEquals(expected, new HashSet<>(actual));
     }
     
     @Test
     public void testZeroIncrement() {
     	assertThrows(IllegalArgumentException.class, () -> {
-    		new AdvanceStockPileMove(0, 0);
+    		new StockPileAdvanceMove(0, 0);
     	});
     }
     
     @Test
     public void testNegativeIncrement() {
     	assertThrows(IllegalArgumentException.class, () -> {
-    		new AdvanceStockPileMove(0, -1);
+    		new StockPileAdvanceMove(0, -1);
     	});
     }
     
     @Test
     public void testGetBeginningIndex() {
-        final AdvanceStockPileMove move = new AdvanceStockPileMove(17, 34);
+        final StockPileAdvanceMove move = new StockPileAdvanceMove(17, 34);
         
         assertEquals(17, move.getBeginningIndex());
     }
     
     @Test
     public void testGetIncrement() {
-        final AdvanceStockPileMove move = new AdvanceStockPileMove(17, 34);
+        final StockPileAdvanceMove move = new StockPileAdvanceMove(17, 34);
         
         assertEquals(34, move.getIncrement());
     }
     
     @Test
     public void testCoalesceBeginningIndex() {
-        final AdvanceStockPileMove firstMove = new AdvanceStockPileMove(20, 4);
-        final AdvanceStockPileMove secondMove = new AdvanceStockPileMove(24, 5);
+        final StockPileAdvanceMove firstMove = new StockPileAdvanceMove(20, 4);
+        final StockPileAdvanceMove secondMove = new StockPileAdvanceMove(24, 5);
         
-        final AdvanceStockPileMove coalescedMove = firstMove.coalesce(secondMove);
+        final StockPileAdvanceMove coalescedMove = firstMove.coalesce(secondMove);
         
         assertEquals(20, coalescedMove.getBeginningIndex());
     }
     
     @Test
     public void testCoalesceIncrement() {
-        final AdvanceStockPileMove firstMove = new AdvanceStockPileMove(20, 4);
-        final AdvanceStockPileMove secondMove = new AdvanceStockPileMove(24, 5);
+        final StockPileAdvanceMove firstMove = new StockPileAdvanceMove(20, 4);
+        final StockPileAdvanceMove secondMove = new StockPileAdvanceMove(24, 5);
         
-        final AdvanceStockPileMove coalescedMove = firstMove.coalesce(secondMove);
+        final StockPileAdvanceMove coalescedMove = firstMove.coalesce(secondMove);
         
         assertEquals(9, coalescedMove.getIncrement());
     }
     
     @Test
     public void testCoalesceNull() {
-        final AdvanceStockPileMove move = new AdvanceStockPileMove(17, 34);
+        final StockPileAdvanceMove move = new StockPileAdvanceMove(17, 34);
         
         assertThrows(NullPointerException.class, () -> move.coalesce(null));
     }
     
     @Test
     public void testHasCards() {
-        final AdvanceStockPileMove move = new AdvanceStockPileMove(17, 34);
+        final StockPileAdvanceMove move = new StockPileAdvanceMove(17, 34);
         
         assertFalse(move.hasCards());
     }
     
     @Test
     public void testGetCards() {
-        final AdvanceStockPileMove move = new AdvanceStockPileMove(17, 34);
+        final StockPileAdvanceMove move = new StockPileAdvanceMove(17, 34);
         
         assertThrows(RuntimeException.class, () -> move.getCards());
     }
@@ -187,7 +187,7 @@ public class AdvanceStockPileMoveTest {
     			new Card(Value.SIX, Suit.CLUB));
     	final Board board = new Board(emptyColumns, stockPile, 2, emptyFoundation);
     	
-        final AdvanceStockPileMove move = new AdvanceStockPileMove(3, board);
+        final StockPileAdvanceMove move = new StockPileAdvanceMove(3, board);
         
         final Board actual = move.apply(board);
         
@@ -221,7 +221,7 @@ public class AdvanceStockPileMoveTest {
     			new Card(Value.SIX, Suit.CLUB));
     	final Board board = new Board(columns, stockPile, 2, emptyFoundation);
     	
-        final AdvanceStockPileMove move = new AdvanceStockPileMove(3, board);
+        final StockPileAdvanceMove move = new StockPileAdvanceMove(3, board);
         
         final Board actual = move.apply(board);
         
@@ -245,7 +245,7 @@ public class AdvanceStockPileMoveTest {
     			new Card(Value.SIX, Suit.CLUB));
     	final Board board = new Board(emptyColumns, stockPile, 2, foundation);
     	
-        final AdvanceStockPileMove move = new AdvanceStockPileMove(3, board);
+        final StockPileAdvanceMove move = new StockPileAdvanceMove(3, board);
         
         final Board actual = move.apply(board);
         
@@ -255,47 +255,47 @@ public class AdvanceStockPileMoveTest {
     
     @Test
     public void testEquals() {
-        final AdvanceStockPileMove move1 = new AdvanceStockPileMove(17, 34);
-        final AdvanceStockPileMove move2 = new AdvanceStockPileMove(17, 34);
+        final StockPileAdvanceMove move1 = new StockPileAdvanceMove(17, 34);
+        final StockPileAdvanceMove move2 = new StockPileAdvanceMove(17, 34);
         
         assertTrue(move1.equals(move2));
     }
     
     @Test
     public void testHashCode() {
-        final AdvanceStockPileMove move1 = new AdvanceStockPileMove(17, 34);
-        final AdvanceStockPileMove move2 = new AdvanceStockPileMove(17, 34);
+        final StockPileAdvanceMove move1 = new StockPileAdvanceMove(17, 34);
+        final StockPileAdvanceMove move2 = new StockPileAdvanceMove(17, 34);
         
         assertEquals(move1.hashCode(), move2.hashCode());
     }
     
     @Test
     public void testEqualsNull() {
-        final AdvanceStockPileMove move = new AdvanceStockPileMove(17, 34);
+        final StockPileAdvanceMove move = new StockPileAdvanceMove(17, 34);
         
         assertFalse(move.equals(null));
     }
     
     @Test
     public void testEqualsDifferentBeginningIndex() {
-        final AdvanceStockPileMove move1 = new AdvanceStockPileMove(17, 34);
-        final AdvanceStockPileMove move2 = new AdvanceStockPileMove(20, 34);
+        final StockPileAdvanceMove move1 = new StockPileAdvanceMove(17, 34);
+        final StockPileAdvanceMove move2 = new StockPileAdvanceMove(20, 34);
         
         assertFalse(move1.equals(move2));
     }
     
     @Test
     public void testEqualsDifferentIncrement() {
-        final AdvanceStockPileMove move1 = new AdvanceStockPileMove(17, 34);
-        final AdvanceStockPileMove move2 = new AdvanceStockPileMove(17, 3);
+        final StockPileAdvanceMove move1 = new StockPileAdvanceMove(17, 34);
+        final StockPileAdvanceMove move2 = new StockPileAdvanceMove(17, 3);
         
         assertFalse(move1.equals(move2));
     }
     
     @Test
     public void testEqualsDifferent() {
-        final AdvanceStockPileMove move1 = new AdvanceStockPileMove(17, 34);
-        final AdvanceStockPileMove move2 = new AdvanceStockPileMove(20, 3);
+        final StockPileAdvanceMove move1 = new StockPileAdvanceMove(17, 34);
+        final StockPileAdvanceMove move2 = new StockPileAdvanceMove(20, 3);
         
         assertFalse(move1.equals(move2));
     }

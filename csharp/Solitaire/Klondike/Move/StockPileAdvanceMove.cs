@@ -14,7 +14,7 @@ namespace Silnith.Game.Klondike.Move
     /// three cards left in the stock pile.
     /// </para>
     /// </remarks>
-    public class AdvanceStockPileMove : ISolitaireMove, IEquatable<AdvanceStockPileMove?>
+    public class StockPileAdvanceMove : ISolitaireMove, IEquatable<StockPileAdvanceMove?>
     {
         /// <summary>
         /// Finds all stock pile advance moves for a given board.
@@ -27,18 +27,18 @@ namespace Silnith.Game.Klondike.Move
         /// <param name="stockPileAdvance">The number of cards to advance the stock pile.</param>
         /// <param name="board">The board to examine.</param>
         /// <returns>An enumerable of moves.</returns>
-        public static IEnumerable<AdvanceStockPileMove> FindMoves(int stockPileAdvance, Board board)
+        public static IEnumerable<StockPileAdvanceMove> FindMoves(int stockPileAdvance, Board board)
         {
             if (board.CanAdvanceStockPile())
             {
-                return new List<AdvanceStockPileMove>(1)
+                return new List<StockPileAdvanceMove>(1)
                 {
-                    new AdvanceStockPileMove(stockPileAdvance, board),
+                    new StockPileAdvanceMove(stockPileAdvance, board),
                 };
             }
             else
             {
-                return Array.Empty<AdvanceStockPileMove>();
+                return Array.Empty<StockPileAdvanceMove>();
             }
         }
 
@@ -88,7 +88,7 @@ namespace Silnith.Game.Klondike.Move
         /// <param name="beginningIndex">The stock pile index before the move is applied.</param>
         /// <param name="increment">The number of cards that the stock pile index advances.</param>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="increment"/> is not positive.</exception>
-        public AdvanceStockPileMove(int beginningIndex, int increment)
+        public StockPileAdvanceMove(int beginningIndex, int increment)
         {
             if (increment < 1)
             {
@@ -104,7 +104,7 @@ namespace Silnith.Game.Klondike.Move
         /// </summary>
         /// <param name="increment">The number of cards that the stock pile index advances.</param>
         /// <param name="board">The board from which to take the beginning index.</param>
-        public AdvanceStockPileMove(int increment, Board board) : this(board.StockPileIndex, increment)
+        public StockPileAdvanceMove(int increment, Board board) : this(board.StockPileIndex, increment)
         {
         }
 
@@ -115,9 +115,9 @@ namespace Silnith.Game.Klondike.Move
         /// </summary>
         /// <param name="next">The move to combine with this move.</param>
         /// <returns>A single move that can replace both moves.</returns>
-        public AdvanceStockPileMove Coalesce(AdvanceStockPileMove next)
+        public StockPileAdvanceMove Coalesce(StockPileAdvanceMove next)
         {
-            return new AdvanceStockPileMove(BeginningIndex, Increment + next.Increment);
+            return new StockPileAdvanceMove(BeginningIndex, Increment + next.Increment);
         }
 
         /// <inheritdoc/>
@@ -131,11 +131,11 @@ namespace Silnith.Game.Klondike.Move
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
-            return Equals(obj as AdvanceStockPileMove);
+            return Equals(obj as StockPileAdvanceMove);
         }
 
         /// <inheritdoc/>
-        public bool Equals(AdvanceStockPileMove? other)
+        public bool Equals(StockPileAdvanceMove? other)
         {
             return other != null
                 && BeginningIndex == other.BeginningIndex

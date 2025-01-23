@@ -2,7 +2,7 @@ package org.silnith.game.solitaire.move.filter;
 
 import org.silnith.game.GameState;
 import org.silnith.game.solitaire.Board;
-import org.silnith.game.solitaire.move.AdvanceStockPileMove;
+import org.silnith.game.solitaire.move.StockPileAdvanceMove;
 import org.silnith.game.solitaire.move.SolitaireMove;
 import org.silnith.game.solitaire.move.StockPileToColumnMove;
 import org.silnith.game.solitaire.move.StockPileToFoundationMove;
@@ -46,7 +46,7 @@ public class DrawFromStockPileFilter implements SolitaireMoveFilter {
 		}
 		// Theoretically, it should only be possible for the previous move to be a stock pile advance.
 		// The recycle should make it impossible to draw from the stock pile.
-		if (previousMove instanceof AdvanceStockPileMove) {
+		if (previousMove instanceof StockPileAdvanceMove) {
 			// This is acceptable, no need to filter.
 			return false;
 		} else {

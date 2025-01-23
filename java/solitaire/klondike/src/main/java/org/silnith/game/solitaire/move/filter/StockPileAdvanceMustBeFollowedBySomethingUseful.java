@@ -2,7 +2,7 @@ package org.silnith.game.solitaire.move.filter;
 
 import org.silnith.game.GameState;
 import org.silnith.game.solitaire.Board;
-import org.silnith.game.solitaire.move.AdvanceStockPileMove;
+import org.silnith.game.solitaire.move.StockPileAdvanceMove;
 import org.silnith.game.solitaire.move.RecycleStockPileMove;
 import org.silnith.game.solitaire.move.SolitaireMove;
 import org.silnith.game.solitaire.move.StockPileToColumnMove;
@@ -22,9 +22,9 @@ public class StockPileAdvanceMustBeFollowedBySomethingUseful implements Solitair
 		
 		final SolitaireMove previousMove = moveHistory.getFirst();
 		
-		if (previousMove instanceof AdvanceStockPileMove) {
+		if (previousMove instanceof StockPileAdvanceMove) {
 			// check stuff
-			if (currentMove instanceof AdvanceStockPileMove
+			if (currentMove instanceof StockPileAdvanceMove
 					|| currentMove instanceof RecycleStockPileMove
 					|| currentMove instanceof StockPileToColumnMove
 					|| currentMove instanceof StockPileToFoundationMove) {

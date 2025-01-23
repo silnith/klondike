@@ -13,7 +13,7 @@ import org.silnith.game.solitaire.Board;
  * <p>In a typical game, the advance is three unless there are fewer than
  * three cards left in the stock pile.</p>
  */
-public class AdvanceStockPileMove implements SolitaireMove {
+public class StockPileAdvanceMove implements SolitaireMove {
 	
 	/**
 	 * Finds all stock pile advance moves for a given board.
@@ -24,9 +24,9 @@ public class AdvanceStockPileMove implements SolitaireMove {
 	 * @param board the board to examine
 	 * @return a collection of moves
 	 */
-	public static Collection<AdvanceStockPileMove> findMoves(final int stockPileAdvance, final Board board) {
+	public static Collection<StockPileAdvanceMove> findMoves(final int stockPileAdvance, final Board board) {
 		if (board.canAdvanceStockPile()) {
-			return Collections.singletonList(new AdvanceStockPileMove(stockPileAdvance, board));
+			return Collections.singletonList(new StockPileAdvanceMove(stockPileAdvance, board));
 		} else {
 			return Collections.emptyList();
 		}
@@ -52,7 +52,7 @@ public class AdvanceStockPileMove implements SolitaireMove {
      * @param increment the number of cards that the stock pile index advances
      * @throws IllegalArgumentException if the increment is not positive
      */
-    public AdvanceStockPileMove(final int beginningIndex, final int increment) {
+    public StockPileAdvanceMove(final int beginningIndex, final int increment) {
         super();
         if (increment < 1) {
         	throw new IllegalArgumentException("Increment must be positive.");
@@ -68,7 +68,7 @@ public class AdvanceStockPileMove implements SolitaireMove {
      * @param increment the number of cards that the stock pile index advances
      * @param board the board from which to take the beginning index
      */
-    public AdvanceStockPileMove(final int increment, final Board board) {
+    public StockPileAdvanceMove(final int increment, final Board board) {
     	this(board.getStockPileIndex(), increment);
     }
     
@@ -98,9 +98,9 @@ public class AdvanceStockPileMove implements SolitaireMove {
      * @param next the move to combine with this move
      * @return a single move that can replace both moves
      */
-    public AdvanceStockPileMove coalesce(final AdvanceStockPileMove next) {
+    public StockPileAdvanceMove coalesce(final StockPileAdvanceMove next) {
         assert beginningIndex + increment == next.beginningIndex;
-        return new AdvanceStockPileMove(beginningIndex, increment + next.increment);
+        return new StockPileAdvanceMove(beginningIndex, increment + next.increment);
     }
     
     @Override
@@ -129,8 +129,8 @@ public class AdvanceStockPileMove implements SolitaireMove {
     
     @Override
     public boolean equals(final Object obj) {
-        if (obj instanceof AdvanceStockPileMove) {
-            final AdvanceStockPileMove move = (AdvanceStockPileMove) obj;
+        if (obj instanceof StockPileAdvanceMove) {
+            final StockPileAdvanceMove move = (StockPileAdvanceMove) obj;
             return beginningIndex == move.beginningIndex && increment == move.increment;
         } else {
             return false;

@@ -2,7 +2,7 @@ package org.silnith.game.solitaire.move.filter;
 
 import org.silnith.game.GameState;
 import org.silnith.game.solitaire.Board;
-import org.silnith.game.solitaire.move.AdvanceStockPileMove;
+import org.silnith.game.solitaire.move.StockPileAdvanceMove;
 import org.silnith.game.solitaire.move.RecycleStockPileMove;
 import org.silnith.game.solitaire.move.SolitaireMove;
 import org.silnith.util.LinkedNode;
@@ -21,7 +21,7 @@ public class StockPileRecycleMustBeFollowedByAdvance implements SolitaireMoveFil
 		final SolitaireMove previousMove = moveHistory.getFirst();
 		
 		if (previousMove instanceof RecycleStockPileMove) {
-			if (currentMove instanceof AdvanceStockPileMove) {
+			if (currentMove instanceof StockPileAdvanceMove) {
 				// This is acceptable, no need to filter.
 				return false;
 			} else {
