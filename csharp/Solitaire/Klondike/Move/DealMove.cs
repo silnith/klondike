@@ -38,10 +38,7 @@ namespace Silnith.Game.Klondike.Move
         /// <inheritdoc/>
         public IReadOnlyList<Card> Cards
         {
-            get
-            {
-                return Deck;
-            }
+            get;
         }
 
         /// <summary>
@@ -62,6 +59,7 @@ namespace Silnith.Game.Klondike.Move
             }
             ColumnCount = columnCount;
             Deck = deck;
+            Cards = deck;
         }
 
         /// <inheritdoc/>

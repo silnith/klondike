@@ -173,7 +173,7 @@ public class StockPileAdvanceMoveTest {
     public void testGetCards() {
         final StockPileAdvanceMove move = new StockPileAdvanceMove(17, 34);
         
-        assertThrows(RuntimeException.class, () -> move.getCards());
+        assertEquals(Collections.emptyList(), move.getCards());
     }
     
     @Test

@@ -23,14 +23,9 @@ namespace Silnith.Game.Klondike.Move
         }
 
         /// <summary>
-        /// If the <see cref="HasCards"/> property is <see langword="true"/>,
-        /// this will be the cards that were affected by the move.
+        /// The cards affected by this move.  If this move does not affect any cards,
+        /// this will be empty.
         /// </summary>
-        /// <remarks>
-        /// <para>
-        /// This property is undefined if <see cref="HasCards"/> is <see langword="false"/>.
-        /// </para>
-        /// </remarks>
         public IReadOnlyList<Card> Cards
         {
             get;

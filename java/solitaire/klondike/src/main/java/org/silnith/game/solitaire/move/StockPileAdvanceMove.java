@@ -110,7 +110,7 @@ public class StockPileAdvanceMove implements SolitaireMove {
     
     @Override
     public List<Card> getCards() {
-        throw new UnsupportedOperationException();
+        return Collections.emptyList();
     }
     
     @Override

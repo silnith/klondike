@@ -76,10 +76,7 @@ namespace Silnith.Game.Klondike.Move
         /// <inheritdoc/>
         public IReadOnlyList<Card> Cards
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get;
         }
 
         /// <summary>
@@ -97,6 +94,7 @@ namespace Silnith.Game.Klondike.Move
 
             BeginningIndex = beginningIndex;
             Increment = increment;
+            Cards = Array.Empty<Card>();
         }
 
         /// <summary>

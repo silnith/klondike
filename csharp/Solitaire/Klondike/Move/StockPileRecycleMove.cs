@@ -60,10 +60,7 @@ namespace Silnith.Game.Klondike.Move
         /// <inheritdoc/>
         public IReadOnlyList<Card> Cards
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get;
         }
 
         /// <summary>
@@ -73,6 +70,7 @@ namespace Silnith.Game.Klondike.Move
         public StockPileRecycleMove(int sourceIndex)
         {
             SourceIndex = sourceIndex;
+            Cards = Array.Empty<Card>();
         }
 
         /// <summary>
