@@ -2,11 +2,13 @@ package org.silnith.game.ticTacToe;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 import org.silnith.game.Game;
 import org.silnith.game.GameState;
@@ -75,6 +77,23 @@ public class TicTacToe implements Game<Move, Board> {
 			return null;
 		}
 		return state;
+	}
+
+	/**
+	 * If player {@code O} wins the game, then by definition player {@code X} loses.
+	 */
+	private class GameLostFilter implements Predicate<GameState<Move, Board>> {
+
+		@Override
+		public boolean test(final GameState<Move, Board> state) {
+			return isWinForPlayer(Player.O, state.getBoards().getFirst());
+		}
+
+	}
+
+	@Override
+	public Collection<Predicate<GameState<Move, Board>>> getFilters() {
+		return Collections.singleton(new GameLostFilter());
 	}
 
 	public static void main(final String[] args) throws InterruptedException, ExecutionException {

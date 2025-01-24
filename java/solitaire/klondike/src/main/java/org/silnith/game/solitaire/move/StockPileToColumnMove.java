@@ -128,6 +128,11 @@ public class StockPileToColumnMove implements SolitaireMove {
     }
     
     @Override
+	public boolean addsCardsToColumn(final int column) {
+		return column == destinationColumn;
+	}
+
+	@Override
     public Board apply(final Board board) {
     	final Pair<Card, List<Card>> pair = board.extractStockPileCard();
         final Card card = pair.getFirst();

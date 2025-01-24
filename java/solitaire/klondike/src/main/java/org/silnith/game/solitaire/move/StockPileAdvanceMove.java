@@ -114,6 +114,11 @@ public class StockPileAdvanceMove implements SolitaireMove {
     }
     
     @Override
+	public boolean addsCardsToColumn(final int column) {
+		return false;
+	}
+
+	@Override
     public Board apply(final Board board) {
     	assert increment >= 1;
 		

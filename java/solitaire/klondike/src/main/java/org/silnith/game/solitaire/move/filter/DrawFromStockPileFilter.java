@@ -3,6 +3,7 @@ package org.silnith.game.solitaire.move.filter;
 import org.silnith.game.GameState;
 import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.move.StockPileAdvanceMove;
+import org.silnith.game.solitaire.move.FoundationToColumnMove;
 import org.silnith.game.solitaire.move.SolitaireMove;
 import org.silnith.game.solitaire.move.StockPileToColumnMove;
 import org.silnith.game.solitaire.move.StockPileToFoundationMove;
@@ -37,7 +38,8 @@ public class DrawFromStockPileFilter implements SolitaireMoveFilter {
 		assert previousMove != null;
 		// There may be a sequence of draws from the stock pile.
 		while (previousMove instanceof StockPileToColumnMove
-				|| previousMove instanceof StockPileToFoundationMove) {
+				|| previousMove instanceof StockPileToFoundationMove
+				|| previousMove instanceof FoundationToColumnMove) {
 			// Walk backwards.
 			moveHistory = moveHistory.getNext();
 			assert moveHistory != null;

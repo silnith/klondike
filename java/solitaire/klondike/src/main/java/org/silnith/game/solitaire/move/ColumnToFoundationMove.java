@@ -110,6 +110,11 @@ public class ColumnToFoundationMove implements SolitaireMove {
     }
     
     @Override
+	public boolean addsCardsToColumn(final int column) {
+		return false;
+	}
+
+	@Override
     public Board apply(final Board board) {
         final List<Column> columns = board.getColumns();
 		final Column column = columns.get(sourceColumn);

@@ -118,6 +118,11 @@ public class FoundationToColumnMove implements SolitaireMove {
     }
     
     @Override
+	public boolean addsCardsToColumn(final int column) {
+		return column == destinationColumn;
+	}
+
+	@Override
     public Board apply(final Board board) {
         final Pair<Card, Map<Suit, List<Card>>> pair = board.extractCardFromFoundation(card.getSuit());
 		final Card card = pair.getFirst();

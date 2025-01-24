@@ -80,6 +80,11 @@ public class DealMove implements SolitaireMove {
     }
     
     @Override
+	public boolean addsCardsToColumn(final int column) {
+		return false;
+	}
+
+	@Override
     public Board apply(final Board board) {
     	// The parameter is completely ignored.
         int remaining = deck.size();

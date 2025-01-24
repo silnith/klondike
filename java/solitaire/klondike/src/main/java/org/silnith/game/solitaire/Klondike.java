@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 import org.silnith.deck.Card;
 import org.silnith.deck.Suit;
@@ -18,26 +19,24 @@ import org.silnith.game.Game;
 import org.silnith.game.GameState;
 import org.silnith.game.search.SequentialDepthFirstSearch;
 import org.silnith.game.search.WorkerThreadDepthFirstSearch;
-import org.silnith.game.solitaire.move.StockPileAdvanceMove;
+import org.silnith.game.solitaire.move.ColumnToColumnMove;
 import org.silnith.game.solitaire.move.ColumnToFoundationMove;
 import org.silnith.game.solitaire.move.DealMove;
 import org.silnith.game.solitaire.move.FoundationToColumnMove;
-import org.silnith.game.solitaire.move.StockPileRecycleMove;
-import org.silnith.game.solitaire.move.ColumnToColumnMove;
 import org.silnith.game.solitaire.move.SolitaireMove;
+import org.silnith.game.solitaire.move.StockPileAdvanceMove;
+import org.silnith.game.solitaire.move.StockPileRecycleMove;
 import org.silnith.game.solitaire.move.StockPileToColumnMove;
 import org.silnith.game.solitaire.move.StockPileToFoundationMove;
 import org.silnith.game.solitaire.move.filter.BoardCycleFilter;
+import org.silnith.game.solitaire.move.filter.DrawFromFoundationMustBeUsefulFilter;
 import org.silnith.game.solitaire.move.filter.DrawFromStockPileFilter;
 import org.silnith.game.solitaire.move.filter.KingMoveMustExposeFaceDownCardFilter;
-import org.silnith.game.solitaire.move.filter.LockFoundationFilter;
 import org.silnith.game.solitaire.move.filter.MoveCapFilter;
-import org.silnith.game.solitaire.move.filter.RedundantStackMoveFilter;
 import org.silnith.game.solitaire.move.filter.RunMoveMustBeFollowedBySomethingUsefulFilter;
 import org.silnith.game.solitaire.move.filter.SolitaireMoveFilter;
 import org.silnith.game.solitaire.move.filter.StockPileAdvanceMustBeFollowedBySomethingUseful;
 import org.silnith.game.solitaire.move.filter.StockPileRecycleMustBeFollowedByAdvance;
-import org.silnith.util.LinkedNode;
 
 /**
  * An implementation of Klondike solitaire.
@@ -142,9 +141,8 @@ public class Klondike implements Game<SolitaireMove, Board> {
 			new KingMoveMustExposeFaceDownCardFilter(),
 			new StockPileRecycleMustBeFollowedByAdvance(),
 			new StockPileAdvanceMustBeFollowedBySomethingUseful(),
-			//new RedundantStackMoveFilter(),
+			new DrawFromFoundationMustBeUsefulFilter(),
 			new DrawFromStockPileFilter(),
-			new LockFoundationFilter(),
 			new RunMoveMustBeFollowedBySomethingUsefulFilter(),
 			new BoardCycleFilter());
 
@@ -157,6 +155,11 @@ public class Klondike implements Game<SolitaireMove, Board> {
 		}
 		
 		return state;
+	}
+
+	@Override
+	public Collection<? extends Predicate<GameState<SolitaireMove, Board>>> getFilters() {
+		return filters;
 	}
 
 	public static void main(final String[] args) throws InterruptedException {
@@ -303,6 +306,8 @@ public class Klondike implements Game<SolitaireMove, Board> {
 			statesExamined = nextStatesExamined;
 			Thread.sleep(TimeUnit.SECONDS.toMillis(1));
 		}
+		
+		thread.join();
 	}
 
 	private static void parallelDFS(final Game<SolitaireMove, Board> game,

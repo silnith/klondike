@@ -101,6 +101,11 @@ public class StockPileToFoundationMove implements SolitaireMove {
     }
     
     @Override
+	public boolean addsCardsToColumn(final int column) {
+		return false;
+	}
+
+	@Override
     public Board apply(final Board board) {
         final Pair<Card, List<Card>> pair = board.extractStockPileCard();
 		final Card card = pair.getFirst();

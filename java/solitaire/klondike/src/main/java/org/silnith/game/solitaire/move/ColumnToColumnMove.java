@@ -176,6 +176,11 @@ public class ColumnToColumnMove implements SolitaireMove {
     }
     
     @Override
+    public boolean addsCardsToColumn(final int column) {
+    	return column == destinationColumn;
+    }
+    
+    @Override
     public Board apply(final Board board) {
     	assert sourceColumn != destinationColumn;
     	

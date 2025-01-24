@@ -67,6 +67,11 @@ public class StockPileRecycleMove implements SolitaireMove {
     }
     
     @Override
+	public boolean addsCardsToColumn(final int column) {
+		return false;
+	}
+
+	@Override
     public Board apply(final Board board) {
         return new Board(board.getColumns(), board.getStockPile(), 0, board.getFoundation());
     }
