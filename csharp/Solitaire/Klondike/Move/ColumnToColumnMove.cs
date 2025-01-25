@@ -151,6 +151,12 @@ namespace Silnith.Game.Klondike.Move
         }
 
         /// <inheritdoc/>
+        public bool AddsCardsToColumn(int column)
+        {
+            return column == DestinationColumn;
+        }
+
+        /// <inheritdoc/>
         public Board Apply(Board board)
         {
             Column fromColumn = board.Columns[SourceColumn];

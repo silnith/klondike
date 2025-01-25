@@ -1,30 +1,39 @@
 package org.silnith.game.solitaire.move.filter;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.silnith.game.GameState;
 import org.silnith.game.solitaire.Board;
-import org.silnith.game.solitaire.move.StockPileAdvanceMove;
-import org.silnith.game.solitaire.move.StockPileRecycleMove;
 import org.silnith.game.solitaire.move.FoundationToColumnMove;
 import org.silnith.game.solitaire.move.SolitaireMove;
+import org.silnith.game.solitaire.move.StockPileAdvanceMove;
+import org.silnith.game.solitaire.move.StockPileRecycleMove;
 import org.silnith.game.solitaire.move.StockPileToColumnMove;
 import org.silnith.game.solitaire.move.StockPileToFoundationMove;
-import org.silnith.util.LinkedNode;
 
 public class StockPileAdvanceMustBeFollowedBySomethingUseful implements SolitaireMoveFilter {
 
+    @Override
+    public Object getStatisticsKey() {
+        return "Stock Pile Draw Must Follow Advance";
+    }
+
 	@Override
-	public boolean test(GameState<SolitaireMove, Board> state) {
-		final SolitaireMove currentMove = state.getMoves().getFirst();
+	public boolean shouldFilter(final List<GameState<SolitaireMove, Board>> state) {
+	    final Iterator<GameState<SolitaireMove, Board>> iterator = state.iterator();
+	    assert iterator.hasNext();
+	    final GameState<SolitaireMove, Board> currentGameState = iterator.next();
+		final SolitaireMove currentMove = currentGameState.getMove();
 		
-		final LinkedNode<SolitaireMove> moveHistory = state.getMoves().getNext();
-		if (moveHistory == null) {
-			return false;
+		if (!iterator.hasNext()) {
+		    return false;
 		}
 		
-		final SolitaireMove previousMove = moveHistory.getFirst();
+		final GameState<SolitaireMove, Board> previousGameState = iterator.next();
+		final SolitaireMove previousMove = previousGameState.getMove();
 		
 		if (previousMove instanceof StockPileAdvanceMove) {
-			// check stuff
 			if (currentMove instanceof StockPileAdvanceMove
 					|| currentMove instanceof StockPileRecycleMove
 					|| currentMove instanceof StockPileToColumnMove

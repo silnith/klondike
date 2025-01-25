@@ -1,5 +1,7 @@
 package org.silnith.game.solitaire.move.filter;
 
+import java.util.List;
+
 import org.silnith.game.GameState;
 import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.move.SolitaireMove;
@@ -12,17 +14,24 @@ import org.silnith.game.solitaire.move.SolitaireMove;
  * greater than that number is unproductive.</p>
  */
 public class MoveCapFilter implements SolitaireMoveFilter {
-	
+
 	private final int moveCap;
-	
+	private final String key;
+
 	public MoveCapFilter(final int moveCap) {
 		super();
 		this.moveCap = moveCap;
+		this.key = "Move Cap of " + this.moveCap;
 	}
 
 	@Override
-	public boolean test(final GameState<SolitaireMove, Board> gameState) {
-		return gameState.getBoards().size() > moveCap;
+    public Object getStatisticsKey() {
+        return key;
+    }
+
+    @Override
+	public boolean shouldFilter(final List<GameState<SolitaireMove, Board>> gameStateHistory) {
+		return gameStateHistory.size() > moveCap;
 	}
 
 }

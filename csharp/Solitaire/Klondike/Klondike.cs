@@ -1,5 +1,6 @@
 ﻿using Silnith.Game.Deck;
 using Silnith.Game.Klondike.Move;
+using Silnith.Game.Klondike.Move.Filter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,18 @@ namespace Silnith.Game.Klondike
     /// </summary>
     public class Klondike : IGame<ISolitaireMove, Board>
     {
+        private readonly IEnumerable<ISolitaireMoveFilter> filters = new List<ISolitaireMoveFilter>()
+        {
+            new MoveCapFilter(150),
+            new KingMoveMustExposeFaceDownCardFilter(),
+            new StockPileRecycleMustBeFollowedByAdvance(),
+            new StockPileAdvanceMustBeFollowedBySomethingUseful(),
+            new DrawFromFoundationMustBeUsefulFilter(),
+            new DrawFromStockPileFilter(),
+            new RunMoveMustBeFollowedBySomethingUsefulFilter(),
+            new BoardCycleFilter(),
+        };
+
         /// <summary>
         /// The number of columns on the board for this game of Klondike solitaire.
         /// </summary>
@@ -54,19 +67,19 @@ namespace Silnith.Game.Klondike
         public IEnumerable<ISolitaireMove> FindAllMoves(Board board)
         {
             return Array.Empty<ISolitaireMove>()
-                .Concat(StockPileToFoundationMove.FindMoves(board))
-                .Concat(StockPileToColumnMove.FindMoves(board))
-                .Concat(ColumnToFoundationMove.FindMoves(board))
+                .Concat(StockPileRecycleMove.FindMoves(board))
+                .Concat(StockPileAdvanceMove.FindMoves(DrawAdvance, board))
                 .Concat(FoundationToColumnMove.FindMoves(board))
                 .Concat(ColumnToColumnMove.FindMoves(board))
-                .Concat(StockPileAdvanceMove.FindMoves(DrawAdvance, board))
-                .Concat(StockPileRecycleMove.FindMoves(board));
+                .Concat(StockPileToColumnMove.FindMoves(board))
+                .Concat(ColumnToFoundationMove.FindMoves(board))
+                .Concat(StockPileToFoundationMove.FindMoves(board));
         }
 
         /// <inheritdoc/>
-        public IEnumerable<ISolitaireMove> FindAllMoves(GameState<ISolitaireMove, Board> state)
+        public IEnumerable<ISolitaireMove> FindAllMoves(IReadOnlyList<GameState<ISolitaireMove, Board>> state)
         {
-            return FindAllMoves(state.Boards[0]);
+            return FindAllMoves(state[0].Board);
         }
 
         /// <summary>
@@ -86,56 +99,13 @@ namespace Silnith.Game.Klondike
         /// <inheritdoc/>
         public bool IsWin(GameState<ISolitaireMove, Board> state)
         {
-            return IsWin(state.Boards.Value);
+            return IsWin(state.Board);
         }
 
         /// <inheritdoc/>
-        public GameState<ISolitaireMove, Board>? PruneGameState(GameState<ISolitaireMove, Board> state)
+        public IEnumerable<IMoveFilter<ISolitaireMove, Board>> GetFilters()
         {
-            ISolitaireMove currentMove = state.Moves.Value;
-            LinkedNode<ISolitaireMove>? pastMoves = state.Moves.Next;
-
-            Board currentBoard = state.Boards.Value;
-            LinkedNode<Board>? pastBoards = state.Boards.Next;
-
-            if (pastMoves is null || pastBoards is null)
-            {
-                // No past history to check, allow the search to continue.
-                return state;
-            }
-
-            if (pastBoards.Count > 150)
-            {
-                return null;
-            }
-
-            if (pastBoards.Contains(currentBoard))
-            {
-                /*
-                 * This move introduces a cycle into the history of boards.
-                 */
-                return null;
-            }
-
-            ISolitaireMove previousMove = pastMoves.Value;
-            Board previousBoard = pastBoards.Value;
-
-            if (currentMove.HasCards && previousMove.HasCards && currentMove.Cards.SequenceEqual(previousMove.Cards))
-            {
-                /*
-                 * If two consecutive moves are moving the same stack of cards, they are
-                 * redundant and the second may be pruned.
-                 */
-                return null;
-            }
-
-            /*
-             * This is where all the complicated logic to check for silly
-             * or redundant moves should go.
-             */
-
-            // The game state was not pruned, return it to allow the search to proceed.
-            return state;
+            return filters;
         }
     }
 }

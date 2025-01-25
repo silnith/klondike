@@ -32,7 +32,7 @@ public interface SolitaireMove extends Move<Board> {
     /**
      * Returns {@code true} if this move adds cards to the specified column.
      * 
-     * @param column the column
+     * @param column the column index
      * @return {@code true} if this move adds cards to the column
      */
     public boolean addsCardsToColumn(int column);

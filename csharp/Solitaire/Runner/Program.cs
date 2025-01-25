@@ -2,9 +2,13 @@
 using Silnith.Game.Deck;
 using Silnith.Game.Klondike;
 using Silnith.Game.Klondike.Move;
+using Silnith.Game.Klondike.Move.Filter;
+using Silnith.Game.Search;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Runner
 {
@@ -61,35 +65,85 @@ namespace Runner
 
             dealtBoard.PrintTo();
 
-            ConcurrentStack<GameState<ISolitaireMove, Board>> stack = new();
-            ConcurrentStack<GameState<ISolitaireMove, Board>> wins = new();
-            stack.Push(initialGameState);
-
             Console.WriteLine("Processor count: {0:N}", Environment.ProcessorCount);
+
+            //RunSearch0(klondike, initialGameState);
+            SequentialDFS(klondike, initialGameState);
+
+            return 0;
+        }
+
+        private static void RunSearch0(IGame<ISolitaireMove, Board> klondike, GameState<ISolitaireMove, Board> initialGameState)
+        {
+            Stack<LinkedNode<GameState<ISolitaireMove, Board>>> stack = new();
+            Stack<IReadOnlyList<GameState<ISolitaireMove, Board>>> wins = new();
+            stack.Push(new LinkedNode<GameState<ISolitaireMove, Board>>(initialGameState));
+
+            IEnumerable<IMoveFilter<ISolitaireMove, Board>> filters = klondike.GetFilters();
 
             long nodesExamined = 0;
             long gameStatesPruned = 0;
-            while (stack.TryPop(out GameState<ISolitaireMove, Board>? currentGameState))
+            while (stack.TryPop(out LinkedNode<GameState<ISolitaireMove, Board>>? gameStateHistory))
             {
                 nodesExamined++;
-                foreach (ISolitaireMove move in klondike.FindAllMoves(currentGameState))
+                IEnumerable<ISolitaireMove> moves = klondike.FindAllMoves(gameStateHistory);
+
+                Console.WriteLine();
+                Console.WriteLine("Scenario:");
+                List<GameState<ISolitaireMove, Board>> history = new(gameStateHistory);
+                history.Reverse();
+                foreach (GameState<ISolitaireMove, Board> gameState in history)
                 {
-                    GameState<ISolitaireMove, Board>? gameState = klondike.PruneGameState(new GameState<ISolitaireMove, Board>(currentGameState, move));
-                    if (gameState is null)
+                    Console.WriteLine(gameState.Move);
+                }
+                Console.WriteLine("Moves made: {0:N0}", history.Count);
+                Console.WriteLine("Game states to examine: {0:N0}", stack.Count);
+                Board currentBoard = gameStateHistory.Value.Board;
+                currentBoard.PrintTo();
+                foreach (ISolitaireMove move in moves)
+                {
+                    Board newBoard = move.Apply(currentBoard);
+                    GameState<ISolitaireMove, Board> newGameState = new(move, newBoard);
+                    LinkedNode<GameState<ISolitaireMove, Board>> newHistory = new(newGameState, gameStateHistory);
+                    Console.Write(move);
+                    foreach (IMoveFilter<ISolitaireMove, Board> filter in filters)
                     {
-                        gameStatesPruned++;
+                        if (filter.ShouldFilter(newHistory))
+                        {
+                            Console.Write(" (filtered by {0})", filter.StatisticsKey);
+                        }
+                    }
+                    Console.WriteLine();
+                }
+                Console.WriteLine();
+
+                foreach (ISolitaireMove move in moves)
+                {
+                    Board newBoard = move.Apply(currentBoard);
+                    GameState<ISolitaireMove, Board> newGameState = new(move, newBoard);
+                    LinkedNode<GameState<ISolitaireMove, Board>> newHistory = new(newGameState, gameStateHistory);
+                    bool broken = false;
+                    foreach (IMoveFilter<ISolitaireMove, Board> filter in filters)
+                    {
+                        if (filter.ShouldFilter(newHistory))
+                        {
+                            gameStatesPruned++;
+                            broken = true;
+                            break;
+                        }
+                    }
+                    if (broken)
+                    {
                         continue;
                     }
-                    //Console.WriteLine(gameState.Moves.Value);
-                    //gameState.Boards.Value.PrintTo();
-                    //Console.WriteLine();
-                    if (klondike.IsWin(gameState.Boards.Value))
+
+                    if (klondike.IsWin(newGameState))
                     {
-                        wins.Push(gameState);
+                        wins.Push(newHistory);
                     }
                     else
                     {
-                        stack.Push(gameState);
+                        stack.Push(newHistory);
                     }
                 }
 
@@ -103,13 +157,71 @@ namespace Runner
                 }
             }
 
-            foreach (GameState<ISolitaireMove, Board> gameState in wins)
+            foreach (IReadOnlyList<GameState<ISolitaireMove, Board>> gameState in wins)
             {
                 Console.WriteLine(gameState);
-                gameState.Boards.Value.PrintTo();
+                gameState[0].Board.PrintTo();
+            }
+        }
+
+        private static void SequentialDFS(IGame<ISolitaireMove, Board> game, GameState<ISolitaireMove, Board> initialState)
+        {
+            SequentialDepthFirstSearch<ISolitaireMove, Board> searcher = new(game, initialState);
+            void Run()
+            {
+                IEnumerable<IReadOnlyList<GameState<ISolitaireMove, Board>>> wins = searcher.Search();
+
+                foreach (IReadOnlyList<GameState<ISolitaireMove, Board>> win in wins)
+                {
+                    Console.WriteLine(win);
+                    win[0].Board.PrintTo();
+                }
+            }
+            Thread thread = new(Run);
+            thread.Start();
+
+            long statesExamined = 0;
+            while (thread.IsAlive)
+            {
+                searcher.PrintStatistics();
+                long nextStatesExamined = searcher.NumberOfGameStatesExamined;
+                long nodesPerSecond = nextStatesExamined - statesExamined;
+                Console.WriteLine("Nodes per second: {0:N0}", nodesPerSecond);
+                Console.WriteLine();
+                statesExamined = nextStatesExamined;
+                Thread.Sleep(TimeSpan.FromSeconds(1));
             }
 
-            return 0;
+            thread.Join();
+        }
+
+        private static void ParallelDFS(IGame<ISolitaireMove, Board> game, GameState<ISolitaireMove, Board> initialState, int numThreads)
+        {
+            WorkerThreadDepthFirstSearch<ISolitaireMove, Board> searcher = new(game, initialState, numThreads);
+            async Task RunAsync()
+            {
+                IEnumerable<IReadOnlyList<GameState<ISolitaireMove, Board>>> wins = await searcher.SearchAsync();
+
+                foreach (IReadOnlyList<GameState<ISolitaireMove, Board>> win in wins)
+                {
+                    Console.WriteLine(win);
+                    win[0].Board.PrintTo();
+                }
+            }
+            Task task = Task.Run(RunAsync);
+
+            long statesExamined = 0;
+            while (!task.IsCompleted)
+            {
+                searcher.PrintStatistics();
+                long nextStatesExamined = searcher.NumberOfGameStatesExamined;
+                long nodesPerSecond = nextStatesExamined - statesExamined;
+                Console.WriteLine("Nodes per second: {0:N0}", nodesPerSecond);
+                statesExamined = nextStatesExamined;
+                Thread.Sleep(TimeSpan.FromSeconds(1));
+            }
+
+            task.GetAwaiter().GetResult();
         }
     }
 }

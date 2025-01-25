@@ -30,5 +30,12 @@ namespace Silnith.Game.Klondike.Move
         {
             get;
         }
+
+        /// <summary>
+        /// Returns <see langword="true"/> if this move adds cards to the specified column.
+        /// </summary>
+        /// <param name="column">The column index.</param>
+        /// <returns><see langword="true"/> if this move adds cards to the column.</returns>
+        public bool AddsCardsToColumn(int column);
     }
 }

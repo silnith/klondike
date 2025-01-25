@@ -1,10 +1,12 @@
 package org.silnith.game.solitaire.move.filter;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.silnith.game.GameState;
 import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.move.FoundationToColumnMove;
 import org.silnith.game.solitaire.move.SolitaireMove;
-import org.silnith.util.LinkedNode;
 
 /**
  * If a card is drawn from the foundation, the following move must make use
@@ -12,17 +14,24 @@ import org.silnith.util.LinkedNode;
  */
 public class DrawFromFoundationMustBeUsefulFilter implements SolitaireMoveFilter {
 
+    @Override
+    public Object getStatisticsKey() {
+        return "Draw From Foundation Must Be Used";
+    }
+
 	@Override
-	public boolean test(final GameState<SolitaireMove, Board> state) {
-		final SolitaireMove currentMove = state.getMoves().getFirst();
+	public boolean shouldFilter(final List<GameState<SolitaireMove, Board>> gameStateHistory) {
+	    final Iterator<GameState<SolitaireMove, Board>> iterator = gameStateHistory.iterator();
+	    assert iterator.hasNext();
+	    final GameState<SolitaireMove, Board> currentGameState = iterator.next();
+		final SolitaireMove currentMove = currentGameState.getMove();
 		
-		final LinkedNode<SolitaireMove> moveHistory = state.getMoves().getNext();
-		
-		if (moveHistory == null) {
-			return false;
+		if (!iterator.hasNext()) {
+		    return false;
 		}
 		
-		final SolitaireMove previousMove = moveHistory.getFirst();
+		final GameState<SolitaireMove, Board> previousGameState = iterator.next();
+		final SolitaireMove previousMove = previousGameState.getMove();
 		
 		if (previousMove instanceof FoundationToColumnMove) {
 			final FoundationToColumnMove foundationToColumnMove = (FoundationToColumnMove) previousMove;

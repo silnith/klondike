@@ -1,6 +1,7 @@
 package org.silnith.game.solitaire.move.filter;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.silnith.deck.Card;
@@ -9,7 +10,6 @@ import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.Column;
 import org.silnith.game.solitaire.move.ColumnToColumnMove;
 import org.silnith.game.solitaire.move.SolitaireMove;
-import org.silnith.util.LinkedNode;
 
 /**
  * If a run is moved from one column to another, one of two conditions must hold true.
@@ -18,46 +18,65 @@ import org.silnith.util.LinkedNode;
  */
 public class RunMoveMustBeFollowedBySomethingUsefulFilter implements SolitaireMoveFilter {
 
+    @Override
+    public Object getStatisticsKey() {
+        return "Run Move Must Be Useful";
+    }
+
 	@Override
-	public boolean test(final GameState<SolitaireMove, Board> state) {
-		final SolitaireMove currentMove = state.getMoves().getFirst();
+	public boolean shouldFilter(final List<GameState<SolitaireMove, Board>> gameStateHistory) {
+	    final Iterator<GameState<SolitaireMove, Board>> iterator = gameStateHistory.iterator();
+	    assert iterator.hasNext() : gameStateHistory;
+	    final GameState<SolitaireMove, Board> currentGameState = iterator.next();
+		final SolitaireMove currentMove = currentGameState.getMove();
 		assert currentMove != null;
 		
-		final LinkedNode<SolitaireMove> moveHistory = state.getMoves().getNext();
-		if (moveHistory == null) {
-			return false;
+		if (!iterator.hasNext()) {
+		    return false;
 		}
-		final LinkedNode<Board> boardHistory = state.getBoards().getNext();
-		assert boardHistory != null : "How can the board history be shorter than the move history?";
 		
-		final SolitaireMove previousMove = moveHistory.getFirst();
-		final Board previousBoard = boardHistory.getFirst();
+		final GameState<SolitaireMove, Board> previousGameState = iterator.next();
+		final SolitaireMove previousMove = previousGameState.getMove();
+		final Board previousBoard = previousGameState.getBoard();
 		/*
 		 * This is the board AFTER the move has been applied!
 		 */
 		
 		if (previousMove instanceof ColumnToColumnMove) {
 			final ColumnToColumnMove previousRunMove = (ColumnToColumnMove) previousMove;
+            assert previousRunMove.hasCards();
 			// check whether the previous run move used up all the cards
 			// if it did, everything is fine
-			assert previousRunMove.hasCards();
-			
-			if (boardHistory.getNext() == null) {
-				return false;
+
+			if (!iterator.hasNext()) {
+			    return false;
 			}
-			final Board boardTwoStepsBack = boardHistory.getNext().getFirst();
+			final GameState<SolitaireMove, Board> gameStateTwoStepsBack = iterator.next();
+			final Board boardTwoStepsBack = gameStateTwoStepsBack.getBoard();
 			
-			final Column sourceColumn = boardTwoStepsBack.getColumns().get(previousRunMove.getSourceColumn());
+			// Get the column that the previous move drew from.
+			final int previousMoveSourceColumn = previousRunMove.getSourceColumn();
+            final Column sourceColumn = boardTwoStepsBack.getColumns().get(previousMoveSourceColumn);
+			// Check whether the previous move took all the available cards from the source column.
 			final List<Card> faceUpCards = sourceColumn.getFaceUpCards();
 			final int availableCards = faceUpCards.size();
 			final int numberOfMovedCards = previousRunMove.getNumberOfCards();
 			if (availableCards == numberOfMovedCards) {
-				// Took everything, no need to filter.
+			    /*
+			     * The previous move took all face-up cards from the source column.
+			     * Therefore, it is not suspicious.
+			     * (Shenanigans with the king are handled by other filters.)
+			     */
 				return false;
 			} else {
-				final Card exposedCard = previousBoard.getColumns().get(previousRunMove.getSourceColumn()).getTopCard();
-				if (currentMove.hasCards()
-						&& Collections.singletonList(exposedCard).equals(currentMove.getCards())) {
+			    /*
+			     * The previous move took only a portion of the available run.
+			     * Therefore, we want to make sure the top-most card NOT taken
+			     * is involved with the current move.  Otherwise, the previous
+			     * move has no value.
+			     */
+				final Card cardExposedByRunMove = previousBoard.getColumns().get(previousMoveSourceColumn).getTopCard();
+				if (Collections.singletonList(cardExposedByRunMove).equals(currentMove.getCards())) {
 					// This move uses the exposed card, meaning the previous run move is allowed.
 					// This makes sure the move uses ONLY the exposed card, not as one of a run.
 					// TODO: Should the only allowed follow-up move be column to foundation?

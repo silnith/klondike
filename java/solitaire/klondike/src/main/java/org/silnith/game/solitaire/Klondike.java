@@ -4,19 +4,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
 
 import org.silnith.deck.Card;
 import org.silnith.deck.Suit;
 import org.silnith.deck.Value;
 import org.silnith.game.Game;
 import org.silnith.game.GameState;
+import org.silnith.game.move.MoveFilter;
 import org.silnith.game.search.SequentialDepthFirstSearch;
 import org.silnith.game.search.WorkerThreadDepthFirstSearch;
 import org.silnith.game.solitaire.move.ColumnToColumnMove;
@@ -37,12 +38,24 @@ import org.silnith.game.solitaire.move.filter.RunMoveMustBeFollowedBySomethingUs
 import org.silnith.game.solitaire.move.filter.SolitaireMoveFilter;
 import org.silnith.game.solitaire.move.filter.StockPileAdvanceMustBeFollowedBySomethingUseful;
 import org.silnith.game.solitaire.move.filter.StockPileRecycleMustBeFollowedByAdvance;
+import org.silnith.util.LinkedNode;
 
 /**
  * An implementation of Klondike solitaire.
  */
 public class Klondike implements Game<SolitaireMove, Board> {
-	
+
+    // RunMove cannot follow stock pile advance or recycle.
+    private static final Collection<SolitaireMoveFilter> filters = Arrays.asList(
+            new MoveCapFilter(150),
+            new KingMoveMustExposeFaceDownCardFilter(),
+            new StockPileRecycleMustBeFollowedByAdvance(),
+            new StockPileAdvanceMustBeFollowedBySomethingUseful(),
+            new DrawFromFoundationMustBeUsefulFilter(),
+            new DrawFromStockPileFilter(),
+            new RunMoveMustBeFollowedBySomethingUsefulFilter(),
+            new BoardCycleFilter());
+
 	/**
 	 * The number of columns on the board.
 	 * 
@@ -109,7 +122,7 @@ public class Klondike implements Game<SolitaireMove, Board> {
 
 	@Override
 	public boolean isWin(final GameState<SolitaireMove, Board> state) {
-		return isWin(state.getBoards().getFirst());
+		return isWin(state.getBoard());
 	}
 
 	/**
@@ -131,34 +144,12 @@ public class Klondike implements Game<SolitaireMove, Board> {
 	}
 
 	@Override
-	public Collection<SolitaireMove> findAllMoves(final GameState<SolitaireMove, Board> state) {
-		return findAllMoves(state.getBoards().get(0));
-	}
-	
-	// RunMove cannot follow stock pile advance or recycle.
-	private static final Collection<SolitaireMoveFilter> filters = Arrays.asList(
-			new MoveCapFilter(150),
-			new KingMoveMustExposeFaceDownCardFilter(),
-			new StockPileRecycleMustBeFollowedByAdvance(),
-			new StockPileAdvanceMustBeFollowedBySomethingUseful(),
-			new DrawFromFoundationMustBeUsefulFilter(),
-			new DrawFromStockPileFilter(),
-			new RunMoveMustBeFollowedBySomethingUsefulFilter(),
-			new BoardCycleFilter());
-
-	@Override
-	public GameState<SolitaireMove, Board> pruneGameState(final GameState<SolitaireMove, Board> state) {
-		for (final SolitaireMoveFilter filter : filters) {
-			if (filter.test(state)) {
-				return null;
-			}
-		}
-		
-		return state;
+	public Collection<SolitaireMove> findAllMoves(final List<GameState<SolitaireMove, Board>> state) {
+		return findAllMoves(state.get(0).getBoard());
 	}
 
 	@Override
-	public Collection<? extends Predicate<GameState<SolitaireMove, Board>>> getFilters() {
+	public Collection<? extends MoveFilter<SolitaireMove, Board>> getFilters() {
 		return filters;
 	}
 
@@ -184,42 +175,45 @@ public class Klondike implements Game<SolitaireMove, Board> {
 		final int availableProcessors = Runtime.getRuntime().availableProcessors();
 		System.out.format(Locale.US, "Runtime processors: %d", availableProcessors);
 		
-		runSearch0(klondike, initialState);
-		//sequentialDFS(klondike, initialState);
+		//runSearch0(klondike, initialState);
+		sequentialDFS(klondike, initialState);
 		//parallelDFS(klondike, initialState, Math.max(availableProcessors - 2, 1));
 		//parallelDFS(klondike, initialState, 1);
 	}
 
 	private static void runSearch0(final Game<SolitaireMove, Board> game, final GameState<SolitaireMove, Board> initialState) {
-		final ConcurrentLinkedDeque<GameState<SolitaireMove, Board>> deque = new ConcurrentLinkedDeque<>();
-		final ConcurrentLinkedDeque<GameState<SolitaireMove, Board>> wins = new ConcurrentLinkedDeque<>();
-		deque.add(initialState);
+		final Deque<LinkedNode<GameState<SolitaireMove, Board>>> deque = new ConcurrentLinkedDeque<>();
+		final Deque<List<GameState<SolitaireMove, Board>>> wins = new ConcurrentLinkedDeque<>();
+		deque.add(new LinkedNode<>(initialState));
 		
 		long nodesExamined = 0;
 		long gameStatesPruned = 0;
-		GameState<SolitaireMove, Board> currentGameState = deque.poll();
-		while (currentGameState != null) {
+		LinkedNode<GameState<SolitaireMove, Board>> gameStateHistory = deque.poll();
+		while (gameStateHistory != null) {
 			nodesExamined++;
-			final Collection<SolitaireMove> moves = game.findAllMoves(currentGameState);
+			final Collection<SolitaireMove> moves = game.findAllMoves(gameStateHistory);
 			
 			System.out.println();
 			System.out.println("Scenario:");
-			final List<SolitaireMove> moveHistory = new ArrayList<>(currentGameState.getMoves());
-			Collections.reverse(moveHistory);
-			for (final SolitaireMove move : moveHistory) {
-				System.out.println(move);
+			final List<GameState<SolitaireMove, Board>> history = new ArrayList<>(gameStateHistory);
+			Collections.reverse(history);
+			for (final GameState<SolitaireMove, Board> gameState : history) {
+				System.out.println(gameState.getMove());
 			}
-			System.out.format(Locale.US, "Moves made: %,d\n", moveHistory.size());
+			System.out.format(Locale.US, "Moves made: %,d\n", history.size());
 			System.out.format(Locale.US, "Game states to examine: %,d\n", deque.size());
-			final Board currentBoard = currentGameState.getBoards().getFirst();
+			final Board currentBoard = gameStateHistory.getFirst().getBoard();
 			currentBoard.printTo(System.out);
 			System.out.println("Choices:");
 			for (final SolitaireMove move : moves) {
+			    final Board newBoard = move.apply(currentBoard);
+			    final GameState<SolitaireMove, Board> newGameState = new GameState<>(move, newBoard);
+                final LinkedNode<GameState<SolitaireMove, Board>> newHistory = new LinkedNode<>(newGameState, gameStateHistory);
 				System.out.print(move);
 				for (final SolitaireMoveFilter filter : filters) {
-					if (filter.test(new GameState<>(currentGameState, move))) {
+					if (filter.shouldFilter(newHistory)) {
 						System.out.print(" (filtered by ");
-						System.out.print(filter.getClass().getSimpleName());
+						System.out.print(filter.getStatisticsKey());
 						System.out.print(")");
 					}
 				}
@@ -232,23 +226,25 @@ public class Klondike implements Game<SolitaireMove, Board> {
 			 * the foundation.
 			 */
 			
-			for (final SolitaireMove move : moves) {
-				final GameState<SolitaireMove, Board> gameState = game.pruneGameState(new GameState<>(currentGameState, move));
-				if (gameState == null) {
-					gameStatesPruned++;
-					continue;
-				}
-				//System.out.println(gameState.getMoves().getFirst());
-				//gameState.getBoards().getFirst().printTo(System.out);
-				//System.out.println();
-				if (game.isWin(gameState)) {
-					wins.add(gameState);
+			movesLoop: for (final SolitaireMove move : moves) {
+                final Board newBoard = move.apply(currentBoard);
+                final GameState<SolitaireMove, Board> newGameState = new GameState<>(move, newBoard);
+                final LinkedNode<GameState<SolitaireMove, Board>> newHistory = new LinkedNode<>(newGameState, gameStateHistory);
+                for (final MoveFilter<SolitaireMove, Board> filter : filters) {
+                    if (filter.shouldFilter(newHistory)) {
+                        gameStatesPruned++;
+                        continue movesLoop;
+                    }
+                }
+                
+				if (game.isWin(newGameState)) {
+					wins.add(newHistory);
 				} else {
-					deque.addFirst(gameState);
+					deque.addFirst(newHistory);
 				}
 			}
 			
-			currentGameState = deque.poll();
+			gameStateHistory = deque.pollFirst();
 			
 			if (nodesExamined % 10_000 == 0) {
 				System.out.print("Nodes examined: ");
@@ -263,9 +259,9 @@ public class Klondike implements Game<SolitaireMove, Board> {
 			}
 		}
 		
-		for (final GameState<SolitaireMove, Board> gameState : wins) {
+		for (final List<GameState<SolitaireMove, Board>> gameState : wins) {
 			System.out.println(gameState);
-			gameState.getBoards().getFirst().printTo(System.out);
+			gameState.get(0).getBoard().printTo(System.out);
 		}
 	}
 
@@ -276,9 +272,9 @@ public class Klondike implements Game<SolitaireMove, Board> {
 			
 			@Override
 			public void run() {
-				final Future<Collection<GameState<SolitaireMove, Board>>> future = searcher.search();
+				final Future<Collection<List<GameState<SolitaireMove, Board>>>> future = searcher.search();
 				
-				final Collection<GameState<SolitaireMove, Board>> wins;
+				final Collection<List<GameState<SolitaireMove, Board>>> wins;
 				try {
 					wins = future.get();
 				} catch (InterruptedException e) {
@@ -287,9 +283,9 @@ public class Klondike implements Game<SolitaireMove, Board> {
 					throw new RuntimeException(e);
 				}
 				
-				for (final GameState<SolitaireMove, Board> gameState : wins) {
+				for (final List<GameState<SolitaireMove, Board>> gameState : wins) {
 					System.out.println(gameState);
-					gameState.getBoards().getFirst().printTo(System.out);
+					gameState.get(0).getBoard().printTo(System.out);
 				}
 			}
 		};
@@ -318,9 +314,9 @@ public class Klondike implements Game<SolitaireMove, Board> {
 			
 			@Override
 			public void run() {
-				final Future<Collection<GameState<SolitaireMove, Board>>> future = searcher.search();
+				final Future<Collection<List<GameState<SolitaireMove, Board>>>> future = searcher.search();
 				
-				final Collection<GameState<SolitaireMove, Board>> wins;
+				final Collection<List<GameState<SolitaireMove, Board>>> wins;
 				try {
 					wins = future.get();
 				} catch (InterruptedException e) {
@@ -329,9 +325,9 @@ public class Klondike implements Game<SolitaireMove, Board> {
 					throw new RuntimeException(e);
 				}
 				
-				for (final GameState<SolitaireMove, Board> gameState : wins) {
+				for (final List<GameState<SolitaireMove, Board>> gameState : wins) {
 					System.out.println(gameState);
-					gameState.getBoards().getFirst().printTo(System.out);
+					gameState.get(0).getBoard().printTo(System.out);
 				}
 			}
 		};

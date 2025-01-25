@@ -99,6 +99,12 @@ namespace Silnith.Game.Klondike.Move
         }
 
         /// <inheritdoc/>
+        public bool AddsCardsToColumn(int column)
+        {
+            return false;
+        }
+
+        /// <inheritdoc/>
         public Board Apply(Board board)
         {
             Tuple<Card, IReadOnlyList<Card>> tuple = board.ExtractStockPileCard();

@@ -16,10 +16,16 @@ import org.silnith.game.solitaire.move.SolitaireMove;
  */
 public class KingMoveMustExposeFaceDownCardFilter implements SolitaireMoveFilter {
 
+    @Override
+    public Object getStatisticsKey() {
+        return "King Move Must Expose Card";
+    }
+
 	@Override
-	public boolean test(final GameState<SolitaireMove, Board> state) {
-		final SolitaireMove currentMove = state.getMoves().getFirst();
-		final Board currentBoard = state.getBoards().getFirst();
+	public boolean shouldFilter(final List<GameState<SolitaireMove, Board>> gameStateHistory) {
+	    final GameState<SolitaireMove, Board> currentGameState = gameStateHistory.get(0);
+		final SolitaireMove currentMove = currentGameState.getMove();
+		final Board currentBoard = currentGameState.getBoard();
 		
 		assert currentMove != null;
 		assert currentBoard != null;
@@ -32,6 +38,9 @@ public class KingMoveMustExposeFaceDownCardFilter implements SolitaireMoveFilter
 				// This is the column after the move.
 				final Column sourceColumn = currentBoard.getColumns().get(runMove.getSourceColumn());
 				if (sourceColumn.hasFaceUpCards()) {
+				    /*
+				     * Something was left behind, therefore the move has value.
+				     */
 					return false;
 				} else {
 					/*

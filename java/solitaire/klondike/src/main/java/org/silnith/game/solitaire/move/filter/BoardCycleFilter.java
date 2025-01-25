@@ -1,26 +1,38 @@
 package org.silnith.game.solitaire.move.filter;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.silnith.game.GameState;
 import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.move.SolitaireMove;
-import org.silnith.util.LinkedNode;
 
 /**
  * Filters moves that introduce a cycle into the board history.
  */
 public class BoardCycleFilter implements SolitaireMoveFilter {
 
-	@Override
-	public boolean test(final GameState<SolitaireMove, Board> state) {
-		assert state != null;
-		
-		final LinkedNode<Board> boards = state.getBoards();
-		final Board currentBoard = boards.getFirst();
-		final LinkedNode<Board> boardHistory = boards.getNext();
-		if (boardHistory == null) {
-			return false;
-		}
-		return boardHistory.contains(currentBoard);
-	}
+    @Override
+    public Object getStatisticsKey() {
+        return "Board Cycle";
+    }
+
+    @Override
+    public boolean shouldFilter(final List<GameState<SolitaireMove, Board>> gameStateHistory) {
+        assert gameStateHistory != null;
+
+        final Iterator<GameState<SolitaireMove, Board>> iterator = gameStateHistory.iterator();
+        assert iterator.hasNext();
+        final GameState<SolitaireMove, Board> currentGameState = iterator.next();
+        final Board currentBoard = currentGameState.getBoard();
+
+        while (iterator.hasNext()) {
+            final GameState<SolitaireMove, Board> gameState = iterator.next();
+            if (currentBoard.equals(gameState.getBoard())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

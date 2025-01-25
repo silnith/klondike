@@ -3,9 +3,12 @@ package org.silnith.game.search;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
@@ -13,19 +16,23 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Predicate;
 
 import org.silnith.game.Game;
 import org.silnith.game.GameState;
 import org.silnith.game.move.Move;
+import org.silnith.game.move.MoveFilter;
+import org.silnith.util.LinkedNode;
 
 public class WorkerThreadDepthFirstSearch<M extends Move<B>, B> {
 
 	private final Game<M, B> game;
 	private final List<Thread> threads;
-	private final Deque<GameState<M, B>> queue;
-	private final Collection<GameState<M, B>> wins;
+	private final Deque<LinkedNode<GameState<M, B>>> queue;
+	private final Collection<List<GameState<M, B>>> wins;
 	private final AtomicLong gameStatesExamined;
-	private final AtomicLong gameStatesPruned;
+	private final AtomicLong gameStatesPrunedTotal;
+    private final Map<Object, AtomicLong> gameStatesPruned;
 	private volatile boolean cancelled;
 
 	public WorkerThreadDepthFirstSearch(final Game<M, B> game, final GameState<M, B> initialState,
@@ -42,10 +49,15 @@ public class WorkerThreadDepthFirstSearch<M extends Move<B>, B> {
 		this.queue = new ConcurrentLinkedDeque<>();
 		this.wins = new ConcurrentLinkedQueue<>();
 		this.gameStatesExamined = new AtomicLong();
-		this.gameStatesPruned = new AtomicLong();
+		this.gameStatesPrunedTotal = new AtomicLong();
+        final Map<Object, AtomicLong> tempMap = new HashMap<>();
+        for (final MoveFilter<M, B> filter : this.game.getFilters()) {
+            tempMap.put(filter.getStatisticsKey(), new AtomicLong());
+        }
+        this.gameStatesPruned = Collections.unmodifiableMap(tempMap);
 		this.cancelled = false;
 
-		this.queue.addLast(initialState);
+		this.queue.addLast(new LinkedNode<>(initialState));
 
 		for (int i = 0; i < numThreads; i++) {
 			threads.add(new Thread(new Worker()));
@@ -59,9 +71,16 @@ public class WorkerThreadDepthFirstSearch<M extends Move<B>, B> {
 				+ "Queue size: %,d\n"
 		        + "Wins: %,d\n",
 				gameStatesExamined.get(),
-				gameStatesPruned.get(),
+				gameStatesPrunedTotal.get(),
 				queue.size(),
 				wins.size());
+        for (final MoveFilter<M, B> filter : game.getFilters()) {
+            final Object statisticsKey = filter.getStatisticsKey();
+            out.printf(Locale.US,
+                    "Nodes pruned by filter %s: %,d\n",
+                    statisticsKey,
+                    gameStatesPruned.get(statisticsKey).get());
+        }
 		out.flush();
 	}
 	
@@ -69,14 +88,14 @@ public class WorkerThreadDepthFirstSearch<M extends Move<B>, B> {
 		return gameStatesExamined.get();
 	}
 
-	public Future<Collection<GameState<M, B>>> search() {
+	public Future<Collection<List<GameState<M, B>>>> search() {
 		for (final Thread thread : threads) {
 			thread.start();
 		}
 		return new Watcher();
 	}
 
-	private final class Watcher implements Future<Collection<GameState<M, B>>> {
+	private final class Watcher implements Future<Collection<List<GameState<M, B>>>> {
 
 		@Override
 		public boolean cancel(boolean mayInterruptIfRunning) {
@@ -106,7 +125,7 @@ public class WorkerThreadDepthFirstSearch<M extends Move<B>, B> {
 		}
 
 		@Override
-		public Collection<GameState<M, B>> get() throws InterruptedException, ExecutionException {
+		public Collection<List<GameState<M, B>>> get() throws InterruptedException, ExecutionException {
 			for (final Thread thread : threads) {
 				thread.join();
 			}
@@ -114,7 +133,7 @@ public class WorkerThreadDepthFirstSearch<M extends Move<B>, B> {
 		}
 
 		@Override
-		public Collection<GameState<M, B>> get(long timeout, TimeUnit unit)
+		public Collection<List<GameState<M, B>>> get(long timeout, TimeUnit unit)
 				throws InterruptedException, ExecutionException, TimeoutException {
 			for (final Thread thread : threads) {
 				// TODO: Subtract elapsed time from subsequent invocations.
@@ -129,27 +148,35 @@ public class WorkerThreadDepthFirstSearch<M extends Move<B>, B> {
 
 		@Override
 		public void run() {
+		    final Collection<? extends MoveFilter<M, B>> filters = game.getFilters();
+		    
 			do {
-				GameState<M, B> gameState = queue.pollLast();
-				while (gameState != null && !cancelled) {
+				LinkedNode<GameState<M, B>> gameStateHistory = queue.pollLast();
+				while (gameStateHistory != null && !cancelled) {
 					gameStatesExamined.incrementAndGet();
-					final Collection<M> moves = game.findAllMoves(gameState);
-					for (final M move : moves) {
-						final GameState<M, B> potentialGameState = new GameState<>(gameState, move);
-						final GameState<M, B> filteredGameState = game.pruneGameState(potentialGameState);
-						if (filteredGameState == null) {
-							gameStatesPruned.incrementAndGet();
-							continue;
-						}
+					final GameState<M, B> gameState = gameStateHistory.getFirst();
+					final B board = gameState.getBoard();
+					final Collection<M> moves = game.findAllMoves(gameStateHistory);
+					movesLoop: for (final M move : moves) {
+					    final B newBoard = move.apply(board);
+					    final GameState<M, B> newGameState = new GameState<>(move, newBoard);
+					    final LinkedNode<GameState<M, B>> newHistory = new LinkedNode<>(newGameState, gameStateHistory);
+					    for (final MoveFilter<M, B> filter : filters) {
+                            if (filter.shouldFilter(newHistory)) {
+                                gameStatesPrunedTotal.incrementAndGet();
+                                gameStatesPruned.get(filter.getStatisticsKey()).incrementAndGet();
+                                continue movesLoop;
+                            }
+                        }
 
-						if (game.isWin(filteredGameState)) {
-							wins.add(filteredGameState);
+						if (game.isWin(newGameState)) {
+							wins.add(newHistory);
 						} else {
-							queue.addLast(filteredGameState);
+							queue.addLast(newHistory);
 						}
 					}
 
-					gameState = queue.pollLast();
+					gameStateHistory = queue.pollLast();
 				}
 				try {
 					Thread.sleep(TimeUnit.SECONDS.toMillis(1));

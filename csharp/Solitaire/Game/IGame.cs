@@ -23,15 +23,35 @@ namespace Silnith.Game
         /// </summary>
         /// <param name="state">The game state to search for legal moves.</param>
         /// <returns>An enumerable of legal moves for the given game state.</returns>
-        IEnumerable<M> FindAllMoves(GameState<M, B> state);
+        IEnumerable<M> FindAllMoves(IReadOnlyList<GameState<M, B>> state);
 
         /// <summary>
-        /// Possibly prunes or modifies the given game state based on the state
-        /// history.  The returned value may be a different object than the input,
-        /// so callers should always use the return value if it is not <see langword="null"/>.
+        /// Returns filters for pruning the game search space.
         /// </summary>
-        /// <param name="state">The game state to check.</param>
-        /// <returns><see langword="null"/> if the game state was pruned, otherwise a valid game state.  This might not be the same game state as the parameter.</returns>
-        GameState<M, B>? PruneGameState(GameState<M, B> state);
+        /// <remarks>
+        /// <para>
+        /// The search space for any non-trivial game is massive.
+        /// Realistically no search will ever complete unless the search space
+        /// is pruned in some way.This method provides a way for an implementation
+        /// of a game&#x2019;s logic to provide filters for pruning the search
+        /// space, in a way that is meaningful for the specifics of the game.
+        /// </para>
+        /// <para>
+        /// The search engine will run all the provided filters on every game state
+        /// in the search tree.If any filter returns <see langword="true"/>, that game state
+        /// will be pruned and no further search of it will happen.
+        /// </para>
+        /// <para>
+        /// The collection of filters will only be queried when the search begins,
+        /// so there is no value in altering the collection of returned filters
+        /// beyond their initial creation.
+        /// </para>
+        /// <para>
+        /// If the game implementation does not wish to provide any filters,
+        /// it should return an empty enumerable.
+        /// </para>
+        /// </remarks>
+        /// <returns>A collection of game state filters for pruning the search space.</returns>
+        IEnumerable<IMoveFilter<M, B>> GetFilters();
     }
 }

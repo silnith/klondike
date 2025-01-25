@@ -1,9 +1,10 @@
 package org.silnith.game;
 
 import java.util.Collection;
-import java.util.function.Predicate;
+import java.util.List;
 
 import org.silnith.game.move.Move;
+import org.silnith.game.move.MoveFilter;
 
 
 /**
@@ -26,27 +27,17 @@ public interface Game<M extends Move<B>, B> {
     boolean isWin(GameState<M, B> state);
 
     /**
-     * Returns all the legal moves for the provided game state. The current game
-     * board can be retrieved using {@code state.getBoards().get(0)}.
+     * Returns all the legal moves for the provided game state history.
+     * The most recent game state is {@code gameState.get(0)}.
      * 
      * <p>The set of moves returned may vary depending on the configuration of the
      * game engine. See the individual engines for configuration parameters.</p>
      * 
-     * @param state the game state to search for legal moves
+     * @param gameState the game state history.  The list is guaranteed to have
+     *         at least one game state in it.
      * @return a collection of legal moves for the given game state
      */
-    Collection<M> findAllMoves(GameState<M, B> state);
-
-    /**
-     * Possibly prunes or modifies the given game state based on the state
-     * history.  The returned value may be a different object than the input,
-     * so callers should always use the return value if it is not {@code null}.
-     * 
-     * @param state the game state to check
-     * @return {@code null} if the game state was pruned, otherwise a valid game
-     *         state. This might not be the same game state as the parameter.
-     */
-    GameState<M, B> pruneGameState(GameState<M, B> state);
+    Collection<M> findAllMoves(List<GameState<M, B>> gameState);
 
     /**
      * Returns filters for pruning the game search space.
@@ -70,6 +61,6 @@ public interface Game<M extends Move<B>, B> {
      * 
      * @return a collection of game state filters for pruning the search space
      */
-    Collection<? extends Predicate<GameState<M, B>>> getFilters();
+    Collection<? extends MoveFilter<M, B>> getFilters();
 
 }
