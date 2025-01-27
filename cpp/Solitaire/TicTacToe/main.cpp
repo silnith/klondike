@@ -13,24 +13,25 @@
 #include "TicTacToePlayer.h"
 
 using namespace silnith::game;
+using namespace std;
 
 int main()
 {
-    std::shared_ptr<TicTacToe> game{ std::make_shared<TicTacToe>() };
-    std::shared_ptr<TicTacToeMove> initial_move{ std::make_shared<TicTacToeMove>(0, 0, TicTacToePlayer::nobody) };
-    std::shared_ptr<TicTacToeBoard> initial_board{ std::make_shared<TicTacToeBoard>(TicTacToePlayer::X) };
+    shared_ptr<TicTacToe> game{ make_shared<TicTacToe>() };
+    shared_ptr<TicTacToeMove> initial_move{ make_shared<TicTacToeMove>(0, 0, TicTacToePlayer::nobody) };
+    shared_ptr<TicTacToeBoard> initial_board{ make_shared<TicTacToeBoard>(TicTacToePlayer::X) };
     game_state<TicTacToeMove, TicTacToeBoard> initial_game_state{ initial_move, initial_board };
-    printTo(std::cout, *initial_board);
+    printTo(cout, *initial_board);
     sequential_depth_first_search<TicTacToeMove, TicTacToeBoard> searcher{ game, initial_game_state };
-    std::cout << "Hello World!" << std::endl;
-    std::list<std::shared_ptr<linked_node<game_state<TicTacToeMove, TicTacToeBoard>>>> results{ searcher.search() };
-    std::cout << results.size() << std::endl;
-    for (std::shared_ptr<linked_node<game_state<TicTacToeMove, TicTacToeBoard>>> result : results)
+    cout << "Hello World!" << endl;
+    list<shared_ptr<linked_node<game_state<TicTacToeMove, TicTacToeBoard>>>> results{ searcher.search() };
+    cout << results.size() << endl;
+    for (shared_ptr<linked_node<game_state<TicTacToeMove, TicTacToeBoard>>> result : results)
     {
         game_state<TicTacToeMove, TicTacToeBoard> game_state{ result->get_value() };
-        //printTo(std::cout, *(game_state.get_board()));
+        //printTo(cout, *(game_state.get_board()));
     }
-    std::cout << "Done!" << std::endl;
+    cout << "Done!" << endl;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
