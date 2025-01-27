@@ -60,9 +60,9 @@ std::wstring Microsoft::VisualStudio::CppUnitTestFramework::ToString<>(game_stat
 	return L"game_state<test_move, int>"s;
 }
 
-namespace GameTests
+namespace MoveTests
 {
-	TEST_CLASS(GameStateTests)
+	TEST_CLASS(MoveTests)
 	{
 	private:
 		std::shared_ptr<test_move> move1_ptr{ std::make_shared<test_move>(1) };

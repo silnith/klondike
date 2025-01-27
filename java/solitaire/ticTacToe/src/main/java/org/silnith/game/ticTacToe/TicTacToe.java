@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.function.Predicate;
 
 import org.silnith.game.Game;
 import org.silnith.game.GameState;
 import org.silnith.game.move.MoveFilter;
+import org.silnith.game.search.SequentialDepthFirstSearch;
 
 public class TicTacToe implements Game<Move, Board> {
 
@@ -88,4 +91,15 @@ public class TicTacToe implements Game<Move, Board> {
         return Collections.singleton(new GameLostFilter());
     }
 
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
+        final TicTacToe game = new TicTacToe();
+        final Move initialMove = new Move(0, 0, null);
+        final Board initialBoard = new Board(Player.X);
+        final GameState<Move, Board> initialGameState = new GameState<Move, Board>(initialMove, initialBoard);
+        final SequentialDepthFirstSearch<Move, Board> searcher = new SequentialDepthFirstSearch<Move, Board>(game, initialGameState);
+        final Future<Collection<List<GameState<Move, Board>>>> future = searcher.search();
+        final Collection<List<GameState<Move, Board>>> results = future.get();
+        System.out.println(results.size());
+    }
+    
 }

@@ -30,6 +30,12 @@
     <ClInclude Include="silnith\game\validator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="silnith\game\move_filter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="silnith\game\sequential_depth_first_search.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="silnith\game\linked_node.cpp">

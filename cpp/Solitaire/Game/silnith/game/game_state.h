@@ -28,7 +28,7 @@ namespace silnith
         /// <typeparam name="B">The board type for the game.</typeparam>
         template<class M, class B>
             requires (std::is_base_of_v<move<B>, M>)
-        class game_state : private std::pair<std::shared_ptr<linked_node<std::shared_ptr<M>>>, std::shared_ptr<linked_node<B>>>
+        class game_state : private std::pair<std::shared_ptr<M>, std::shared_ptr<B>>
         {
         public:
             game_state(void) = delete;
@@ -39,59 +39,31 @@ namespace silnith
             ~game_state(void) = default;
 
             /// <summary>
-            /// Constructs a new game state with the given list of moves and associated board states.
+            /// Constructs a new game state with the given move and resulting board.
             /// </summary>
-            /// <param name="moves">The list of moves.</param>
-            /// <param name="boards">The list of boards.</param>
-            explicit game_state(std::shared_ptr<linked_node<std::shared_ptr<M>>> const& moves, std::shared_ptr<linked_node<B>> const& boards)
-                : std::pair<std::shared_ptr<linked_node<std::shared_ptr<M>>>, std::shared_ptr<linked_node<B>>>{ moves, boards }
+            /// <param name="move">The move.</param>
+            /// <param name="board">The board.</param>
+            explicit game_state(std::shared_ptr<M> const& move, std::shared_ptr<B> const& board)
+                : std::pair<std::shared_ptr<M>, std::shared_ptr<B>>{ move, board }
             {}
 
             /// <summary>
-            /// Constructs an initial game state with the given initial move and board.
+            /// Returns the move.
             /// </summary>
-            /// <param name="initial_move_ptr">The initial move.  This is often a form of "deal deck".</param>
-            /// <param name="initial_board">The initial board.</param>
-            explicit game_state(std::shared_ptr<M> const& initial_move_ptr, B const& initial_board)
-                : game_state{ std::make_shared<linked_node<std::shared_ptr<M>>>(initial_move_ptr), std::make_shared<linked_node<B>>(initial_board) }
-            {}
-
-            /// <summary>
-            /// Constructs a new game state by appending the given move and board to the
-            /// previous game state.
-            /// </summary>
-            /// <param name="parent">The previous game state.</param>
-            /// <param name="move_ptr">The new move to append.</param>
-            /// <param name="board">The new board to append.</param>
-            explicit game_state(game_state<M, B> const& parent, std::shared_ptr<M> const& move_ptr, B const& board)
-                : game_state{ std::make_shared<linked_node<std::shared_ptr<M>>>(move_ptr, parent.get_moves()), std::make_shared<linked_node<B>>(board, parent.get_boards()) }
-            {}
-
-            /// <summary>
-            /// Constructs a new game state by applying the given move to the most recent
-            /// board in the given parent game state.
-            /// </summary>
-            /// <param name="parent">The previous game state.</param>
-            /// <param name="move_ptr">The new move to apply to the game state.</param>
-            explicit game_state(game_state<M, B> const& parent, std::shared_ptr<M> const& move_ptr)
-                : game_state{ parent, move_ptr, move_ptr->apply(parent.get_boards()->get_value()) }
-            {}
-
-            /// <summary>
-            /// Returns the list of moves.
-            /// </summary>
-            /// <returns>The list of moves.</returns>
-            std::shared_ptr<linked_node<std::shared_ptr<M>>> get_moves(void) const
+            /// <returns>The move.</returns>
+            std::shared_ptr<M> get_move(void) const
             {
+                //return std::pair<M, B>::first;
                 return this->first;
             }
 
             /// <summary>
-            /// Returns the list of board states.
+            /// Returns the board.
             /// </summary>
-            /// <returns>The list of board states.</returns>
-            std::shared_ptr<linked_node<B>> get_boards(void) const
+            /// <returns>The board.</returns>
+            std::shared_ptr<B> get_board(void) const
             {
+                //return std::pair<M, B>::second;
                 return this->second;
             }
 

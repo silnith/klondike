@@ -11,8 +11,8 @@ namespace Silnith.Game.Search
     {
         private readonly IGame<M, B> game;
         private readonly List<Thread> threads;
-        private readonly System.Collections.Concurrent.ConcurrentStack<LinkedNode<GameState<M, B>>> stack;
-        private readonly System.Collections.Concurrent.ConcurrentQueue<IReadOnlyList<GameState<M, B>>> wins;
+        private readonly ConcurrentStack<LinkedNode<GameState<M, B>>> stack;
+        private readonly ConcurrentQueue<IReadOnlyList<GameState<M, B>>> wins;
         private long gameStatesExamined;
         private long gameStatesPrunedTotal;
         private readonly ConcurrentDictionary<object, long> gameStatesPruned;
@@ -22,8 +22,8 @@ namespace Silnith.Game.Search
         {
             this.game = game ?? throw new ArgumentNullException(nameof(game));
             this.threads = new List<Thread>(numThreads);
-            this.stack = new System.Collections.Concurrent.ConcurrentStack<LinkedNode<GameState<M, B>>>();
-            this.wins = new System.Collections.Concurrent.ConcurrentQueue<IReadOnlyList<GameState<M, B>>>();
+            this.stack = new ConcurrentStack<LinkedNode<GameState<M, B>>>();
+            this.wins = new ConcurrentQueue<IReadOnlyList<GameState<M, B>>>();
             this.gameStatesExamined = 0;
             this.gameStatesPrunedTotal = 0;
             this.gameStatesPruned = new ConcurrentDictionary<object, long>();

@@ -175,6 +175,8 @@
     <ClInclude Include="silnith\game\game_state.h" />
     <ClInclude Include="silnith\game\linked_node.h" />
     <ClInclude Include="silnith\game\move.h" />
+    <ClInclude Include="silnith\game\move_filter.h" />
+    <ClInclude Include="silnith\game\sequential_depth_first_search.h" />
     <ClInclude Include="silnith\game\validator.h" />
   </ItemGroup>
   <ItemGroup>

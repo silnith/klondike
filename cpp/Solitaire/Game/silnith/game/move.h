@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 namespace silnith
 {
     namespace game
@@ -7,8 +9,8 @@ namespace silnith
         /// <summary>
         /// The common interface for game moves.
         /// </summary>
-        /// <typeparam name="board">The board type.</typeparam>
-        template<class board>
+        /// <typeparam name="B">The board type.</typeparam>
+        template<class B>
         class move
         {
         public:
@@ -22,9 +24,8 @@ namespace silnith
             /// <summary>
             /// Applies this move to the given board, returning the new board.
             /// </summary>
-            /// <param name="t"></param>
-            /// <returns></returns>
-            virtual board apply(board const& board) const = 0;
+            /// <returns>The new board after the move has been completed.</returns>
+            virtual std::shared_ptr<B> apply(std::shared_ptr<B> const& board) const = 0;
         };
     }
 }
