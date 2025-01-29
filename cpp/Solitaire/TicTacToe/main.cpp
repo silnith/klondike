@@ -17,6 +17,7 @@ using namespace std;
 
 int main()
 {
+    cout.imbue(locale{ "en_US" });
     shared_ptr<TicTacToe> game{ make_shared<TicTacToe>() };
     shared_ptr<TicTacToeMove> initial_move{ make_shared<TicTacToeMove>(0, 0, TicTacToePlayer::nobody) };
     shared_ptr<TicTacToeBoard> initial_board{ make_shared<TicTacToeBoard>(TicTacToePlayer::X) };
@@ -26,6 +27,7 @@ int main()
     cout << "Hello World!" << endl;
     list<shared_ptr<linked_node<game_state<TicTacToeMove, TicTacToeBoard>>>> results{ searcher.search() };
     cout << results.size() << endl;
+    searcher.print_statistics(std::cout);
     for (shared_ptr<linked_node<game_state<TicTacToeMove, TicTacToeBoard>>> result : results)
     {
         game_state<TicTacToeMove, TicTacToeBoard> game_state{ result->get_value() };
