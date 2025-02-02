@@ -26,25 +26,25 @@ public class DealMove implements SolitaireMove {
     /**
      * The deck of cards to deal.
      */
-    private final List<Card> deck;
+    private final List<Card> cards;
     
     /**
      * Creates a new move that deals a fresh deck of cards.
      * 
-     * @param deck the deck of cards to deal
+     * @param cards the deck of cards to deal
      * @param numberOfColumns the number of columns on the board.  This is always seven.
      */
-    public DealMove(final List<Card> deck, final int numberOfColumns) {
+    public DealMove(final List<Card> cards, final int numberOfColumns) {
         super();
         int cardsRequired = 0;
         for (int i = 1; i <= numberOfColumns; i++) {
         	cardsRequired += i;
         }
-        if (deck.size() < cardsRequired) {
+        if (cards.size() < cardsRequired) {
         	throw new IllegalArgumentException("A deck of size " + cardsRequired + " is required to deal " + numberOfColumns + " columns.");
         }
         this.numberOfColumns = numberOfColumns;
-        this.deck = deck;
+        this.cards = cards;
     }
     
     /**
@@ -59,16 +59,6 @@ public class DealMove implements SolitaireMove {
         return numberOfColumns;
     }
     
-    /**
-     * Returns the deck of cards dealt onto the board.
-     * 
-     * @return the deck of cards
-     * @see #getCards()
-     */
-    public List<Card> getDeck() {
-        return deck;
-    }
-    
     @Override
     public boolean hasCards() {
         return true;
@@ -76,7 +66,7 @@ public class DealMove implements SolitaireMove {
     
     @Override
     public List<Card> getCards() {
-        return deck;
+        return cards;
     }
     
 	@Override
@@ -105,7 +95,7 @@ public class DealMove implements SolitaireMove {
     }
 
     @Override
-    public int getFromColumnIndex() {
+    public int getSourceColumnIndex() {
         throw new IllegalStateException("Not a move from a column.");
     }
 
@@ -125,19 +115,19 @@ public class DealMove implements SolitaireMove {
     }
 
     @Override
-    public int getToColumnIndex() {
+    public int getDestinationColumnIndex() {
         throw new IllegalStateException("Not a move to a column.");
     }
 
     @Override
     public Board apply(final Board board) {
     	// The parameter is completely ignored.
-        int remaining = deck.size();
+        int remaining = cards.size();
         final List<List<Card>> stacks = new ArrayList<>(numberOfColumns);
         for (int i = 0; i < numberOfColumns; i++ ) {
             stacks.add(new ArrayList<Card>(i + 1));
         }
-        final Iterator<Card> iter = deck.iterator();
+        final Iterator<Card> iter = cards.iterator();
         for (int i = 0; i < numberOfColumns; i++ ) {
             for (int j = i; j < numberOfColumns; j++ ) {
                 final Card card = iter.next();
@@ -168,14 +158,14 @@ public class DealMove implements SolitaireMove {
     
     @Override
     public int hashCode() {
-        return Integer.rotateLeft(numberOfColumns, 16) ^ deck.hashCode();
+        return Integer.rotateLeft(numberOfColumns, 16) ^ cards.hashCode();
     }
     
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof DealMove) {
             final DealMove move = (DealMove) obj;
-            return numberOfColumns == move.numberOfColumns && deck.size() == move.deck.size() && deck.equals(move.deck);
+            return numberOfColumns == move.numberOfColumns && cards.size() == move.cards.size() && cards.equals(move.cards);
         } else {
             return false;
         }
@@ -183,7 +173,7 @@ public class DealMove implements SolitaireMove {
     
     @Override
     public String toString() {
-        return "Deal " + numberOfColumns + " columns using deck " + deck + ".";
+        return "Deal " + numberOfColumns + " columns using deck " + cards + ".";
     }
     
 }

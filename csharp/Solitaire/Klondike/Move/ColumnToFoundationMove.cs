@@ -39,14 +39,6 @@ namespace Silnith.Game.Klondike.Move
         }
 
         /// <summary>
-        /// The index in the board of the column from which the card is taken.
-        /// </summary>
-        public int SourceColumn
-        {
-            get;
-        }
-
-        /// <summary>
         /// The card being moved.
         /// </summary>
         public Card Card
@@ -55,13 +47,22 @@ namespace Silnith.Game.Klondike.Move
         }
 
         /// <inheritdoc/>
-        public bool HasCards => true;
-
-        /// <inheritdoc/>
         public IReadOnlyList<Card> Cards
         {
             get;
         }
+
+        /// <inheritdoc/>
+        public int SourceColumnIndex
+        {
+            get;
+        }
+
+        /// <inheritdoc/>
+        public int DestinationColumnIndex => throw new ArgumentException("Not a move to a column.");
+
+        /// <inheritdoc/>
+        public bool HasCards => true;
 
         /// <inheritdoc/>
         public bool IsStockPileModification => false;
@@ -76,32 +77,20 @@ namespace Silnith.Game.Klondike.Move
         public bool IsFromColumn => true;
 
         /// <inheritdoc/>
-        public bool TakesFromColumn(int columnIndex) => columnIndex == FromColumnIndex;
-
-        /// <inheritdoc/>
-        public int FromColumnIndex => SourceColumn;
-
-        /// <inheritdoc/>
         public bool IsToFoundation => true;
 
         /// <inheritdoc/>
         public bool IsToColumn => false;
 
-        /// <inheritdoc/>
-        public bool AddsToColumn(int columnIndex) => false;
-
-        /// <inheritdoc/>
-        public int ToColumnIndex => throw new ArgumentException("Not a move to a column.");
-
         /// <summary>
         /// Constructs a new move that takes a face-up card from a column and puts it
         /// into the foundation.
         /// </summary>
-        /// <param name="sourceColumn">The index into the board of the column from which the card is taken.</param>
+        /// <param name="sourceColumnIndex">The index into the board of the column from which the card is taken.</param>
         /// <param name="card">The card being moved.</param>
-        public ColumnToFoundationMove(int sourceColumn, Card card)
+        public ColumnToFoundationMove(int sourceColumnIndex, Card card)
         {
-            SourceColumn = sourceColumn;
+            SourceColumnIndex = sourceColumnIndex;
             Card = card;
             Cards = new List<Card>()
             {
@@ -113,25 +102,31 @@ namespace Silnith.Game.Klondike.Move
         /// Constructs a new move that takes a face-up card from a column and puts it
         /// into the foundation.
         /// </summary>
-        /// <param name="sourceColumn">The index into the board of the column from which the card is taken.</param>
+        /// <param name="sourceColumnIndex">The index into the board of the column from which the card is taken.</param>
         /// <param name="board">The board containing the card to move.</param>
-        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="sourceColumn"/> is out of range,
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="sourceColumnIndex"/> is out of range,
         /// or the source column is empty.</exception>
-        public ColumnToFoundationMove(int sourceColumn, Board board) : this(sourceColumn, board.Columns[sourceColumn].GetTopCard())
+        public ColumnToFoundationMove(int sourceColumnIndex, Board board) : this(sourceColumnIndex, board.Columns[sourceColumnIndex].GetTopCard())
         {
         }
+
+        /// <inheritdoc/>
+        public bool TakesFromColumn(int columnIndex) => columnIndex == SourceColumnIndex;
+
+        /// <inheritdoc/>
+        public bool AddsToColumn(int columnIndex) => false;
 
         /// <inheritdoc/>
         public Board Apply(Board board)
         {
             IReadOnlyList<Column> columns = board.Columns;
-            Tuple<Card, Column> tuple = columns[SourceColumn].ExtractCard();
+            Tuple<Card, Column> tuple = columns[SourceColumnIndex].ExtractCard();
             Card card = tuple.Item1;
             Column newColumn = tuple.Item2;
 
             IReadOnlyList<Column> newColumns = new List<Column>(columns)
             {
-                [SourceColumn] = newColumn,
+                [SourceColumnIndex] = newColumn,
             };
 
             IReadOnlyDictionary<Suit, IReadOnlyList<Card>> newFoundation = board.GetFoundationPlusCard(card);
@@ -149,20 +144,20 @@ namespace Silnith.Game.Klondike.Move
         public bool Equals(ColumnToFoundationMove? other)
         {
             return other != null
-                && SourceColumn == other.SourceColumn
+                && SourceColumnIndex == other.SourceColumnIndex
                 && Card.Equals(other.Card);
         }
 
         /// <inheritdoc/>
         public override int GetHashCode()
         {
-            return HashCode.Combine(SourceColumn, Card);
+            return HashCode.Combine(SourceColumnIndex, Card);
         }
 
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"Move {Card} from column {SourceColumn} to foundation.";
+            return $"Move {Card} from column {SourceColumnIndex} to foundation.";
         }
     }
 }

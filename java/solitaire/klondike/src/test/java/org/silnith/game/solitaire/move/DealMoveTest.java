@@ -108,13 +108,6 @@ public class DealMoveTest {
 	}
 
 	@Test
-	public void testGetDeck() {
-		final DealMove move = new DealMove(deck, numberOfColumns);
-		
-		assertEquals(deck, move.getDeck());
-	}
-
-	@Test
 	public void testHasCards() {
 		final DealMove move = new DealMove(deck, numberOfColumns);
 		

@@ -143,11 +143,11 @@ namespace Silnith.Game.Klondike.Move.Tests
         }
 
         [TestMethod]
-        public void TestDestinationColumn()
+        public void TestDestinationColumnIndex()
         {
             StockPileToColumnMove move = new(2, 5, new Card(Value.Ace, Suit.Club));
 
-            Assert.AreEqual(5, move.DestinationColumn);
+            Assert.AreEqual(5, move.DestinationColumnIndex);
         }
 
         [TestMethod]

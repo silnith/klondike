@@ -68,11 +68,11 @@ namespace Silnith.Game.Klondike.Move.Tests
         };
 
         [TestMethod]
-        public void TestDeck()
+        public void TestCards()
         {
             DealMove move = new(deck, numberOfColumns);
 
-            Assert.IsTrue(deck.SequenceEqual(move.Deck));
+            Assert.IsTrue(deck.SequenceEqual(move.Cards));
         }
 
         [TestMethod]

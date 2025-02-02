@@ -109,11 +109,11 @@ namespace Silnith.Game.Klondike.Move.Tests
         }
 
         [TestMethod]
-        public void TestSourceColumn()
+        public void TestSourceColumnIndex()
         {
             ColumnToFoundationMove move = new(3, new Card(Value.Ace, Suit.Club));
 
-            Assert.AreEqual(3, move.SourceColumn);
+            Assert.AreEqual(3, move.SourceColumnIndex);
         }
 
         [TestMethod]

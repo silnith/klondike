@@ -45,7 +45,7 @@ public class DrawFromFoundationMustBeUsefulFilter implements SolitaireMoveFilter
 		         */
 		        return false;
 		    }
-			if (currentMove.isToColumn(previousMove.getToColumnIndex())) {
+			if (currentMove.isToColumn(previousMove.getDestinationColumnIndex())) {
 			    assert !currentMove.isFromFoundation();
 			    /*
 			     * The current move puts a card on top of the card taken

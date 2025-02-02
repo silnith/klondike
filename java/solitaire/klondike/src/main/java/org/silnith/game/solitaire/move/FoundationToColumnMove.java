@@ -54,7 +54,7 @@ public class FoundationToColumnMove implements SolitaireMove {
     /**
      * The index in the board of the destination column for the card.
      */
-    private final int destinationColumn;
+    private final int destinationColumnIndex;
     
     /**
      * The card being moved.
@@ -65,12 +65,12 @@ public class FoundationToColumnMove implements SolitaireMove {
      * Creates a move that takes a card from the Foundation and puts it on top
      * of a column.
      * 
-     * @param destinationColumn the index of the column into the board
+     * @param destinationColumnIndex the index of the column into the board
      * @param card the card being moved
      */
-    public FoundationToColumnMove(final int destinationColumn, final Card card) {
+    public FoundationToColumnMove(final int destinationColumnIndex, final Card card) {
         super();
-        this.destinationColumn = destinationColumn;
+        this.destinationColumnIndex = destinationColumnIndex;
         this.card = card;
     }
     
@@ -78,23 +78,13 @@ public class FoundationToColumnMove implements SolitaireMove {
      * Creates a move that takes a card from the Foundation and puts it on top
      * of a column.
      * 
-     * @param destinationColumn the index of the column into the board
+     * @param destinationColumnIndex the index of the column into the board
      * @param suit the suit of card to pull from the foundation
      * @param board the board to get the card from
      * @throws IndexOutOfBoundsException if the board foundation has no cards for the suit
      */
-    public FoundationToColumnMove(final int destinationColumn, final Suit suit, final Board board) {
-    	this(destinationColumn, board.getTopOfFoundation(suit));
-    }
-    
-    /**
-     * Returns the index into the board of the column that is the destination of
-     * the card.
-     * 
-     * @return the index into the board of the column
-     */
-    public int getDestinationColumn() {
-        return destinationColumn;
+    public FoundationToColumnMove(final int destinationColumnIndex, final Suit suit, final Board board) {
+    	this(destinationColumnIndex, board.getTopOfFoundation(suit));
     }
     
     /**
@@ -143,7 +133,7 @@ public class FoundationToColumnMove implements SolitaireMove {
     }
 
     @Override
-    public int getFromColumnIndex() {
+    public int getSourceColumnIndex() {
         throw new IllegalStateException("Not a move from a column.");
     }
 
@@ -159,12 +149,12 @@ public class FoundationToColumnMove implements SolitaireMove {
 
     @Override
     public boolean isToColumn(int columnIndex) {
-        return columnIndex == destinationColumn;
+        return columnIndex == destinationColumnIndex;
     }
 
     @Override
-    public int getToColumnIndex() {
-        return destinationColumn;
+    public int getDestinationColumnIndex() {
+        return destinationColumnIndex;
     }
 
 	@Override
@@ -174,25 +164,25 @@ public class FoundationToColumnMove implements SolitaireMove {
 		final Map<Suit, List<Card>> newFoundation = pair.getSecond();
 		
 		final List<Column> columns = board.getColumns();
-		final Column column = columns.get(destinationColumn);
+		final Column column = columns.get(destinationColumnIndex);
 		final Column newColumn = column.withCard(card);
 		
 		final List<Column> newColumns = new ArrayList<>(columns);
-		newColumns.set(destinationColumn, newColumn);
+		newColumns.set(destinationColumnIndex, newColumn);
 		
 		return new Board(newColumns, board.getStockPile(), board.getStockPileIndex(), newFoundation);
     }
     
     @Override
     public int hashCode() {
-        return Integer.rotateLeft(destinationColumn, 8) ^ card.hashCode();
+        return Integer.rotateLeft(destinationColumnIndex, 8) ^ card.hashCode();
     }
     
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof FoundationToColumnMove) {
             final FoundationToColumnMove move = (FoundationToColumnMove) obj;
-            return destinationColumn == move.destinationColumn && card.equals(move.card);
+            return destinationColumnIndex == move.destinationColumnIndex && card.equals(move.card);
         } else {
             return false;
         }
@@ -200,7 +190,7 @@ public class FoundationToColumnMove implements SolitaireMove {
     
     @Override
     public String toString() {
-        return "Move " + card + " from foundation to column " + destinationColumn + ".";
+        return "Move " + card + " from foundation to column " + destinationColumnIndex + ".";
     }
     
 }

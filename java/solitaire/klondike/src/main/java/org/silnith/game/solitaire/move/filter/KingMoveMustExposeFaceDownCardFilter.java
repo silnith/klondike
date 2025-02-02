@@ -40,7 +40,7 @@ public class KingMoveMustExposeFaceDownCardFilter implements SolitaireMoveFilter
 				/*
 				 * This is the column after the move.
 				 */
-				final Column sourceColumn = currentBoard.getColumn(currentMove.getFromColumnIndex());
+				final Column sourceColumn = currentBoard.getColumn(currentMove.getSourceColumnIndex());
 				if (sourceColumn.hasFaceUpCards()) {
 				    /*
 				     * Something was left behind, therefore the move has value.

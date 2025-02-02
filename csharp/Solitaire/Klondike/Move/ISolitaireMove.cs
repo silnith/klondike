@@ -9,6 +9,33 @@ namespace Silnith.Game.Klondike.Move
     public interface ISolitaireMove : IMove<Board>
     {
         /// <summary>
+        /// The cards affected by this move.  If this move does not affect any cards,
+        /// this will be empty.
+        /// </summary>
+        IReadOnlyList<Card> Cards
+        {
+            get;
+        }
+
+        /// <summary>
+        /// The index of the column from which this move takes cards.
+        /// </summary>
+        /// <exception cref="System.ArgumentException">If <see cref="HasCards"/> or <see cref="IsFromColumn"/> are <see langword="false"/>.</exception>
+        int SourceColumnIndex
+        {
+            get;
+        }
+
+        /// <summary>
+        /// The index of the column to which this move adds cards.
+        /// </summary>
+        /// <exception cref="System.ArgumentException">If either <see cref="HasCards"/> or <see cref="IsToColumn"/> is <see langword="false"/>.</exception>
+        int DestinationColumnIndex
+        {
+            get;
+        }
+
+        /// <summary>
         /// Whether the move involves one or more cards.
         /// </summary>
         /// <remarks>
@@ -18,15 +45,6 @@ namespace Silnith.Game.Klondike.Move
         /// </para>
         /// </remarks>
         bool HasCards
-        {
-            get;
-        }
-
-        /// <summary>
-        /// The cards affected by this move.  If this move does not affect any cards,
-        /// this will be empty.
-        /// </summary>
-        IReadOnlyList<Card> Cards
         {
             get;
         }
@@ -67,22 +85,6 @@ namespace Silnith.Game.Klondike.Move
         }
 
         /// <summary>
-        /// Returns <see langword="true"/> if this move takes cards from the specific column.
-        /// </summary>
-        /// <param name="columnIndex">The column index to check whether this move takes cards from.</param>
-        /// <returns><see langword="true"/> if this move takes cards from the specific column.</returns>
-        bool TakesFromColumn(int columnIndex);
-
-        /// <summary>
-        /// The index of the column from which this move takes cards.
-        /// </summary>
-        /// <exception cref="System.ArgumentException">If <see cref="HasCards"/> or <see cref="IsFromColumn"/> are <see langword="false"/>.</exception>
-        int FromColumnIndex
-        {
-            get;
-        }
-
-        /// <summary>
         /// <see langword="true"/> if this move puts a card into the foundation.
         /// </summary>
         bool IsToFoundation
@@ -99,19 +101,17 @@ namespace Silnith.Game.Klondike.Move
         }
 
         /// <summary>
+        /// Returns <see langword="true"/> if this move takes cards from the specific column.
+        /// </summary>
+        /// <param name="columnIndex">The column index to check whether this move takes cards from.</param>
+        /// <returns><see langword="true"/> if this move takes cards from the specific column.</returns>
+        bool TakesFromColumn(int columnIndex);
+
+        /// <summary>
         /// Returns <see langword="true"/> if this move puts cards onto the specific column.
         /// </summary>
         /// <param name="columnIndex">The column to check whether receives cards.</param>
         /// <returns><see langword="true"/> if thos move puts cards onto the specific column.</returns>
         bool AddsToColumn(int columnIndex);
-
-        /// <summary>
-        /// The index of the column to which this move adds cards.
-        /// </summary>
-        /// <exception cref="System.ArgumentException">If either <see cref="HasCards"/> or <see cref="IsToColumn"/> is <see langword="false"/>.</exception>
-        int ToColumnIndex
-        {
-            get;
-        }
     }
 }

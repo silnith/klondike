@@ -44,7 +44,7 @@ namespace Silnith.Game.Klondike.Move.Filter
                      */
                     return false;
                 }
-                if (currentMove.AddsToColumn(previousMove.ToColumnIndex))
+                if (currentMove.AddsToColumn(previousMove.DestinationColumnIndex))
                 {
                     /*
                      * The current move puts a card on top of the card taken

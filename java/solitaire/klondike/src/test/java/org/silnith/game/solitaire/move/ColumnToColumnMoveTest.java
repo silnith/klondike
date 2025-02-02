@@ -272,25 +272,25 @@ public class ColumnToColumnMoveTest {
     }
 
 	@Test
-	public void testGetSourceColumn() {
+	public void testGetSourceColumnIndex() {
 		final List<Card> run = Arrays.asList(
 				new Card(Value.THREE, Suit.CLUB),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
 		final ColumnToColumnMove move = new ColumnToColumnMove(2, 5, 3, run);
 		
-		assertEquals(2, move.getSourceColumn());
+		assertEquals(2, move.getSourceColumnIndex());
 	}
 
 	@Test
-	public void testGetDestinationColumn() {
+	public void testGetDestinationColumnIndex() {
 		final List<Card> run = Arrays.asList(
 				new Card(Value.THREE, Suit.CLUB),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
 		final ColumnToColumnMove move = new ColumnToColumnMove(2, 5, 3, run);
 		
-		assertEquals(5, move.getDestinationColumn());
+		assertEquals(5, move.getDestinationColumnIndex());
 	}
 
 	@Test

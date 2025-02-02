@@ -112,10 +112,10 @@ public class FoundationToColumnMoveTest {
     }
 
 	@Test
-	public void testGetDestinationColumn() {
+	public void testGetDestinationColumnIndex() {
 		final FoundationToColumnMove move = new FoundationToColumnMove(5, new Card(Value.ACE, Suit.CLUB));
 		
-		assertEquals(5, move.getDestinationColumn());
+		assertEquals(5, move.getDestinationColumnIndex());
 	}
 
 	@Test

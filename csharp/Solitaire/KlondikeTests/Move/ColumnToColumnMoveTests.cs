@@ -372,7 +372,7 @@ namespace Silnith.Game.Klondike.Move.Tests
         }
 
         [TestMethod]
-        public void TestSourceColumn()
+        public void TestSourceColumnIndex()
         {
             List<Card> run = new()
             {
@@ -382,11 +382,11 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             ColumnToColumnMove move = new(2, 5, 3, run);
 
-            Assert.AreEqual(2, move.SourceColumn);
+            Assert.AreEqual(2, move.SourceColumnIndex);
         }
 
         [TestMethod]
-        public void TestDestinationColumn()
+        public void TestDestinationColumnIndex()
         {
             List<Card> run = new()
             {
@@ -396,7 +396,7 @@ namespace Silnith.Game.Klondike.Move.Tests
             };
             ColumnToColumnMove move = new(2, 5, 3, run);
 
-            Assert.AreEqual(5, move.DestinationColumn);
+            Assert.AreEqual(5, move.DestinationColumnIndex);
         }
 
         [TestMethod]

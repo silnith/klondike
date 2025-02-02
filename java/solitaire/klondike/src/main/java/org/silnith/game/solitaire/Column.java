@@ -37,7 +37,7 @@ public class Column {
      * @param faceDownCards the face-down cards
      * @param faceUpCards the face-up run of cards
      */
-    public Column(List<? extends Card> faceDownCards, List<? extends Card> faceUpCards) {
+    public Column(final List<Card> faceDownCards, final List<Card> faceUpCards) {
         super();
         if (faceDownCards != null && !faceDownCards.isEmpty()
         		&& (faceUpCards == null || faceUpCards.isEmpty())) {
@@ -55,12 +55,12 @@ public class Column {
             if (faceDownCards == null) {
                 this.faceDown = Collections.emptyList();
             } else {
-            	this.faceDown = new ArrayList<Card>(faceDownCards);
+            	this.faceDown = new ArrayList<>(faceDownCards);
             }
             if (faceUpCards == null) {
                 this.faceUp = Collections.emptyList();
             } else {
-            	this.faceUp = new ArrayList<Card>(faceUpCards);
+            	this.faceUp = new ArrayList<>(faceUpCards);
             }
         }
         /*

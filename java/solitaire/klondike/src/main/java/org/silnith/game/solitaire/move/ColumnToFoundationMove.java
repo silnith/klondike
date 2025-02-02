@@ -45,7 +45,7 @@ public class ColumnToFoundationMove implements SolitaireMove {
     /**
      * The index in the board of the column from which the card is taken.
      */
-    private final int sourceColumn;
+    private final int sourceColumnIndex;
     
     /**
      * The card being moved.
@@ -56,13 +56,13 @@ public class ColumnToFoundationMove implements SolitaireMove {
      * Creates a new move that takes a face-up card from a column and puts it
      * into the Foundation.
      * 
-     * @param sourceColumn the index into the board of the column from which the
+     * @param sourceColumnIndex the index into the board of the column from which the
      *         card is taken
      * @param card the card being moved
      */
-    public ColumnToFoundationMove(final int sourceColumn, final Card card) {
+    public ColumnToFoundationMove(final int sourceColumnIndex, final Card card) {
         super();
-        this.sourceColumn = sourceColumn;
+        this.sourceColumnIndex = sourceColumnIndex;
         this.card = card;
     }
     
@@ -70,23 +70,14 @@ public class ColumnToFoundationMove implements SolitaireMove {
      * Creates a new move that takes a face-up card from a column and puts it
      * into the foundation.
      * 
-     * @param sourceColumn the index into the board of the column from which the
+     * @param sourceColumnIndex the index into the board of the column from which the
      *         card is taken
      * @param board the board containing the card to move
      * @throws IndexOutOfBoundsException if the source column is out of range
      * @throws IllegalArgumentException if the source column has no card to move
      */
-    public ColumnToFoundationMove(final int sourceColumn, final Board board) {
-    	this(sourceColumn, board.getColumn(sourceColumn).getTopCard());
-    }
-    
-    /**
-     * Returns the index into the board of the column from which the card is taken.
-     * 
-     * @return the index of the column in the board
-     */
-    public int getSourceColumn() {
-        return sourceColumn;
+    public ColumnToFoundationMove(final int sourceColumnIndex, final Board board) {
+    	this(sourceColumnIndex, board.getColumn(sourceColumnIndex).getTopCard());
     }
     
     /**
@@ -131,12 +122,12 @@ public class ColumnToFoundationMove implements SolitaireMove {
 
     @Override
     public boolean isFromColumn(int columnIndex) {
-        return columnIndex == sourceColumn;
+        return columnIndex == sourceColumnIndex;
     }
 
     @Override
-    public int getFromColumnIndex() {
-        return sourceColumn;
+    public int getSourceColumnIndex() {
+        return sourceColumnIndex;
     }
 
     @Override
@@ -155,20 +146,20 @@ public class ColumnToFoundationMove implements SolitaireMove {
     }
 
 	@Override
-    public int getToColumnIndex() {
+    public int getDestinationColumnIndex() {
         throw new IllegalStateException("Not a move to a column.");
     }
 
     @Override
     public Board apply(final Board board) {
         final List<Column> columns = board.getColumns();
-		final Column column = columns.get(sourceColumn);
+		final Column column = columns.get(sourceColumnIndex);
 		final Pair<Card, Column> pair = column.extractCard();
 		final Card card = pair.getFirst();
 		final Column newColumn = pair.getSecond();
 		
 		final List<Column> newColumns = new ArrayList<>(columns);
-		newColumns.set(sourceColumn, newColumn);
+		newColumns.set(sourceColumnIndex, newColumn);
 		
 		final List<Card> stockPile = board.getStockPile();
 		final int stockPileIndex = board.getStockPileIndex();
@@ -179,14 +170,14 @@ public class ColumnToFoundationMove implements SolitaireMove {
     
     @Override
     public int hashCode() {
-        return Integer.rotateLeft(sourceColumn, 16) ^ card.hashCode();
+        return Integer.rotateLeft(sourceColumnIndex, 16) ^ card.hashCode();
     }
     
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof ColumnToFoundationMove) {
             final ColumnToFoundationMove move = (ColumnToFoundationMove) obj;
-            return sourceColumn == move.sourceColumn && card.equals(move.card);
+            return sourceColumnIndex == move.sourceColumnIndex && card.equals(move.card);
         } else {
             return false;
         }
@@ -194,7 +185,7 @@ public class ColumnToFoundationMove implements SolitaireMove {
     
     @Override
     public String toString() {
-        return "Move " + card + " from column " + sourceColumn + " to foundation.";
+        return "Move " + card + " from column " + sourceColumnIndex + " to foundation.";
     }
     
 }

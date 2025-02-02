@@ -75,7 +75,7 @@ public interface SolitaireMove extends Move<Board> {
      * 
      * @return the index of the column from which this move takes cards
      */
-    public int getFromColumnIndex();
+    public int getSourceColumnIndex();
     
     /**
      * Returns {@code true} if this move puts a card into the foundation.
@@ -106,6 +106,6 @@ public interface SolitaireMove extends Move<Board> {
      * 
      * @return the index of the column to which this move adds cards
      */
-    public int getToColumnIndex();
+    public int getDestinationColumnIndex();
     
 }

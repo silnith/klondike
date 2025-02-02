@@ -62,7 +62,7 @@ public class RunMoveMustBeFollowedBySomethingUsefulFilter implements SolitaireMo
             /*
              * Check whether the previous move took all the available cards from the source column.
              */
-            final int sourceColumnIndex = previousMove.getFromColumnIndex();
+            final int sourceColumnIndex = previousMove.getSourceColumnIndex();
             final int numberOfMovedCards = previousMove.getCards().size();
 			if (numberOfMovedCards == boardTwoStepsBack.getColumn(sourceColumnIndex).getNumberOfFaceUpCards()) {
 			    /*

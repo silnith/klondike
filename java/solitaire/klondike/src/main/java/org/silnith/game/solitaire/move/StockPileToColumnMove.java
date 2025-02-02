@@ -56,7 +56,7 @@ public class StockPileToColumnMove implements SolitaireMove {
     /**
      * The index into the board of the column to which the card is being moved.
      */
-    private final int destinationColumn;
+    private final int destinationColumnIndex;
     
     /**
      * The card being moved.
@@ -67,25 +67,25 @@ public class StockPileToColumnMove implements SolitaireMove {
      * Creates a new move of a card from the stock pile to a column on the board.
      * 
      * @param sourceIndex the stock pile index of the card being moved
-     * @param destinationColumn the index into the board of the destination column
+     * @param destinationColumnIndex the index into the board of the destination column
      * @param card the card being moved
      */
-    public StockPileToColumnMove(final int sourceIndex, final int destinationColumn, final Card card) {
+    public StockPileToColumnMove(final int sourceIndex, final int destinationColumnIndex, final Card card) {
         super();
         this.sourceIndex = sourceIndex;
-        this.destinationColumn = destinationColumn;
+        this.destinationColumnIndex = destinationColumnIndex;
         this.card = card;
     }
     
     /**
      * Creates a new move of a card from the stock pile to a column on the board.
      * 
-     * @param destinationColumn the index into the board of the destination column
+     * @param destinationColumnIndex the index into the board of the destination column
      * @param board the board from which to get the card
      * @throws IndexOutOfBoundsException if no card is available to be drawn from the board stock pile
      */
-    public StockPileToColumnMove(final int destinationColumn, final Board board) {
-    	this(board.getStockPileIndex(), destinationColumn, board.getStockPileCard());
+    public StockPileToColumnMove(final int destinationColumnIndex, final Board board) {
+    	this(board.getStockPileIndex(), destinationColumnIndex, board.getStockPileCard());
     }
     
     /**
@@ -95,16 +95,6 @@ public class StockPileToColumnMove implements SolitaireMove {
      */
     public int getSourceIndex() {
         return sourceIndex;
-    }
-    
-    /**
-     * Returns the index into the board of the column to which the card is being
-     * moved.
-     * 
-     * @return the index into the board of the destination column
-     */
-    public int getDestinationColumn() {
-        return destinationColumn;
     }
     
     /**
@@ -153,7 +143,7 @@ public class StockPileToColumnMove implements SolitaireMove {
     }
 
     @Override
-    public int getFromColumnIndex() {
+    public int getSourceColumnIndex() {
         throw new IllegalStateException("Not a move from a column.");
     }
 
@@ -169,12 +159,12 @@ public class StockPileToColumnMove implements SolitaireMove {
 
     @Override
     public boolean isToColumn(int columnIndex) {
-        return columnIndex == destinationColumn;
+        return columnIndex == destinationColumnIndex;
     }
 
     @Override
-    public int getToColumnIndex() {
-        return destinationColumn;
+    public int getDestinationColumnIndex() {
+        return destinationColumnIndex;
     }
 
 	@Override
@@ -187,11 +177,11 @@ public class StockPileToColumnMove implements SolitaireMove {
 		final int newStockPileIndex = stockPileIndex - 1;
 		
 		final List<Column> columns = board.getColumns();
-		final Column column = columns.get(destinationColumn);
+		final Column column = columns.get(destinationColumnIndex);
 		final Column newColumn = column.withCard(card);
 		
 		final List<Column> newColumns = new ArrayList<>(columns);
-		newColumns.set(destinationColumn, newColumn);
+		newColumns.set(destinationColumnIndex, newColumn);
 		
 		final Map<Suit, List<Card>> foundation = board.getFoundation();
 		return new Board(newColumns, newStockPile, newStockPileIndex, foundation);
@@ -199,14 +189,14 @@ public class StockPileToColumnMove implements SolitaireMove {
     
     @Override
     public int hashCode() {
-        return sourceIndex ^ destinationColumn ^ card.hashCode();
+        return sourceIndex ^ destinationColumnIndex ^ card.hashCode();
     }
     
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof StockPileToColumnMove) {
             final StockPileToColumnMove move = (StockPileToColumnMove) obj;
-            return sourceIndex == move.sourceIndex && destinationColumn == move.destinationColumn && card.equals(move.card);
+            return sourceIndex == move.sourceIndex && destinationColumnIndex == move.destinationColumnIndex && card.equals(move.card);
         } else {
             return false;
         }
@@ -214,7 +204,7 @@ public class StockPileToColumnMove implements SolitaireMove {
     
     @Override
     public String toString() {
-        return "Move " + card + " from stock pile index " + sourceIndex + " to column " + destinationColumn + ".";
+        return "Move " + card + " from stock pile index " + sourceIndex + " to column " + destinationColumnIndex + ".";
     }
     
 }

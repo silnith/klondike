@@ -55,14 +55,6 @@ namespace Silnith.Game.Klondike.Move
         }
 
         /// <summary>
-        /// The index into the board of the column to which the card is being moved.
-        /// </summary>
-        public int DestinationColumn
-        {
-            get;
-        }
-
-        /// <summary>
         /// The card being moved.
         /// </summary>
         public Card Card
@@ -71,13 +63,22 @@ namespace Silnith.Game.Klondike.Move
         }
 
         /// <inheritdoc/>
-        public bool HasCards => true;
-
-        /// <inheritdoc/>
         public IReadOnlyList<Card> Cards
         {
             get;
         }
+
+        /// <inheritdoc/>
+        public int SourceColumnIndex => throw new ArgumentException("Not a move from a column.");
+
+        /// <inheritdoc/>
+        public int DestinationColumnIndex
+        {
+            get;
+        }
+
+        /// <inheritdoc/>
+        public bool HasCards => true;
 
         /// <inheritdoc/>
         public bool IsStockPileModification => true;
@@ -92,33 +93,21 @@ namespace Silnith.Game.Klondike.Move
         public bool IsFromColumn => false;
 
         /// <inheritdoc/>
-        public bool TakesFromColumn(int columnIndex) => false;
-
-        /// <inheritdoc/>
-        public int FromColumnIndex => throw new ArgumentException("Not a move from a column.");
-
-        /// <inheritdoc/>
         public bool IsToFoundation => false;
 
         /// <inheritdoc/>
         public bool IsToColumn => true;
 
-        /// <inheritdoc/>
-        public bool AddsToColumn(int columnIndex) => columnIndex == ToColumnIndex;
-
-        /// <inheritdoc/>
-        public int ToColumnIndex => DestinationColumn;
-
         /// <summary>
         /// Constructs a new move of a card from the stock pile to a column on the board.
         /// </summary>
         /// <param name="sourceIndex">The stock pile index of the card being moved.</param>
-        /// <param name="destinationColumn">The index into the board of the destination column.</param>
+        /// <param name="destinationColumnIndex">The index into the board of the destination column.</param>
         /// <param name="card">The card being moved.</param>
-        public StockPileToColumnMove(int sourceIndex, int destinationColumn, Card card)
+        public StockPileToColumnMove(int sourceIndex, int destinationColumnIndex, Card card)
         {
             SourceIndex = sourceIndex;
-            DestinationColumn = destinationColumn;
+            DestinationColumnIndex = destinationColumnIndex;
             Card = card;
             Cards = new List<Card>()
             {
@@ -137,6 +126,12 @@ namespace Silnith.Game.Klondike.Move
         }
 
         /// <inheritdoc/>
+        public bool TakesFromColumn(int columnIndex) => false;
+
+        /// <inheritdoc/>
+        public bool AddsToColumn(int columnIndex) => columnIndex == DestinationColumnIndex;
+
+        /// <inheritdoc/>
         public Board Apply(Board board)
         {
             Tuple<Card, IReadOnlyList<Card>> tuple = board.ExtractStockPileCard();
@@ -148,7 +143,7 @@ namespace Silnith.Game.Klondike.Move
             IReadOnlyList<Column> columns = board.Columns;
             IReadOnlyList<Column> newColumns = new List<Column>(columns)
             {
-                [DestinationColumn] = columns[DestinationColumn].WithCard(card),
+                [DestinationColumnIndex] = columns[DestinationColumnIndex].WithCard(card),
             };
 
             return new Board(newColumns, newStockPile, newStockPileIndex, board.Foundation);
@@ -165,20 +160,20 @@ namespace Silnith.Game.Klondike.Move
         {
             return other != null
                 && SourceIndex == other.SourceIndex
-                && DestinationColumn == other.DestinationColumn
+                && DestinationColumnIndex == other.DestinationColumnIndex
                 && Card.Equals(other.Card);
         }
 
         /// <inheritdoc/>
         public override int GetHashCode()
         {
-            return HashCode.Combine(SourceIndex, DestinationColumn, Card);
+            return HashCode.Combine(SourceIndex, DestinationColumnIndex, Card);
         }
 
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"Move {Card} from stock pile index {SourceIndex} to column {DestinationColumn}.";
+            return $"Move {Card} from stock pile index {SourceIndex} to column {DestinationColumnIndex}.";
         }
     }
 }

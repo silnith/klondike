@@ -64,14 +64,6 @@ namespace Silnith.Game.Klondike.Move
         }
 
         /// <summary>
-        /// The index in the board of the destination column for the card.
-        /// </summary>
-        public int DestinationColumn
-        {
-            get;
-        }
-
-        /// <summary>
         /// The card being moved.
         /// </summary>
         public Card Card
@@ -80,13 +72,22 @@ namespace Silnith.Game.Klondike.Move
         }
 
         /// <inheritdoc/>
-        public bool HasCards => true;
-
-        /// <inheritdoc/>
         public IReadOnlyList<Card> Cards
         {
             get;
         }
+
+        /// <inheritdoc/>
+        public int SourceColumnIndex => throw new ArgumentException("Not a move from a column.");
+
+        /// <inheritdoc/>
+        public int DestinationColumnIndex
+        {
+            get;
+        }
+
+        /// <inheritdoc/>
+        public bool HasCards => true;
 
         /// <inheritdoc/>
         public bool IsStockPileModification => false;
@@ -101,32 +102,20 @@ namespace Silnith.Game.Klondike.Move
         public bool IsFromColumn => false;
 
         /// <inheritdoc/>
-        public bool TakesFromColumn(int columnIndex) => false;
-
-        /// <inheritdoc/>
-        public int FromColumnIndex => throw new ArgumentException("Not a move from a column.");
-
-        /// <inheritdoc/>
         public bool IsToFoundation => false;
 
         /// <inheritdoc/>
         public bool IsToColumn => true;
 
-        /// <inheritdoc/>
-        public bool AddsToColumn(int columnIndex) => columnIndex == ToColumnIndex;
-
-        /// <inheritdoc/>
-        public int ToColumnIndex => DestinationColumn;
-
         /// <summary>
         /// Constructs a move that takes a card from the foundation and puts it on top
         /// of a column.
         /// </summary>
-        /// <param name="destinationColumn">The index of the column into the board.</param>
+        /// <param name="destinationColumnIndex">The index of the column into the board.</param>
         /// <param name="card">The card being moved.</param>
-        public FoundationToColumnMove(int destinationColumn, Card card)
+        public FoundationToColumnMove(int destinationColumnIndex, Card card)
         {
-            DestinationColumn = destinationColumn;
+            DestinationColumnIndex = destinationColumnIndex;
             Card = card;
             Cards = new List<Card>()
             {
@@ -138,13 +127,19 @@ namespace Silnith.Game.Klondike.Move
         /// Constructs a move that takes a card from the foundation and puts it on top
         /// of a column.
         /// </summary>
-        /// <param name="destinationColumn">The index of the column into the board.</param>
+        /// <param name="destinationColumnIndex">The index of the column into the board.</param>
         /// <param name="suit">The suit of card to pull from the foundation.</param>
         /// <param name="board">The board to get the card from.</param>
         /// <exception cref="ArgumentOutOfRangeException">If the board foundation has no cards for <paramref name="suit"/>.</exception>
-        public FoundationToColumnMove(int destinationColumn, Suit suit, Board board) : this(destinationColumn, board.GetTopOfFoundation(suit))
+        public FoundationToColumnMove(int destinationColumnIndex, Suit suit, Board board) : this(destinationColumnIndex, board.GetTopOfFoundation(suit))
         {
         }
+
+        /// <inheritdoc/>
+        public bool TakesFromColumn(int columnIndex) => false;
+
+        /// <inheritdoc/>
+        public bool AddsToColumn(int columnIndex) => columnIndex == DestinationColumnIndex;
 
         /// <inheritdoc/>
         public Board Apply(Board board)
@@ -155,7 +150,7 @@ namespace Silnith.Game.Klondike.Move
 
             IReadOnlyList<Column> newColumns = new List<Column>(board.Columns)
             {
-                [DestinationColumn] = board.Columns[DestinationColumn].WithCard(card),
+                [DestinationColumnIndex] = board.Columns[DestinationColumnIndex].WithCard(card),
             };
 
             return new Board(newColumns, board.StockPile, board.StockPileIndex, newFoundation);
@@ -171,20 +166,20 @@ namespace Silnith.Game.Klondike.Move
         public bool Equals(FoundationToColumnMove? other)
         {
             return other != null
-                && DestinationColumn == other.DestinationColumn
+                && DestinationColumnIndex == other.DestinationColumnIndex
                 && Card.Equals(other.Card);
         }
 
         /// <inheritdoc/>
         public override int GetHashCode()
         {
-            return HashCode.Combine(DestinationColumn, Card);
+            return HashCode.Combine(DestinationColumnIndex, Card);
         }
 
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"Move {Card} from foundation to column {DestinationColumn}.";
+            return $"Move {Card} from foundation to column {DestinationColumnIndex}.";
         }
     }
 }

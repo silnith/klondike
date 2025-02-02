@@ -34,7 +34,7 @@ namespace Silnith.Game.Klondike.Move.Filter
                     /*
                      * This is the column after the move.
                      */
-                    Column sourceColumn = currentBoard.Columns[currentMove.FromColumnIndex];
+                    Column sourceColumn = currentBoard.Columns[currentMove.SourceColumnIndex];
                     if (sourceColumn.HasFaceUpCards())
                     {
                         /*

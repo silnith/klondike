@@ -126,7 +126,7 @@ public class StockPileToFoundationMove implements SolitaireMove {
     }
 
     @Override
-    public int getFromColumnIndex() {
+    public int getSourceColumnIndex() {
         throw new IllegalStateException("Not a move from a column.");
     }
 
@@ -146,7 +146,7 @@ public class StockPileToFoundationMove implements SolitaireMove {
     }
 
     @Override
-    public int getToColumnIndex() {
+    public int getDestinationColumnIndex() {
         throw new IllegalStateException("Not a move to a column.");
     }
 

@@ -105,10 +105,10 @@ public class ColumnToFoundationMoveTest {
     }
     
 	@Test
-	public void testGetSourceColumn() {
+	public void testGetSourceColumnIndex() {
 		final ColumnToFoundationMove move = new ColumnToFoundationMove(3, new Card(ACE, CLUB));
 		
-		assertEquals(3, move.getSourceColumn());
+		assertEquals(3, move.getSourceColumnIndex());
 	}
 
 	@Test

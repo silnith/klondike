@@ -132,10 +132,10 @@ public class StockPileToColumnMoveTest {
 	}
 
 	@Test
-	public void testGetDestinationColumn() {
+	public void testGetDestinationColumnIndex() {
 		final StockPileToColumnMove move = new StockPileToColumnMove(2, 5, new Card(Value.ACE, Suit.CLUB));
 		
-		assertEquals(5, move.getDestinationColumn());
+		assertEquals(5, move.getDestinationColumnIndex());
 	}
 
 	@Test

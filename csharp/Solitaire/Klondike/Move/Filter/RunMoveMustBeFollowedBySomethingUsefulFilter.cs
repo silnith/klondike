@@ -61,7 +61,7 @@ namespace Silnith.Game.Klondike.Move.Filter
                 /*
                  * Check whether the previous move took all the available cards from the source column.
                  */
-                int sourceColumnIndex = previousMove.FromColumnIndex;
+                int sourceColumnIndex = previousMove.SourceColumnIndex;
                 int numberOfMovedCards = previousMove.Cards.Count;
                 if (numberOfMovedCards == boardTwoStepsBack.Columns[sourceColumnIndex].FaceUp.Count)
                 {

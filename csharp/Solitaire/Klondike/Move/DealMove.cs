@@ -18,22 +18,20 @@ namespace Silnith.Game.Klondike.Move
             get;
         }
 
-        /// <summary>
-        /// The deck of cards to deal.
-        /// </summary>
-        public IReadOnlyList<Card> Deck
-        {
-            get;
-        }
-
-        /// <inheritdoc/>
-        public bool HasCards => true;
-
         /// <inheritdoc/>
         public IReadOnlyList<Card> Cards
         {
             get;
         }
+
+        /// <inheritdoc/>
+        public int SourceColumnIndex => throw new ArgumentException("Not a move from a column.");
+
+        /// <inheritdoc/>
+        public int DestinationColumnIndex => throw new ArgumentException("Not a move to a column.");
+
+        /// <inheritdoc/>
+        public bool HasCards => true;
 
         /// <inheritdoc/>
         public bool IsStockPileModification => false;
@@ -48,22 +46,10 @@ namespace Silnith.Game.Klondike.Move
         public bool IsFromColumn => false;
 
         /// <inheritdoc/>
-        public bool TakesFromColumn(int columnIndex) => false;
-
-        /// <inheritdoc/>
-        public int FromColumnIndex => throw new ArgumentException("Not a move from a column.");
-
-        /// <inheritdoc/>
         public bool IsToFoundation => false;
 
         /// <inheritdoc/>
         public bool IsToColumn => false;
-
-        /// <inheritdoc/>
-        public bool AddsToColumn(int columnIndex) => false;
-
-        /// <inheritdoc/>
-        public int ToColumnIndex => throw new ArgumentException("Not a move to a column.");
 
         /// <summary>
         /// Constructs a new move that deals a fresh deck of cards.
@@ -82,20 +68,25 @@ namespace Silnith.Game.Klondike.Move
                 throw new ArgumentException($"A deck of size {cardsRequired}  is required to deal {columnCount} columns.");
             }
             ColumnCount = columnCount;
-            Deck = deck;
             Cards = deck;
         }
 
         /// <inheritdoc/>
+        public bool TakesFromColumn(int columnIndex) => false;
+
+        /// <inheritdoc/>
+        public bool AddsToColumn(int columnIndex) => false;
+
+        /// <inheritdoc/>
         public Board Apply(Board board)
         {
-            int remaining = Deck.Count;
+            int remaining = Cards.Count;
             List<List<Card>> stacks = new List<List<Card>>(ColumnCount);
             for (int i = 0; i < ColumnCount; i++)
             {
                 stacks.Add(new List<Card>(i + 1));
             }
-            IEnumerator<Card> enumerator = Deck.GetEnumerator();
+            IEnumerator<Card> enumerator = Cards.GetEnumerator();
             for (int i = 0; i < ColumnCount; i++)
             {
                 for (int j = i; j < ColumnCount; j++)
@@ -135,7 +126,7 @@ namespace Silnith.Game.Klondike.Move
         {
             return other != null
                 && ColumnCount == other.ColumnCount
-                && Deck.SequenceEqual(other.Deck);
+                && Cards.SequenceEqual(other.Cards);
         }
 
         /// <inheritdoc/>
@@ -143,7 +134,7 @@ namespace Silnith.Game.Klondike.Move
         {
             HashCode hashCode = new HashCode();
             hashCode.Add(ColumnCount);
-            foreach (Card card in Deck)
+            foreach (Card card in Cards)
             {
                 hashCode.Add(card);
             }
@@ -153,7 +144,7 @@ namespace Silnith.Game.Klondike.Move
         /// <inheritdoc/>
         public override string ToString()
         {
-            return "Deal " + ColumnCount + " columns using deck [" + string.Join(", ", Deck) + "].";
+            return "Deal " + ColumnCount + " columns using deck [" + string.Join(", ", Cards) + "].";
         }
     }
 }
