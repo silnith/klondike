@@ -28,34 +28,42 @@ namespace Silnith.Game.Klondike.Move.Filter
 
             if (!enumerator.MoveNext())
             {
+                /*
+                 * This can only happen at the very beginning of the game.
+                 * In that case, this filter is not helpful, so just let everything pass.
+                 */
                 return false;
             }
 
             GameState<ISolitaireMove, Board> previousGameState = enumerator.Current;
             ISolitaireMove previousMove = previousGameState.Move;
             Board previousBoard = previousGameState.Board;
-            // This is the board AFTER the move has been applied!
+            /*
+             * This is the board AFTER the move has been applied!
+             */
 
-            if (previousMove is ColumnToColumnMove columnToColumnMove)
+            if (previousMove.IsFromColumn)
             {
                 // Check whether the previous run move used u pall the cards.
                 // If it did, everything is fine.
 
                 if (!enumerator.MoveNext())
                 {
+                    /*
+                     * This can only happen at the very beginning of the game.
+                     * In that case, this filter is not helpful, so just let everything pass.
+                     */
                     return false;
                 }
                 GameState<ISolitaireMove, Board> gameStateTwoStepsBack = enumerator.Current;
                 Board boardTwoStepsBack = gameStateTwoStepsBack.Board;
 
-                // Get the column that the previous move drew from.
-                int previousMoveSourceColumn = columnToColumnMove.SourceColumn;
-                Column sourceColumn = boardTwoStepsBack.Columns[previousMoveSourceColumn];
-                // Check whether the previous move took all the available cards from the source column.
-                IReadOnlyList<Deck.Card> faceUpCards = sourceColumn.FaceUp;
-                int availableCards = faceUpCards.Count;
-                int numberOfMovedCards = columnToColumnMove.CardCount;
-                if (availableCards == numberOfMovedCards)
+                /*
+                 * Check whether the previous move took all the available cards from the source column.
+                 */
+                int sourceColumnIndex = previousMove.FromColumnIndex;
+                int numberOfMovedCards = previousMove.Cards.Count;
+                if (numberOfMovedCards == boardTwoStepsBack.Columns[sourceColumnIndex].FaceUp.Count)
                 {
                     /*
                      * The previous move took all the face-up cards from the source column.
@@ -72,7 +80,7 @@ namespace Silnith.Game.Klondike.Move.Filter
                      * is involved with the current move.  Otherwise, the previous
                      * move has no value.
                      */
-                    Card cardExposedByRunMove = previousBoard.Columns[previousMoveSourceColumn].GetTopCard();
+                    Card cardExposedByRunMove = previousBoard.Columns[sourceColumnIndex].GetTopCard();
                     List<Card> singletonList = new List<Card>()
                     {
                         cardExposedByRunMove,
@@ -86,14 +94,18 @@ namespace Silnith.Game.Klondike.Move.Filter
                     }
                     else
                     {
-                        // This move does not use the exposed card, so filter the sequence of moves.
+                        /*
+                         * This move does not use the exposed card, so filter the sequence of moves.
+                         */
                         return true;
                     }
                 }
             }
             else
             {
-                // Not interested in any scenario except where the second-most-recent move is moving a run from one column to another.
+                /*
+                 * Not interested in any scenario except where the second-most-recent move is moving a run from one column to another.
+                 */
                 return false;
             }
         }

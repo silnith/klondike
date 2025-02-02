@@ -21,7 +21,7 @@ namespace Silnith.Game.Klondike.Move.Filter
             GameState<ISolitaireMove, Board> currentGameState = enumerator.Current;
             ISolitaireMove currentMove = currentGameState.Move;
 
-            if (currentMove is StockPileToColumnMove || currentMove is StockPileToFoundationMove)
+            if (currentMove.IsFromStockPile)
             {
                 // TODO: Split out the logic between "to column" and "to foundation"!
                 // This is because one requires the special case for pulling from the foundation, the other does not.
@@ -42,24 +42,36 @@ namespace Silnith.Game.Klondike.Move.Filter
             ISolitaireMove previousMove = previousGameState.Move;
             // There may be a sequence of draws from the stock pile.
             // Moving from the foundation to a column is a special case that we allow between stock pile advances and draws.
-            while (previousMove is StockPileToColumnMove
-                || previousMove is StockPileToFoundationMove
-                || previousMove is FoundationToColumnMove)
+            while (previousMove.IsFromStockPile
+                || previousMove.IsFromFoundation)
             {
+                /*
+                 * Walk backwards.
+                 * Ignoring moves from the foundation is a special-case.
+                 * In general moves from the foundation are filtered, but
+                 * they are allowed to provide a destination for column-to-column
+                 * moves or stock pile draws in the event tha tno other destination
+                 * is available.
+                 */
                 _ = enumerator.MoveNext();
                 previousGameState = enumerator.Current;
                 previousMove = previousGameState.Move;
             }
             // Theoretically, it should only be possible for the previous move to be a stock pile advance.
             // The recycle should make it impossible to draw from the stock pile.
-            if (previousMove is StockPileAdvanceMove)
+            if (previousMove.IsStockPileModification)
             {
-                // This is acceptable, no need to filter.
+                /*
+                 * This is acceptable, no need to filter.
+                 */
                 return false;
             }
             else
             {
-                // The previous move did not modify the stock pile, so drawing from the stock pile is silly.
+                /*
+                 * The previous move did not modify the stock pile,
+                 * so drawing from the stock pile is silly.
+                 */
                 return true;
             }
         }

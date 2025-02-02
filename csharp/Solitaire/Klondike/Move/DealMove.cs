@@ -27,19 +27,43 @@ namespace Silnith.Game.Klondike.Move
         }
 
         /// <inheritdoc/>
-        public bool HasCards
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public bool HasCards => true;
 
         /// <inheritdoc/>
         public IReadOnlyList<Card> Cards
         {
             get;
         }
+
+        /// <inheritdoc/>
+        public bool IsStockPileModification => false;
+
+        /// <inheritdoc/>
+        public bool IsFromStockPile => false;
+
+        /// <inheritdoc/>
+        public bool IsFromFoundation => false;
+
+        /// <inheritdoc/>
+        public bool IsFromColumn => false;
+
+        /// <inheritdoc/>
+        public bool TakesFromColumn(int columnIndex) => false;
+
+        /// <inheritdoc/>
+        public int FromColumnIndex => throw new ArgumentException("Not a move from a column.");
+
+        /// <inheritdoc/>
+        public bool IsToFoundation => false;
+
+        /// <inheritdoc/>
+        public bool IsToColumn => false;
+
+        /// <inheritdoc/>
+        public bool AddsToColumn(int columnIndex) => false;
+
+        /// <inheritdoc/>
+        public int ToColumnIndex => throw new ArgumentException("Not a move to a column.");
 
         /// <summary>
         /// Constructs a new move that deals a fresh deck of cards.
@@ -60,12 +84,6 @@ namespace Silnith.Game.Klondike.Move
             ColumnCount = columnCount;
             Deck = deck;
             Cards = deck;
-        }
-
-        /// <inheritdoc/>
-        public bool AddsCardsToColumn(int column)
-        {
-            return false;
         }
 
         /// <inheritdoc/>

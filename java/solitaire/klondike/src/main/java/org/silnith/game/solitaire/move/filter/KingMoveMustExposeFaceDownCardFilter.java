@@ -7,7 +7,6 @@ import org.silnith.deck.Value;
 import org.silnith.game.GameState;
 import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.Column;
-import org.silnith.game.solitaire.move.ColumnToColumnMove;
 import org.silnith.game.solitaire.move.SolitaireMove;
 
 /**
@@ -26,17 +25,22 @@ public class KingMoveMustExposeFaceDownCardFilter implements SolitaireMoveFilter
 	    final GameState<SolitaireMove, Board> currentGameState = gameStateHistory.get(0);
 		final SolitaireMove currentMove = currentGameState.getMove();
 		final Board currentBoard = currentGameState.getBoard();
+        /*
+         * The current board is the state after the move has been applied.
+         */
 		
 		assert currentMove != null;
 		assert currentBoard != null;
 		
-		if (currentMove instanceof ColumnToColumnMove) {
-			final ColumnToColumnMove runMove = (ColumnToColumnMove) currentMove;
-			final List<Card> run = runMove.getCards();
+		if (currentMove.isFromColumn() && currentMove.isToColumn()) {
+		    assert currentMove.hasCards();
+			final List<Card> run = currentMove.getCards();
 			final Card firstCard = run.get(0);
 			if (firstCard.getValue() == Value.KING) {
-				// This is the column after the move.
-				final Column sourceColumn = currentBoard.getColumns().get(runMove.getSourceColumn());
+				/*
+				 * This is the column after the move.
+				 */
+				final Column sourceColumn = currentBoard.getColumn(currentMove.getFromColumnIndex());
 				if (sourceColumn.hasFaceUpCards()) {
 				    /*
 				     * Something was left behind, therefore the move has value.
@@ -52,11 +56,16 @@ public class KingMoveMustExposeFaceDownCardFilter implements SolitaireMoveFilter
 					return true;
 				}
 			} else {
-				// This filter only cares about runs that start with a king.
+				/*
+				 * This filter only cares about runs that start with a king.
+				 */
 				return false;
 			}
 		} else {
-			// Not interested in other types of moves.
+			/*
+			 * Only interested in moves from a column to another column
+			 * where the run begins with a king.
+			 */
 			return false;
 		}
 	}

@@ -77,7 +77,7 @@ public class ColumnToFoundationMove implements SolitaireMove {
      * @throws IllegalArgumentException if the source column has no card to move
      */
     public ColumnToFoundationMove(final int sourceColumn, final Board board) {
-    	this(sourceColumn, board.getColumns().get(sourceColumn).getTopCard());
+    	this(sourceColumn, board.getColumn(sourceColumn).getTopCard());
     }
     
     /**
@@ -108,13 +108,58 @@ public class ColumnToFoundationMove implements SolitaireMove {
     public List<Card> getCards() {
         return Collections.singletonList(card);
     }
-    
+
     @Override
-	public boolean addsCardsToColumn(final int column) {
-		return false;
-	}
+    public boolean isStockPileModification() {
+        return false;
+    }
+
+    @Override
+    public boolean isFromStockPile() {
+        return false;
+    }
+
+    @Override
+    public boolean isFromFoundation() {
+        return false;
+    }
+
+    @Override
+    public boolean isFromColumn() {
+        return true;
+    }
+
+    @Override
+    public boolean isFromColumn(int columnIndex) {
+        return columnIndex == sourceColumn;
+    }
+
+    @Override
+    public int getFromColumnIndex() {
+        return sourceColumn;
+    }
+
+    @Override
+    public boolean isToFoundation() {
+        return true;
+    }
+
+    @Override
+    public boolean isToColumn() {
+        return false;
+    }
+
+    @Override
+    public boolean isToColumn(int columnIndex) {
+        return false;
+    }
 
 	@Override
+    public int getToColumnIndex() {
+        throw new IllegalStateException("Not a move to a column.");
+    }
+
+    @Override
     public Board apply(final Board board) {
         final List<Column> columns = board.getColumns();
 		final Column column = columns.get(sourceColumn);

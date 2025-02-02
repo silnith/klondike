@@ -65,6 +65,17 @@ public class Board {
     }
     
     /**
+     * Returns the given column.
+     * 
+     * @param index the index of the column
+     * @return the column
+     * @throws IndexOutOfBoundsException if the index is out of bounds
+     */
+    public Column getColumn(int index) {
+        return columns.get(index);
+    }
+    
+    /**
      * Returns the stock pile.
      * 
      * @return the stock pile

@@ -79,12 +79,57 @@ public class DealMove implements SolitaireMove {
         return deck;
     }
     
-    @Override
-	public boolean addsCardsToColumn(final int column) {
-		return false;
-	}
-
 	@Override
+    public boolean isStockPileModification() {
+        return false;
+    }
+
+    @Override
+    public boolean isFromStockPile() {
+        return false;
+    }
+
+    @Override
+    public boolean isFromFoundation() {
+        return false;
+    }
+
+    @Override
+    public boolean isFromColumn() {
+        return false;
+    }
+
+    @Override
+    public boolean isFromColumn(int columnIndex) {
+        return false;
+    }
+
+    @Override
+    public int getFromColumnIndex() {
+        throw new IllegalStateException("Not a move from a column.");
+    }
+
+    @Override
+    public boolean isToFoundation() {
+        return false;
+    }
+
+    @Override
+    public boolean isToColumn() {
+        return false;
+    }
+
+    @Override
+    public boolean isToColumn(int columnIndex) {
+        return false;
+    }
+
+    @Override
+    public int getToColumnIndex() {
+        throw new IllegalStateException("Not a move to a column.");
+    }
+
+    @Override
     public Board apply(final Board board) {
     	// The parameter is completely ignored.
         int remaining = deck.size();

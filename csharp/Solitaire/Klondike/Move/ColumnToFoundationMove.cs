@@ -55,19 +55,43 @@ namespace Silnith.Game.Klondike.Move
         }
 
         /// <inheritdoc/>
-        public bool HasCards
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public bool HasCards => true;
 
         /// <inheritdoc/>
         public IReadOnlyList<Card> Cards
         {
             get;
         }
+
+        /// <inheritdoc/>
+        public bool IsStockPileModification => false;
+
+        /// <inheritdoc/>
+        public bool IsFromStockPile => false;
+
+        /// <inheritdoc/>
+        public bool IsFromFoundation => false;
+
+        /// <inheritdoc/>
+        public bool IsFromColumn => true;
+
+        /// <inheritdoc/>
+        public bool TakesFromColumn(int columnIndex) => columnIndex == FromColumnIndex;
+
+        /// <inheritdoc/>
+        public int FromColumnIndex => SourceColumn;
+
+        /// <inheritdoc/>
+        public bool IsToFoundation => true;
+
+        /// <inheritdoc/>
+        public bool IsToColumn => false;
+
+        /// <inheritdoc/>
+        public bool AddsToColumn(int columnIndex) => false;
+
+        /// <inheritdoc/>
+        public int ToColumnIndex => throw new ArgumentException("Not a move to a column.");
 
         /// <summary>
         /// Constructs a new move that takes a face-up card from a column and puts it
@@ -95,12 +119,6 @@ namespace Silnith.Game.Klondike.Move
         /// or the source column is empty.</exception>
         public ColumnToFoundationMove(int sourceColumn, Board board) : this(sourceColumn, board.Columns[sourceColumn].GetTopCard())
         {
-        }
-
-        /// <inheritdoc/>
-        public bool AddsCardsToColumn(int column)
-        {
-            return false;
         }
 
         /// <inheritdoc/>

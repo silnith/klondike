@@ -101,19 +101,43 @@ namespace Silnith.Game.Klondike.Move
         }
 
         /// <inheritdoc/>
-        public bool HasCards
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public bool HasCards => true;
 
         /// <inheritdoc/>
         public IReadOnlyList<Card> Cards
         {
             get;
         }
+
+        /// <inheritdoc/>
+        public bool IsStockPileModification => false;
+
+        /// <inheritdoc/>
+        public bool IsFromStockPile => false;
+
+        /// <inheritdoc/>
+        public bool IsFromFoundation => false;
+
+        /// <inheritdoc/>
+        public bool IsFromColumn => true;
+
+        /// <inheritdoc/>
+        public bool TakesFromColumn(int columnIndex) => columnIndex == FromColumnIndex;
+
+        /// <inheritdoc/>
+        public int FromColumnIndex => SourceColumn;
+
+        /// <inheritdoc/>
+        public bool IsToFoundation => false;
+
+        /// <inheritdoc/>
+        public bool IsToColumn => true;
+
+        /// <inheritdoc/>
+        public bool AddsToColumn(int columnIndex) => columnIndex == ToColumnIndex;
+
+        /// <inheritdoc/>
+        public int ToColumnIndex => DestinationColumn;
 
         /// <summary>
         /// Constructs a new move of a run of cards from one column to another.
@@ -148,12 +172,6 @@ namespace Silnith.Game.Klondike.Move
         public ColumnToColumnMove(int sourceColumn, int destinationColumn, int cardCount, Board board)
             : this(sourceColumn, destinationColumn, cardCount, board.Columns[sourceColumn].GetTopCards(cardCount))
         {
-        }
-
-        /// <inheritdoc/>
-        public bool AddsCardsToColumn(int column)
-        {
-            return column == DestinationColumn;
         }
 
         /// <inheritdoc/>

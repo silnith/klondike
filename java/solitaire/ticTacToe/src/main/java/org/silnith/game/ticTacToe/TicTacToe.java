@@ -100,6 +100,7 @@ public class TicTacToe implements Game<Move, Board> {
         final Future<Collection<List<GameState<Move, Board>>>> future = searcher.search();
         final Collection<List<GameState<Move, Board>>> results = future.get();
         System.out.println(results.size());
+        searcher.printStatistics(System.out);
     }
     
 }

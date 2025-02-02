@@ -126,11 +126,56 @@ public class StockPileToColumnMove implements SolitaireMove {
     public List<Card> getCards() {
         return Collections.singletonList(card);
     }
-    
+
     @Override
-	public boolean addsCardsToColumn(final int column) {
-		return column == destinationColumn;
-	}
+    public boolean isStockPileModification() {
+        return true;
+    }
+
+    @Override
+    public boolean isFromStockPile() {
+        return true;
+    }
+
+    @Override
+    public boolean isFromFoundation() {
+        return false;
+    }
+
+    @Override
+    public boolean isFromColumn() {
+        return false;
+    }
+
+    @Override
+    public boolean isFromColumn(int columnIndex) {
+        return false;
+    }
+
+    @Override
+    public int getFromColumnIndex() {
+        throw new IllegalStateException("Not a move from a column.");
+    }
+
+    @Override
+    public boolean isToFoundation() {
+        return false;
+    }
+
+    @Override
+    public boolean isToColumn() {
+        return true;
+    }
+
+    @Override
+    public boolean isToColumn(int columnIndex) {
+        return columnIndex == destinationColumn;
+    }
+
+    @Override
+    public int getToColumnIndex() {
+        return destinationColumn;
+    }
 
 	@Override
     public Board apply(final Board board) {

@@ -20,6 +20,10 @@ namespace Silnith.Game.Klondike.Move.Filter
 
             if (!enumerator.MoveNext())
             {
+                /*
+                 * This can only happen at the very beginning of the game.
+                 * In that case, this filter is not helpful, so just let everything pass.
+                 */
                 return false;
             }
 
@@ -28,20 +32,26 @@ namespace Silnith.Game.Klondike.Move.Filter
 
             if (previousMove is StockPileRecycleMove)
             {
-                if (currentMove is StockPileAdvanceMove)
+                if (currentMove.IsStockPileModification)
                 {
-                    // This is accepetable, no need to filter.
+                    /*
+                     * This is accepetable, no need to filter.
+                     */
                     return false;
                 }
                 else
                 {
-                    // Why do something not involving the stock pile after recycling it?
+                    /*
+                     * Why do something not involving the stock pile after recycling it?
+                     */
                     return true;
                 }
             }
             else
             {
-                // This filter doesn't apply.
+                /*
+                 * This filter doesn't apply.
+                 */
                 return false;
             }
         }

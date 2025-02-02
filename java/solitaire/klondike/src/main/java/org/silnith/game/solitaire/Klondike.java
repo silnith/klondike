@@ -179,6 +179,8 @@ public class Klondike implements Game<SolitaireMove, Board> {
 		sequentialDFS(klondike, initialState);
 		//parallelDFS(klondike, initialState, Math.max(availableProcessors - 2, 1));
 		//parallelDFS(klondike, initialState, 1);
+		
+		System.out.println("Finished.");
 	}
 
 	private static void runSearch0(final Game<SolitaireMove, Board> game, final GameState<SolitaireMove, Board> initialState) {
@@ -304,6 +306,7 @@ public class Klondike implements Game<SolitaireMove, Board> {
 		}
 		
 		thread.join();
+		searcher.printStatistics(System.out);
 	}
 
 	private static void parallelDFS(final Game<SolitaireMove, Board> game,
@@ -344,6 +347,9 @@ public class Klondike implements Game<SolitaireMove, Board> {
 			statesExamined = nextStatesExamined;
 			Thread.sleep(TimeUnit.SECONDS.toMillis(1));
 		}
+        
+        thread.join();
+        searcher.printStatistics(System.out);
 	}
 
 }

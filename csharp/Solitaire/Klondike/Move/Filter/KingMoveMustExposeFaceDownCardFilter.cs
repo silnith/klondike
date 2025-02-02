@@ -21,14 +21,20 @@ namespace Silnith.Game.Klondike.Move.Filter
             GameState<ISolitaireMove, Board> currentGameState = gameStateHistory[0];
             ISolitaireMove currentMove = currentGameState.Move;
             Board currentBoard = currentGameState.Board;
+            /*
+             * The current board is the state after the move has been applied.
+             */
 
-            if (currentMove is ColumnToColumnMove columnToColumnMove)
+            if (currentMove.IsFromColumn && currentMove.IsToColumn)
             {
-                IReadOnlyList<Card> run = columnToColumnMove.Cards;
+                IReadOnlyList<Card> run = currentMove.Cards;
                 Card firstCard = run[0];
                 if (firstCard.Value == Value.King)
                 {
-                    Column sourceColumn = currentBoard.Columns[columnToColumnMove.SourceColumn];
+                    /*
+                     * This is the column after the move.
+                     */
+                    Column sourceColumn = currentBoard.Columns[currentMove.FromColumnIndex];
                     if (sourceColumn.HasFaceUpCards())
                     {
                         /*
@@ -49,13 +55,18 @@ namespace Silnith.Game.Klondike.Move.Filter
                 }
                 else
                 {
-                    // This filter only cares about runs that start with a king.
+                    /*
+                     * This filter only cares about runs that start with a king.
+                     */
                     return false;
                 }
             }
             else
             {
-                // Not interested in other types of moves.
+                /*
+                 * Only interested in moves from a column to another column
+                 * where the run begins with a king.
+                 */
                 return false;
             } 
         }

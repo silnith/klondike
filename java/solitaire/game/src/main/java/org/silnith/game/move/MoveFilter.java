@@ -18,6 +18,7 @@ public interface MoveFilter<M extends Move<B>, B> {
     /**
      * Returns a key that can be used in a {@link Map} for gathering statistics
      * about how this filter performs.  This key should be <dfn>consistent with equals</dfn>.
+     * It must not change over the lifetime of the object.
      * 
      * <p>It is helpful if the object has a {@link #toString()} implementation that
      * produces a meaningful and user-readable string.</p>

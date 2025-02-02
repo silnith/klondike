@@ -26,16 +26,92 @@ namespace Silnith.Game.Klondike.Move
         /// The cards affected by this move.  If this move does not affect any cards,
         /// this will be empty.
         /// </summary>
-        public IReadOnlyList<Card> Cards
+        IReadOnlyList<Card> Cards
         {
             get;
         }
 
         /// <summary>
-        /// Returns <see langword="true"/> if this move adds cards to the specified column.
+        /// <see langword="true"/> if this move changes the stock pile index.
+        /// Moves that advance or recycle the stock pile will be <see langword="true"/>.
+        /// Drawing from the stock pile also adjusts the index, so will also
+        /// be <see langword="true"/>.
         /// </summary>
-        /// <param name="column">The column index.</param>
-        /// <returns><see langword="true"/> if this move adds cards to the column.</returns>
-        public bool AddsCardsToColumn(int column);
+        bool IsStockPileModification
+        {
+            get;
+        }
+
+        /// <summary>
+        /// <see langword="true"/> if this move draws a card from the stock pile.
+        /// </summary>
+        bool IsFromStockPile
+        {
+            get;
+        }
+
+        /// <summary>
+        /// <see langword="true"/> if this move takes a card from the foundation.
+        /// </summary>
+        bool IsFromFoundation
+        {
+            get;
+        }
+
+        /// <summary>
+        /// <see langword="true"/> if this move takes cards from a column.
+        /// </summary>
+        bool IsFromColumn
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Returns <see langword="true"/> if this move takes cards from the specific column.
+        /// </summary>
+        /// <param name="columnIndex">The column index to check whether this move takes cards from.</param>
+        /// <returns><see langword="true"/> if this move takes cards from the specific column.</returns>
+        bool TakesFromColumn(int columnIndex);
+
+        /// <summary>
+        /// The index of the column from which this move takes cards.
+        /// </summary>
+        /// <exception cref="System.ArgumentException">If <see cref="HasCards"/> or <see cref="IsFromColumn"/> are <see langword="false"/>.</exception>
+        int FromColumnIndex
+        {
+            get;
+        }
+
+        /// <summary>
+        /// <see langword="true"/> if this move puts a card into the foundation.
+        /// </summary>
+        bool IsToFoundation
+        {
+            get;
+        }
+
+        /// <summary>
+        /// <see langword="true"/> if this move puts cards onto a column run.
+        /// </summary>
+        bool IsToColumn
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Returns <see langword="true"/> if this move puts cards onto the specific column.
+        /// </summary>
+        /// <param name="columnIndex">The column to check whether receives cards.</param>
+        /// <returns><see langword="true"/> if thos move puts cards onto the specific column.</returns>
+        bool AddsToColumn(int columnIndex);
+
+        /// <summary>
+        /// The index of the column to which this move adds cards.
+        /// </summary>
+        /// <exception cref="System.ArgumentException">If either <see cref="HasCards"/> or <see cref="IsToColumn"/> is <see langword="false"/>.</exception>
+        int ToColumnIndex
+        {
+            get;
+        }
     }
 }

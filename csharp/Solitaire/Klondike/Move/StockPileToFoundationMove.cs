@@ -53,19 +53,43 @@ namespace Silnith.Game.Klondike.Move
         }
 
         /// <inheritdoc/>
-        public bool HasCards
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public bool HasCards => true;
 
         /// <inheritdoc/>
         public IReadOnlyList<Card> Cards
         {
             get;
         }
+
+        /// <inheritdoc/>
+        public bool IsStockPileModification => true;
+
+        /// <inheritdoc/>
+        public bool IsFromStockPile => true;
+
+        /// <inheritdoc/>
+        public bool IsFromFoundation => false;
+
+        /// <inheritdoc/>
+        public bool IsFromColumn => false;
+
+        /// <inheritdoc/>
+        public bool TakesFromColumn(int columnIndex) => false;
+
+        /// <inheritdoc/>
+        public int FromColumnIndex => throw new ArgumentException("Not a move from a column.");
+
+        /// <inheritdoc/>
+        public bool IsToFoundation => true;
+
+        /// <inheritdoc/>
+        public bool IsToColumn => false;
+
+        /// <inheritdoc/>
+        public bool AddsToColumn(int columnIndex) => false;
+
+        /// <inheritdoc/>
+        public int ToColumnIndex => throw new ArgumentException("Not a move to a column.");
 
         /// <summary>
         /// Constructs a new move that takes a card from the stock pile and puts it into
@@ -96,12 +120,6 @@ namespace Silnith.Game.Klondike.Move
         /// <exception cref="IndexOutOfRangeException">If no card is available to be drawn from the stock pile.</exception>
         public StockPileToFoundationMove(Board board) : this(board.StockPileIndex, board.GetStockPileCard())
         {
-        }
-
-        /// <inheritdoc/>
-        public bool AddsCardsToColumn(int column)
-        {
-            return false;
         }
 
         /// <inheritdoc/>

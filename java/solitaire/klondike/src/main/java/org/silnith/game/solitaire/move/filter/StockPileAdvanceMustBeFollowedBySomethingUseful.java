@@ -5,12 +5,8 @@ import java.util.List;
 
 import org.silnith.game.GameState;
 import org.silnith.game.solitaire.Board;
-import org.silnith.game.solitaire.move.FoundationToColumnMove;
 import org.silnith.game.solitaire.move.SolitaireMove;
 import org.silnith.game.solitaire.move.StockPileAdvanceMove;
-import org.silnith.game.solitaire.move.StockPileRecycleMove;
-import org.silnith.game.solitaire.move.StockPileToColumnMove;
-import org.silnith.game.solitaire.move.StockPileToFoundationMove;
 
 public class StockPileAdvanceMustBeFollowedBySomethingUseful implements SolitaireMoveFilter {
 
@@ -27,6 +23,10 @@ public class StockPileAdvanceMustBeFollowedBySomethingUseful implements Solitair
 		final SolitaireMove currentMove = currentGameState.getMove();
 		
 		if (!iterator.hasNext()) {
+            /*
+             * This can only happen at the very beginning of the game.
+             * In that case, this filter is not helpful, so just let everything pass.
+             */
 		    return false;
 		}
 		
@@ -34,11 +34,9 @@ public class StockPileAdvanceMustBeFollowedBySomethingUseful implements Solitair
 		final SolitaireMove previousMove = previousGameState.getMove();
 		
 		if (previousMove instanceof StockPileAdvanceMove) {
-			if (currentMove instanceof StockPileAdvanceMove
-					|| currentMove instanceof StockPileRecycleMove
-					|| currentMove instanceof StockPileToColumnMove
-					|| currentMove instanceof StockPileToFoundationMove
-					|| currentMove instanceof FoundationToColumnMove) {
+			if (currentMove.isStockPileModification()
+                    || currentMove.isFromStockPile()
+                    || currentMove.isFromFoundation()) {
 				// This is fine.
 				return false;
 			} else {

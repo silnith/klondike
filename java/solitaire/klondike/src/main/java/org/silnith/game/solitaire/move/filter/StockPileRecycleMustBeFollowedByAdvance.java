@@ -6,7 +6,6 @@ import java.util.List;
 import org.silnith.game.GameState;
 import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.move.SolitaireMove;
-import org.silnith.game.solitaire.move.StockPileAdvanceMove;
 import org.silnith.game.solitaire.move.StockPileRecycleMove;
 
 public class StockPileRecycleMustBeFollowedByAdvance implements SolitaireMoveFilter {
@@ -24,6 +23,10 @@ public class StockPileRecycleMustBeFollowedByAdvance implements SolitaireMoveFil
         final SolitaireMove currentMove = currentGameState.getMove();
         
         if (!iterator.hasNext()) {
+            /*
+             * This can only happen at the very beginning of the game.
+             * In that case, this filter is not helpful, so just let everything pass.
+             */
             return false;
         }
         
@@ -31,15 +34,21 @@ public class StockPileRecycleMustBeFollowedByAdvance implements SolitaireMoveFil
         final SolitaireMove previousMove = previousGameState.getMove();
 		
 		if (previousMove instanceof StockPileRecycleMove) {
-			if (currentMove instanceof StockPileAdvanceMove) {
-				// This is acceptable, no need to filter.
+			if (currentMove.isStockPileModification()) { 
+				/*
+				 * This is acceptable, no need to filter.
+				 */
 				return false;
 			} else {
-				// Why do something not involving the stock pile after recycling it?
+				/*
+				 * Why do something not involving the stock pile after recycling it?
+				 */
 				return true;
 			}
 		} else {
-			// This filter doesn't apply.
+			/*
+			 * This filter doesn't apply.
+			 */
 			return false;
 		}
 	}

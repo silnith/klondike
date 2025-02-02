@@ -132,7 +132,7 @@ public class ColumnToColumnMove implements SolitaireMove {
      * @throws IndexOutOfBoundsException if the source column is out of bounds
      */
     public ColumnToColumnMove(final int sourceColumn, final int destinationColumn, final int numberOfCards, final Board board) {
-    	this(sourceColumn, destinationColumn, numberOfCards, board.getColumns().get(sourceColumn).getTopCards(numberOfCards));
+    	this(sourceColumn, destinationColumn, numberOfCards, board.getColumn(sourceColumn).getTopCards(numberOfCards));
     }
     
     /**
@@ -174,12 +174,57 @@ public class ColumnToColumnMove implements SolitaireMove {
     public List<Card> getCards() {
         return cards;
     }
-    
+
     @Override
-    public boolean addsCardsToColumn(final int column) {
-    	return column == destinationColumn;
+    public boolean isStockPileModification() {
+        return false;
     }
-    
+
+    @Override
+    public boolean isFromStockPile() {
+        return false;
+    }
+
+    @Override
+    public boolean isFromFoundation() {
+        return false;
+    }
+
+    @Override
+    public boolean isFromColumn() {
+        return true;
+    }
+
+    @Override
+    public boolean isFromColumn(int columnIndex) {
+        return columnIndex == sourceColumn;
+    }
+
+    @Override
+    public int getFromColumnIndex() {
+        return sourceColumn;
+    }
+
+    @Override
+    public boolean isToFoundation() {
+        return false;
+    }
+
+    @Override
+    public boolean isToColumn() {
+        return true;
+    }
+
+    @Override
+    public boolean isToColumn(int columnIndex) {
+        return columnIndex == destinationColumn;
+    }
+
+    @Override
+    public int getToColumnIndex() {
+        return destinationColumn;
+    }
+
     @Override
     public Board apply(final Board board) {
     	assert sourceColumn != destinationColumn;
@@ -227,5 +272,5 @@ public class ColumnToColumnMove implements SolitaireMove {
             return "Move stack " + cards + " from column " + sourceColumn + " to column " + destinationColumn + ".";
         }
     }
-    
+
 }

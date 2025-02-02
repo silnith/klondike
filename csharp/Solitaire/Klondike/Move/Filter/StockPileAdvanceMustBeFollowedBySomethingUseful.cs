@@ -20,6 +20,10 @@ namespace Silnith.Game.Klondike.Move.Filter
 
             if (!enumerator.MoveNext())
             {
+                /*
+                 * This can only happen at the very beginning of the game.
+                 * In that case, this filter is not helpful, so just let everything pass.
+                 */
                 return false;
             }
 
@@ -28,11 +32,9 @@ namespace Silnith.Game.Klondike.Move.Filter
 
             if (previousMove is StockPileAdvanceMove)
             {
-                if (currentMove is StockPileAdvanceMove
-                    || currentMove is StockPileRecycleMove
-                    || currentMove is StockPileToColumnMove
-                    || currentMove is StockPileToFoundationMove
-                    || currentMove is FoundationToColumnMove)
+                if (currentMove.IsStockPileModification
+                    || currentMove.IsFromStockPile
+                    || currentMove.IsFromFoundation)
                 {
                     // This is fine.
                     return false;

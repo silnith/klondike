@@ -49,19 +49,43 @@ namespace Silnith.Game.Klondike.Move
         }
 
         /// <inheritdoc/>
-        public bool HasCards
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool HasCards => false;
 
         /// <inheritdoc/>
         public IReadOnlyList<Card> Cards
         {
             get;
         }
+
+        /// <inheritdoc/>
+        public bool IsStockPileModification => true;
+
+        /// <inheritdoc/>
+        public bool IsFromStockPile => false;
+
+        /// <inheritdoc/>
+        public bool IsFromFoundation => false;
+
+        /// <inheritdoc/>
+        public bool IsFromColumn => false;
+
+        /// <inheritdoc/>
+        public bool TakesFromColumn(int columnIndex) => false;
+
+        /// <inheritdoc/>
+        public int FromColumnIndex => throw new ArgumentException("Not a move from a column.");
+
+        /// <inheritdoc/>
+        public bool IsToFoundation => false;
+
+        /// <inheritdoc/>
+        public bool IsToColumn => false;
+
+        /// <inheritdoc/>
+        public bool AddsToColumn(int columnIndex) => false;
+
+        /// <inheritdoc/>
+        public int ToColumnIndex => throw new ArgumentException("Not a move to a column.");
 
         /// <summary>
         /// Constructs a new move that recycles the stock pile.
@@ -79,12 +103,6 @@ namespace Silnith.Game.Klondike.Move
         /// <param name="board">The board from which to get the stock pile index.</param>
         public StockPileRecycleMove(Board board) : this(board.StockPileIndex)
         {
-        }
-
-        /// <inheritdoc/>
-        public bool AddsCardsToColumn(int column)
-        {
-            return false;
         }
 
         /// <inheritdoc/>

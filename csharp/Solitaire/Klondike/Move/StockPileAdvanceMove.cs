@@ -65,19 +65,43 @@ namespace Silnith.Game.Klondike.Move
         }
 
         /// <inheritdoc/>
-        public bool HasCards
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool HasCards => false;
 
         /// <inheritdoc/>
         public IReadOnlyList<Card> Cards
         {
             get;
         }
+
+        /// <inheritdoc/>
+        public bool IsStockPileModification => true;
+
+        /// <inheritdoc/>
+        public bool IsFromStockPile => false;
+
+        /// <inheritdoc/>
+        public bool IsFromFoundation => false;
+
+        /// <inheritdoc/>
+        public bool IsFromColumn => false;
+
+        /// <inheritdoc/>
+        public bool TakesFromColumn(int columnIndex) => false;
+
+        /// <inheritdoc/>
+        public int FromColumnIndex => throw new ArgumentException("Not a move from a column.");
+
+        /// <inheritdoc/>
+        public bool IsToFoundation => false;
+
+        /// <inheritdoc/>
+        public bool IsToColumn => false;
+
+        /// <inheritdoc/>
+        public bool AddsToColumn(int columnIndex) => false;
+
+        /// <inheritdoc/>
+        public int ToColumnIndex => throw new ArgumentException("Not a move to a column.");
 
         /// <summary>
         /// Creates a new move that advances the stock pile index.
@@ -116,12 +140,6 @@ namespace Silnith.Game.Klondike.Move
         public StockPileAdvanceMove Coalesce(StockPileAdvanceMove next)
         {
             return new StockPileAdvanceMove(BeginningIndex, Increment + next.Increment);
-        }
-
-        /// <inheritdoc/>
-        public bool AddsCardsToColumn(int column)
-        {
-            return false;
         }
 
         /// <inheritdoc/>

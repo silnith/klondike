@@ -193,6 +193,7 @@ namespace Runner
             }
 
             thread.Join();
+            searcher.PrintStatistics();
         }
 
         private static void ParallelDFS(IGame<ISolitaireMove, Board> game, GameState<ISolitaireMove, Board> initialState, int numThreads)
@@ -222,6 +223,7 @@ namespace Runner
             }
 
             task.GetAwaiter().GetResult();
+            searcher.PrintStatistics();
         }
     }
 }

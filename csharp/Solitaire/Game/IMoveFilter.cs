@@ -12,6 +12,7 @@ namespace Silnith.Game
         /// <summary>
         /// A key that can be used in a <see cref="System.Collections.Generic.IDictionary{TKey, TValue}"/>
         /// for gathering statistics about how this filter performs.
+        /// It must not change over the lifetime of the object.
         /// </summary>
         /// <remarks>
         /// <para>

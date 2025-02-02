@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.silnith.game.GameState;
 import org.silnith.game.solitaire.Board;
-import org.silnith.game.solitaire.move.FoundationToColumnMove;
 import org.silnith.game.solitaire.move.SolitaireMove;
 
 /**
@@ -27,23 +26,43 @@ public class DrawFromFoundationMustBeUsefulFilter implements SolitaireMoveFilter
 		final SolitaireMove currentMove = currentGameState.getMove();
 		
 		if (!iterator.hasNext()) {
+            /*
+             * This can only happen at the very beginning of the game.
+             * In that case, this filter is not helpful, so just let everything pass.
+             */
 		    return false;
 		}
 		
 		final GameState<SolitaireMove, Board> previousGameState = iterator.next();
 		final SolitaireMove previousMove = previousGameState.getMove();
 		
-		if (previousMove instanceof FoundationToColumnMove) {
-			final FoundationToColumnMove foundationToColumnMove = (FoundationToColumnMove) previousMove;
-			final int destinationColumn = foundationToColumnMove.getDestinationColumn();
-			// If currentMove adds cards to the same column, this is valid.
-			// Otherwise, filter.
-			if (currentMove.addsCardsToColumn(destinationColumn)) {
-				return false;
+		if (previousMove.isFromFoundation() && previousMove.isToColumn()) {
+		    assert previousMove.hasCards();
+		    if (currentMove.isFromFoundation()) {
+		        /*
+		         * Chained moves from the foundation could be for a purpose,
+		         * so allow the chain to unfold.
+		         */
+		        return false;
+		    }
+			if (currentMove.isToColumn(previousMove.getToColumnIndex())) {
+			    assert !currentMove.isFromFoundation();
+			    /*
+			     * The current move puts a card on top of the card taken
+			     * from the foundation, so the foundation move has value.
+			     */
+			    return false;
 			} else {
-				return true;
+			    /*
+			     * The current move does not make use of the card taken
+			     * from the foundation, so the foundation move was worthless.
+			     */
+			    return true;
 			}
 		} else {
+		    /*
+		     * This filter only cares about moves that take cards from the foundation.
+		     */
 			return false;
 		}
 	}

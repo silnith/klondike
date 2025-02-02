@@ -24,28 +24,48 @@ namespace Silnith.Game.Klondike.Move.Filter
 
             if (!enumerator.MoveNext())
             {
+                /*
+                 * This can only happen at the very beginning of the game.
+                 * In that case, this filter is not helpful, so just let everything pass.
+                 */
                 return false;
             }
 
             GameState<ISolitaireMove, Board> previousGameState = enumerator.Current;
             ISolitaireMove previousMove = previousGameState.Move;
 
-            if (previousMove is FoundationToColumnMove foundationToColumnMove)
+            if (previousMove.IsFromFoundation && previousMove.IsToColumn)
             {
-                int destinationColumn = foundationToColumnMove.DestinationColumn;
-                // if current move adds cards to the same column, this is valid.
-                // otherwise, filter
-                if (currentMove.AddsCardsToColumn(destinationColumn))
+                if (currentMove.IsFromFoundation)
                 {
+                    /*
+                     * Chained moves from the foundation could be for a purpose,
+                     * so allow the chain to unfold.
+                     */
+                    return false;
+                }
+                if (currentMove.AddsToColumn(previousMove.ToColumnIndex))
+                {
+                    /*
+                     * The current move puts a card on top of the card taken
+                     * from the foundation, so the foundation move has value.
+                     */
                     return false;
                 }
                 else
                 {
+                    /*
+                     * The current move does not make use of the card taken
+                     * from the foundation, so the foundation move was worthless.
+                     */
                     return true;
                 }
             }
             else
             {
+                /*
+                 * This filter only cares about moves that take cards from the foundation.
+                 */
                 return false;
             }
         }

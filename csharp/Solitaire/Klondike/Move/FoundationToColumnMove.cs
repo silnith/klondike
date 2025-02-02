@@ -80,19 +80,43 @@ namespace Silnith.Game.Klondike.Move
         }
 
         /// <inheritdoc/>
-        public bool HasCards
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public bool HasCards => true;
 
         /// <inheritdoc/>
         public IReadOnlyList<Card> Cards
         {
             get;
         }
+
+        /// <inheritdoc/>
+        public bool IsStockPileModification => false;
+
+        /// <inheritdoc/>
+        public bool IsFromStockPile => false;
+
+        /// <inheritdoc/>
+        public bool IsFromFoundation => true;
+
+        /// <inheritdoc/>
+        public bool IsFromColumn => false;
+
+        /// <inheritdoc/>
+        public bool TakesFromColumn(int columnIndex) => false;
+
+        /// <inheritdoc/>
+        public int FromColumnIndex => throw new ArgumentException("Not a move from a column.");
+
+        /// <inheritdoc/>
+        public bool IsToFoundation => false;
+
+        /// <inheritdoc/>
+        public bool IsToColumn => true;
+
+        /// <inheritdoc/>
+        public bool AddsToColumn(int columnIndex) => columnIndex == ToColumnIndex;
+
+        /// <inheritdoc/>
+        public int ToColumnIndex => DestinationColumn;
 
         /// <summary>
         /// Constructs a move that takes a card from the foundation and puts it on top
@@ -120,12 +144,6 @@ namespace Silnith.Game.Klondike.Move
         /// <exception cref="ArgumentOutOfRangeException">If the board foundation has no cards for <paramref name="suit"/>.</exception>
         public FoundationToColumnMove(int destinationColumn, Suit suit, Board board) : this(destinationColumn, board.GetTopOfFoundation(suit))
         {
-        }
-
-        /// <inheritdoc/>
-        public bool AddsCardsToColumn(int column)
-        {
-            return column == DestinationColumn;
         }
 
         /// <inheritdoc/>
