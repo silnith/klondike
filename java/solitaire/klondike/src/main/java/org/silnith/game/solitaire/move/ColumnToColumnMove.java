@@ -65,13 +65,13 @@ public class ColumnToColumnMove implements SolitaireMove {
 						
 						final List<Card> run = sourceColumn.getTopCards(runLength);
 						if (destinationTopCard.getSuit().getColor() != run.get(0).getSuit().getColor()) {
-							moves.add(new ColumnToColumnMove(sourceIndex, destinationIndex, runLength, run));
+							moves.add(new ColumnToColumnMove(sourceIndex, destinationIndex, run));
 						}
 					}
 				} else {
 					// Destination is empty, only a King may be moved to it.
 					if (sourceBottomCard.getValue() == Value.KING) {
-						moves.add(new ColumnToColumnMove(sourceIndex, destinationIndex, sourceRunLength, sourceRun));
+						moves.add(new ColumnToColumnMove(sourceIndex, destinationIndex, sourceRun));
 					}
 				}
 			}
@@ -90,11 +90,6 @@ public class ColumnToColumnMove implements SolitaireMove {
     private final int destinationColumnIndex;
     
     /**
-     * The number of cards being moved.
-     */
-    private final int numberOfCards;
-    
-    /**
      * The cards being moved.
      */
     private final List<Card> cards;
@@ -104,11 +99,10 @@ public class ColumnToColumnMove implements SolitaireMove {
      * 
      * @param sourceColumnIndex the index into the board of the source column
      * @param destinationColumnIndex the index into the board of the destination column
-     * @param numberOfCards the number of cards being moved
      * @param cards the cards being moved
      * @throws IllegalArgumentException if the source and destination columns are the same
      */
-    public ColumnToColumnMove(final int sourceColumnIndex, final int destinationColumnIndex, final int numberOfCards, final List<Card> cards) {
+    public ColumnToColumnMove(final int sourceColumnIndex, final int destinationColumnIndex, final List<Card> cards) {
         super();
         if (sourceColumnIndex == destinationColumnIndex) {
 		    throw new IllegalArgumentException("Source and destination column are the same.");
@@ -116,7 +110,6 @@ public class ColumnToColumnMove implements SolitaireMove {
 		
         this.sourceColumnIndex = sourceColumnIndex;
         this.destinationColumnIndex = destinationColumnIndex;
-        this.numberOfCards = numberOfCards;
         this.cards = cards;
     }
     
@@ -132,17 +125,7 @@ public class ColumnToColumnMove implements SolitaireMove {
      * @throws IndexOutOfBoundsException if the source column is out of bounds
      */
     public ColumnToColumnMove(final int sourceColumnIndex, final int destinationColumnIndex, final int numberOfCards, final Board board) {
-    	this(sourceColumnIndex, destinationColumnIndex, numberOfCards, board.getColumn(sourceColumnIndex).getTopCards(numberOfCards));
-    }
-    
-    /**
-     * Returns the number of cards being moved.
-     * 
-     * @return the number of cards moved
-     * @see #getCards()
-     */
-    public int getNumberOfCards() {
-        return numberOfCards;
+    	this(sourceColumnIndex, destinationColumnIndex, board.getColumn(sourceColumnIndex).getTopCards(numberOfCards));
     }
     
     @Override
@@ -216,7 +199,7 @@ public class ColumnToColumnMove implements SolitaireMove {
 		
 		final Column fromColumn = columns.get(sourceColumnIndex);
 		final Column toColumn = columns.get(destinationColumnIndex);
-		final Pair<List<Card>, Column> pair = fromColumn.extractRun(numberOfCards);
+		final Pair<List<Card>, Column> pair = fromColumn.extractRun(cards.size());
 		final List<Card> run = pair.getFirst();
 		final Column newFromColumn = pair.getSecond();
 		final Column newToColumn = toColumn.withCards(run);
@@ -230,15 +213,16 @@ public class ColumnToColumnMove implements SolitaireMove {
     @Override
     public int hashCode() {
         return Integer.rotateLeft(sourceColumnIndex, 8) ^ Integer.rotateLeft(destinationColumnIndex, 16)
-                ^ Integer.rotateLeft(numberOfCards, 24) ^ cards.hashCode();
+                ^ cards.hashCode();
     }
     
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof ColumnToColumnMove) {
             final ColumnToColumnMove move = (ColumnToColumnMove) obj;
-            return sourceColumnIndex == move.sourceColumnIndex && destinationColumnIndex == move.destinationColumnIndex
-                    && numberOfCards == move.numberOfCards && cards.equals(move.cards);
+            return sourceColumnIndex == move.sourceColumnIndex
+                    && destinationColumnIndex == move.destinationColumnIndex
+                    && cards.equals(move.cards);
         } else {
             return false;
         }
@@ -246,7 +230,7 @@ public class ColumnToColumnMove implements SolitaireMove {
     
     @Override
     public String toString() {
-        if (numberOfCards == 1) {
+        if (cards.size() == 1) {
             return "Move " + cards.get(0) + " from column " + sourceColumnIndex + " to column " + destinationColumnIndex + ".";
         } else {
             return "Move stack " + cards + " from column " + sourceColumnIndex + " to column " + destinationColumnIndex + ".";

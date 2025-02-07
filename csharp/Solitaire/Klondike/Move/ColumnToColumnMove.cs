@@ -59,7 +59,7 @@ namespace Silnith.Game.Klondike.Move
                             IReadOnlyList<Card> run = sourceColumn.GetTopCards(runCount);
                             if (destinationTopCard.Suit.GetColor() != run[0].Suit.GetColor())
                             {
-                                moves.Add(new ColumnToColumnMove(sourceIndex, destinationIndex, runCount, run));
+                                moves.Add(new ColumnToColumnMove(sourceIndex, destinationIndex, run));
                             }
                         }
                     }
@@ -68,20 +68,12 @@ namespace Silnith.Game.Klondike.Move
                         // Destination is empty, only a King may be moved to it.
                         if (sourceBottomCard.Value == Value.King)
                         {
-                            moves.Add(new ColumnToColumnMove(sourceIndex, destinationIndex, sourceRunCount, sourceRun));
+                            moves.Add(new ColumnToColumnMove(sourceIndex, destinationIndex, sourceRun));
                         }
                     }
                 }
             }
             return moves;
-        }
-
-        /// <summary>
-        /// The number of cards being moved.
-        /// </summary>
-        public int CardCount
-        {
-            get;
         }
 
         /// <inheritdoc/>
@@ -128,10 +120,10 @@ namespace Silnith.Game.Klondike.Move
         /// </summary>
         /// <param name="sourceColumnIndex">The index into the board of the source column.</param>
         /// <param name="destinationColumnIndex">The index into the board of the destination column.</param>
-        /// <param name="cardCount">The number of cards being moved.</param>
         /// <param name="cards">The cards being moved.</param>
+        /// 
         /// <exception cref="ArgumentException">If <paramref name="sourceColumnIndex"/> equals <paramref name="destinationColumnIndex"/>.</exception>
-        public ColumnToColumnMove(int sourceColumnIndex, int destinationColumnIndex, int cardCount, IReadOnlyList<Card> cards)
+        public ColumnToColumnMove(int sourceColumnIndex, int destinationColumnIndex, IReadOnlyList<Card> cards)
         {
             if (sourceColumnIndex == destinationColumnIndex)
             {
@@ -140,7 +132,6 @@ namespace Silnith.Game.Klondike.Move
 
             SourceColumnIndex = sourceColumnIndex;
             DestinationColumnIndex = destinationColumnIndex;
-            CardCount = cardCount;
             Cards = cards;
         }
 
@@ -154,7 +145,7 @@ namespace Silnith.Game.Klondike.Move
         /// <exception cref="ArgumentOutOfRangeException">If the number of cards is less than <c>1</c>,
         /// or exceeds the available cards, or the source column is out of bounds.</exception>
         public ColumnToColumnMove(int sourceColumnIndex, int destinationColumnIndex, int cardCount, Board board)
-            : this(sourceColumnIndex, destinationColumnIndex, cardCount, board.Columns[sourceColumnIndex].GetTopCards(cardCount))
+            : this(sourceColumnIndex, destinationColumnIndex, board.Columns[sourceColumnIndex].GetTopCards(cardCount))
         {
         }
 
@@ -169,7 +160,7 @@ namespace Silnith.Game.Klondike.Move
         {
             Column fromColumn = board.Columns[SourceColumnIndex];
             Column toColumn = board.Columns[DestinationColumnIndex];
-            Tuple<IReadOnlyList<Card>, Column> tuple = fromColumn.ExtractRun(CardCount);
+            Tuple<IReadOnlyList<Card>, Column> tuple = fromColumn.ExtractRun(Cards.Count);
             IReadOnlyList<Card> run = tuple.Item1;
             Column newFromColumn = tuple.Item2;
             Column newToColumn = toColumn.WithCards(run);
@@ -194,7 +185,6 @@ namespace Silnith.Game.Klondike.Move
             return other != null
                 && SourceColumnIndex == other.SourceColumnIndex
                 && DestinationColumnIndex == other.DestinationColumnIndex
-                && CardCount == other.CardCount
                 && Cards.SequenceEqual(other.Cards);
         }
 
@@ -204,7 +194,6 @@ namespace Silnith.Game.Klondike.Move
             HashCode hashCode = new HashCode();
             hashCode.Add(SourceColumnIndex);
             hashCode.Add(DestinationColumnIndex);
-            hashCode.Add(CardCount);
             foreach (Card card in Cards)
             {
                 hashCode.Add(card);
@@ -215,7 +204,7 @@ namespace Silnith.Game.Klondike.Move
         /// <inheritdoc/>
         public override string ToString()
         {
-            if (CardCount == 1)
+            if (Cards.Count == 1)
             {
                 return $"Move {Cards[0]} from column {SourceColumnIndex} to column {DestinationColumnIndex}.";
             }

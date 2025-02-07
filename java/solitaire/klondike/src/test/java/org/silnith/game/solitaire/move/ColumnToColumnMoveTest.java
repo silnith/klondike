@@ -63,12 +63,12 @@ public class ColumnToColumnMoveTest {
     	final Collection<ColumnToColumnMove> actual = ColumnToColumnMove.findMoves(board);
     	
     	final Collection<ColumnToColumnMove> expected = Arrays.asList(
-    			new ColumnToColumnMove(3, 0, run.size(), run),
-    			new ColumnToColumnMove(3, 1, run.size(), run),
-    			new ColumnToColumnMove(3, 2, run.size(), run),
-    			new ColumnToColumnMove(3, 4, run.size(), run),
-    			new ColumnToColumnMove(3, 5, run.size(), run),
-    			new ColumnToColumnMove(3, 6, run.size(), run));
+    			new ColumnToColumnMove(3, 0, run),
+    			new ColumnToColumnMove(3, 1, run),
+    			new ColumnToColumnMove(3, 2, run),
+    			new ColumnToColumnMove(3, 4, run),
+    			new ColumnToColumnMove(3, 5, run),
+    			new ColumnToColumnMove(3, 6, run));
     	assertEquals(new HashSet<>(expected), new HashSet<>(actual));
     }
     
@@ -85,12 +85,12 @@ public class ColumnToColumnMoveTest {
     	final Collection<ColumnToColumnMove> actual = ColumnToColumnMove.findMoves(board);
     	
     	final Collection<ColumnToColumnMove> expected = Arrays.asList(
-    			new ColumnToColumnMove(3, 0, run.size(), run),
-    			new ColumnToColumnMove(3, 1, run.size(), run),
-    			new ColumnToColumnMove(3, 2, run.size(), run),
-    			new ColumnToColumnMove(3, 4, run.size(), run),
-    			new ColumnToColumnMove(3, 5, run.size(), run),
-    			new ColumnToColumnMove(3, 6, run.size(), run));
+    			new ColumnToColumnMove(3, 0, run),
+    			new ColumnToColumnMove(3, 1, run),
+    			new ColumnToColumnMove(3, 2, run),
+    			new ColumnToColumnMove(3, 4, run),
+    			new ColumnToColumnMove(3, 5, run),
+    			new ColumnToColumnMove(3, 6, run));
     	assertEquals(new HashSet<>(expected), new HashSet<>(actual));
     }
     
@@ -110,7 +110,7 @@ public class ColumnToColumnMoveTest {
     	final Collection<ColumnToColumnMove> actual = ColumnToColumnMove.findMoves(board);
     	
     	final Collection<ColumnToColumnMove> expected = Arrays.asList(
-    			new ColumnToColumnMove(2, 1, 3, Arrays.asList(
+    			new ColumnToColumnMove(2, 1, Arrays.asList(
     					new Card(SEVEN, HEART),
     					new Card(SIX, SPADE),
     					new Card(FIVE, HEART))));
@@ -156,11 +156,11 @@ public class ColumnToColumnMoveTest {
     	final Collection<ColumnToColumnMove> actual = ColumnToColumnMove.findMoves(board);
     	
     	final Collection<ColumnToColumnMove> expected = Arrays.asList(
-    			new ColumnToColumnMove(2, 1, 3, Arrays.asList(
+    			new ColumnToColumnMove(2, 1, Arrays.asList(
     					new Card(SEVEN, HEART),
     					new Card(SIX, SPADE),
     					new Card(FIVE, HEART))),
-    			new ColumnToColumnMove(2, 3, 3, Arrays.asList(
+    			new ColumnToColumnMove(2, 3, Arrays.asList(
     					new Card(SEVEN, HEART),
     					new Card(SIX, SPADE),
     					new Card(FIVE, HEART))));
@@ -187,11 +187,11 @@ public class ColumnToColumnMoveTest {
     	final Collection<ColumnToColumnMove> actual = ColumnToColumnMove.findMoves(board);
     	
     	final Collection<ColumnToColumnMove> expected = Arrays.asList(
-    			new ColumnToColumnMove(2, 1, 3, Arrays.asList(
+    			new ColumnToColumnMove(2, 1, Arrays.asList(
     					new Card(SEVEN, HEART),
     					new Card(SIX, SPADE),
     					new Card(FIVE, HEART))),
-    			new ColumnToColumnMove(4, 1, 3, Arrays.asList(
+    			new ColumnToColumnMove(4, 1, Arrays.asList(
     					new Card(SEVEN, DIAMOND),
     	    			new Card(SIX, CLUB),
     	    			new Card(FIVE, DIAMOND))));
@@ -215,7 +215,7 @@ public class ColumnToColumnMoveTest {
     	final Collection<ColumnToColumnMove> actual = ColumnToColumnMove.findMoves(board);
     	
     	final Collection<ColumnToColumnMove> expected = Arrays.asList(
-    			new ColumnToColumnMove(2, 1, 3, Arrays.asList(
+    			new ColumnToColumnMove(2, 1, Arrays.asList(
     					new Card(SEVEN, HEART),
     					new Card(SIX, SPADE),
     					new Card(FIVE, HEART))));
@@ -267,7 +267,7 @@ public class ColumnToColumnMoveTest {
     			new Card(ACE, CLUB));
     	
     	assertThrows(IllegalArgumentException.class, () -> {
-    		new ColumnToColumnMove(2, 2, 1, run);
+    		new ColumnToColumnMove(2, 2, run);
     	});
     }
 
@@ -277,7 +277,7 @@ public class ColumnToColumnMoveTest {
 				new Card(Value.THREE, Suit.CLUB),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
-		final ColumnToColumnMove move = new ColumnToColumnMove(2, 5, 3, run);
+		final ColumnToColumnMove move = new ColumnToColumnMove(2, 5, run);
 		
 		assertEquals(2, move.getSourceColumnIndex());
 	}
@@ -288,20 +288,9 @@ public class ColumnToColumnMoveTest {
 				new Card(Value.THREE, Suit.CLUB),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
-		final ColumnToColumnMove move = new ColumnToColumnMove(2, 5, 3, run);
+		final ColumnToColumnMove move = new ColumnToColumnMove(2, 5, run);
 		
 		assertEquals(5, move.getDestinationColumnIndex());
-	}
-
-	@Test
-	public void testGetNumberOfCards() {
-		final List<Card> run = Arrays.asList(
-				new Card(Value.THREE, Suit.CLUB),
-				new Card(Value.TWO, Suit.DIAMOND),
-				new Card(Value.ACE, Suit.CLUB));
-		final ColumnToColumnMove move = new ColumnToColumnMove(2, 5, 3, run);
-		
-		assertEquals(3, move.getNumberOfCards());
 	}
 
 	@Test
@@ -310,7 +299,7 @@ public class ColumnToColumnMoveTest {
 				new Card(Value.THREE, Suit.CLUB),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
-		final ColumnToColumnMove move = new ColumnToColumnMove(2, 5, 3, run);
+		final ColumnToColumnMove move = new ColumnToColumnMove(2, 5, run);
 		
 		assertTrue(move.hasCards());
 	}
@@ -321,7 +310,7 @@ public class ColumnToColumnMoveTest {
 				new Card(Value.THREE, Suit.CLUB),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
-		final ColumnToColumnMove move = new ColumnToColumnMove(2, 5, 3, run);
+		final ColumnToColumnMove move = new ColumnToColumnMove(2, 5, run);
 		
 		assertEquals(run, move.getCards());
 	}
@@ -359,38 +348,6 @@ public class ColumnToColumnMoveTest {
         final Board expected = new Board(expectedColumns, emptyListOfCards, 0, emptyFoundation);
         
         assertEquals(expected, actual);
-    }
-    
-    @Test
-    public void testApplyTooManyCards() {
-        final List<Card> run = Arrays.asList(
-        		new Card(KING, SPADE));
-        
-        final List<Column> columns = new ArrayList<>(emptyColumns);
-        columns.set(0, new Column(null, run));
-        final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
-
-        final ColumnToColumnMove move = new ColumnToColumnMove(0, 1, 2, run);
-        
-        assertThrows(RuntimeException.class, () -> {
-        	move.apply(board);
-        });
-    }
-    
-    @Test
-    public void testApplyTooFewCards() {
-        final List<Card> run = Arrays.asList(
-        		new Card(KING, SPADE));
-        
-        final List<Column> columns = new ArrayList<>(emptyColumns);
-        columns.set(0, new Column(null, run));
-        final Board board = new Board(columns, emptyListOfCards, 0, emptyFoundation);
-        
-        final ColumnToColumnMove move = new ColumnToColumnMove(0, 1, 0, run);
-        
-        assertThrows(RuntimeException.class, () -> {
-        	move.apply(board);
-        });
     }
     
     @Test
@@ -568,8 +525,8 @@ public class ColumnToColumnMoveTest {
 				new Card(Value.THREE, Suit.CLUB),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
-		final ColumnToColumnMove move1 = new ColumnToColumnMove(2, 5, 3, run);
-		final ColumnToColumnMove move2 = new ColumnToColumnMove(2, 5, 3, run);
+		final ColumnToColumnMove move1 = new ColumnToColumnMove(2, 5, run);
+		final ColumnToColumnMove move2 = new ColumnToColumnMove(2, 5, run);
 		
 		assertTrue(move1.equals(move2));
 	}
@@ -580,8 +537,8 @@ public class ColumnToColumnMoveTest {
 				new Card(Value.THREE, Suit.CLUB),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
-		final ColumnToColumnMove move1 = new ColumnToColumnMove(2, 5, 3, run);
-		final ColumnToColumnMove move2 = new ColumnToColumnMove(2, 5, 3, run);
+		final ColumnToColumnMove move1 = new ColumnToColumnMove(2, 5, run);
+		final ColumnToColumnMove move2 = new ColumnToColumnMove(2, 5, run);
 		
 		assertEquals(move1.hashCode(), move2.hashCode());
 	}
@@ -592,8 +549,8 @@ public class ColumnToColumnMoveTest {
 				new Card(Value.THREE, Suit.CLUB),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
-		final ColumnToColumnMove move1 = new ColumnToColumnMove(2, 5, 3, run);
-		final ColumnToColumnMove move2 = new ColumnToColumnMove(1, 5, 3, run);
+		final ColumnToColumnMove move1 = new ColumnToColumnMove(2, 5, run);
+		final ColumnToColumnMove move2 = new ColumnToColumnMove(1, 5, run);
 		
 		assertFalse(move1.equals(move2));
 	}
@@ -604,21 +561,8 @@ public class ColumnToColumnMoveTest {
 				new Card(Value.THREE, Suit.CLUB),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
-		final ColumnToColumnMove move1 = new ColumnToColumnMove(2, 5, 3, run);
-		final ColumnToColumnMove move2 = new ColumnToColumnMove(2, 4, 3, run);
-		
-		assertFalse(move1.equals(move2));
-	}
-
-	@Test
-	public void testEqualsDifferentNumberOfCards() {
-		final List<Card> run = Arrays.asList(
-				new Card(Value.THREE, Suit.CLUB),
-				new Card(Value.TWO, Suit.DIAMOND),
-				new Card(Value.ACE, Suit.CLUB));
-		final ColumnToColumnMove move1 = new ColumnToColumnMove(2, 5, 3, run);
-		// Note that the number of cards and the run length differ.
-		final ColumnToColumnMove move2 = new ColumnToColumnMove(2, 5, 2, run);
+		final ColumnToColumnMove move1 = new ColumnToColumnMove(2, 5, run);
+		final ColumnToColumnMove move2 = new ColumnToColumnMove(2, 4, run);
 		
 		assertFalse(move1.equals(move2));
 	}
@@ -633,8 +577,8 @@ public class ColumnToColumnMoveTest {
 				new Card(Value.THREE, Suit.SPADE),
 				new Card(Value.TWO, Suit.DIAMOND),
 				new Card(Value.ACE, Suit.CLUB));
-		final ColumnToColumnMove move1 = new ColumnToColumnMove(2, 5, 3, run1);
-		final ColumnToColumnMove move2 = new ColumnToColumnMove(2, 5, 3, run2);
+		final ColumnToColumnMove move1 = new ColumnToColumnMove(2, 5, run1);
+		final ColumnToColumnMove move2 = new ColumnToColumnMove(2, 5, run2);
 		
 		assertFalse(move1.equals(move2));
 	}
