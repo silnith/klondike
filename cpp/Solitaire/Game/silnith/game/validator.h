@@ -25,6 +25,7 @@ namespace silnith
             /// Validates that the given object is in a valid state.
             /// </summary>
             /// <param name="t">The object to validate.</param>
+            [[nodiscard]]
             virtual void validate(T const& t) const = 0;
         };
     }

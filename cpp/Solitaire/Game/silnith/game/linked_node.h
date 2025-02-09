@@ -30,6 +30,7 @@ namespace silnith
                 explicit const_iterator(linked_node<T> const* node) : current{ node }
                 {}
 
+                [[nodiscard]]
                 T const operator*(void) const
                 {
                     return current->get_value();
@@ -57,11 +58,13 @@ namespace silnith
                     return const_iterator{ copy };
                 }
 
+                [[nodiscard]]
                 bool operator==(const_iterator const& other) const
                 {
                     return current == other.current;
                 }
 
+                [[nodiscard]]
                 bool operator!=(const_iterator const& other) const
                 {
                     return current != other.current;
@@ -83,7 +86,7 @@ namespace silnith
             /// Constructs a new list with one element.
             /// </summary>
             /// <param name="value">The element to put into the list.</param>
-            explicit linked_node(T const& value) : value_{ value }, next_{ nullptr }
+            explicit linked_node(T const& value) : linked_node{ value, nullptr }
             {}
 
             /// <summary>
@@ -94,38 +97,45 @@ namespace silnith
             explicit linked_node(T const& value, std::shared_ptr<linked_node<T>> const& next) : value_{ value }, next_{ next }
             {}
 
+            [[nodiscard]]
             T get_value(void) const
             {
                 return value_;
             }
 
+            [[nodiscard]]
             std::shared_ptr<linked_node<T>> get_next(void) const
             {
                 return next_;
             }
 
+            [[nodiscard]]
             bool operator==(linked_node<T> const& other)
             {
                 return value_ == other.value_
                     && next_ == other.next_;
             }
 
+            [[nodiscard]]
             bool operator!=(linked_node<T> const& other)
             {
                 return value_ != other.value_
                     || next_ != other.next_;
             }
 
+            [[nodiscard]]
             T& operator*(void) const
             {
                 return value_;
             }
 
+            [[nodiscard]]
             const_iterator cbegin(void) const
             {
                 return const_iterator{ this };
             }
 
+            [[nodiscard]]
             const_iterator cend(void) const
             {
                 return const_iterator{ nullptr };

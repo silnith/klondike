@@ -39,6 +39,7 @@ namespace silnith
             /// </summary>
             /// <param name="suit">The suit.</param>
             /// <returns>The color of the suit.</returns>
+            [[nodiscard]]
             color get_color(suit suit);
 
             /// <summary>
@@ -46,6 +47,7 @@ namespace silnith
             /// </summary>
             /// <param name="suit">The suit.</param>
             /// <returns>A string representation of the suit.</returns>
+            [[nodiscard]]
             std::string to_string(suit suit);
 
             /// <summary>
@@ -77,6 +79,7 @@ namespace silnith
             /// </remarks>
             /// <param name="suit">The suit.</param>
             /// <returns>A single Unicode glyph.</returns>
+            [[nodiscard]]
             std::wstring to_wstring(suit suit);
 
             /// <summary>

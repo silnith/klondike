@@ -29,6 +29,7 @@ namespace silnith
             /// </summary>
             /// <param name="color">The color.</param>
             /// <returns>A string representation of the color.</returns>
+            [[nodiscard]]
             std::string to_string(color color);
 
             /// <summary>
@@ -36,6 +37,7 @@ namespace silnith
             /// </summary>
             /// <param name="color">The color.</param>
             /// <returns>A string representation of the color.</returns>
+            [[nodiscard]]
             std::wstring to_wstring(color color);
 
             /// <summary>

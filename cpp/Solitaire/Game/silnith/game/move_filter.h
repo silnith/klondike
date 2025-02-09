@@ -34,7 +34,8 @@ namespace silnith
             /// about how this filter performs.
             /// </summary>
             /// <returns>a map key for storing statistical information about the use of this filter.</returns>
-            virtual std::string get_statistics_key() = 0;
+            [[nodiscard]]
+            virtual std::string get_statistics_key() const = 0;
 
             /// <summary>
             /// Returns <c>true</c> if the game state should be pruned from the
@@ -50,7 +51,8 @@ namespace silnith
             /// <param name="game_state_history">a sequence of game states,
             /// beginning with the most recent move and resulting board.</param>
             /// <returns><c>true</c> if the node should be pruned from the search tree.</returns>
-            virtual bool should_filter(std::shared_ptr<linked_node<game_state<M, B>>> game_state_history) = 0;
+            [[nodiscard]]
+            virtual bool should_filter(std::shared_ptr<linked_node<game_state<M, B>>> game_state_history) const = 0;
         };
     }
 }

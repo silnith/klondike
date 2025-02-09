@@ -76,6 +76,7 @@ namespace silnith
             /// </summary>
             /// <param name="value">The card value.</param>
             /// <returns>The numeric equivalent for the card value.</returns>
+            [[nodiscard]]
             int get_value(value value);
 
             /// <summary>
@@ -83,6 +84,7 @@ namespace silnith
             /// </summary>
             /// <param name="value">The value.</param>
             /// <returns>A string representation of the value.</returns>
+            [[nodiscard]]
             std::string to_string(value value);
 
             /// <summary>
@@ -90,6 +92,7 @@ namespace silnith
             /// </summary>
             /// <param name="value">The value.</param>
             /// <returns>A string representation of the value.</returns>
+            [[nodiscard]]
             std::wstring to_wstring(value value);
 
             /// <summary>

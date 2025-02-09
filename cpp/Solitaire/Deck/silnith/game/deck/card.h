@@ -51,11 +51,13 @@ namespace silnith
                     return suit;
                 }
 
+                [[nodiscard]]
                 bool operator==(card const& other) const
                 {
                     return value == other.value && suit == other.suit;
                 }
 
+                [[nodiscard]]
                 bool operator!=(card const& other) const = default;
 
             private:
@@ -68,6 +70,7 @@ namespace silnith
             /// </summary>
             /// <param name="card">The card.</param>
             /// <returns>A string representation of the card.</returns>
+            [[nodiscard]]
             std::string to_string(card const& card);
 
             /// <summary>
@@ -75,6 +78,7 @@ namespace silnith
             /// </summary>
             /// <param name="card">The card.</param>
             /// <returns>A string representation of the card.</returns>
+            [[nodiscard]]
             std::wstring to_wstring(card const& card);
 
             /// <summary>

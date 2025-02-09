@@ -37,6 +37,7 @@ namespace silnith
             /// </summary>
             /// <param name="board">The board to check.</param>
             /// <returns><c>true</c> if the board represents a win.</returns>
+            [[nodiscard]]
             virtual bool is_win(B const& board) const = 0;
 
             /// <summary>
@@ -44,6 +45,7 @@ namespace silnith
             /// </summary>
             /// <param name="game_state">The game state to check.</param>
             /// <returns><c>true</c> if the game state is a win.</returns>
+            [[nodiscard]]
             virtual bool is_win(game_state<M, B> const& game_state) const = 0;
 
             /// <summary>
@@ -52,12 +54,14 @@ namespace silnith
             /// </summary>
             /// <param name="game_state_history">The game state to search for legal moves.</param>
             /// <returns>A collection of legal moves for the given game state.</returns>
+            [[nodiscard]]
             virtual std::vector<std::shared_ptr<M>> find_all_moves(std::shared_ptr<linked_node<game_state<M, B>>> const& game_state_history) const = 0;
 
             /// <summary>
             /// Returns filters.
             /// </summary>
             /// <returns>Move filters.</returns>
+            [[nodiscard]]
             virtual std::vector<std::shared_ptr<move_filter<M, B>>> get_filters(void) const = 0;
         };
     }
