@@ -4,6 +4,7 @@
 #include <silnith/game/deck/value.h>
 
 #include <ostream>
+#include <span>
 #include <string>
 
 namespace silnith
@@ -85,6 +86,22 @@ namespace silnith
             /// <param name="card">The card.</param>
             /// <returns>The same output stream.</returns>
             std::wostream& operator<<(std::wostream& out, card const& card);
+
+            /// <summary>
+            /// Formats a sequence of cards into the output stream.
+            /// </summary>
+            /// <param name="out">The output stream.</param>
+            /// <param name="card">The sequence of cards.</param>
+            /// <returns>The same output stream.</returns>
+            std::ostream& operator<<(std::ostream& out, std::span<card const> const& cards);
+
+            /// <summary>
+            /// Formats a sequence of cards into the wide output stream.
+            /// </summary>
+            /// <param name="out">The output stream.</param>
+            /// <param name="card">The sequence of cards.</param>
+            /// <returns>The same output stream.</returns>
+            std::wostream& operator<<(std::wostream& out, std::span<card const> const& cards);
         }
     }
 }

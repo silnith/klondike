@@ -4,6 +4,7 @@
 #include <silnith/game/deck/value.h>
 
 #include <ostream>
+#include <span>
 #include <string>
 
 using namespace std;
@@ -50,6 +51,46 @@ namespace silnith::game::deck
     wostream& operator<<(wostream& out, card const& card)
     {
         out << to_wstring(card);
+        return out;
+    }
+
+    ostream& operator<<(ostream& out, span<card const> const& cards)
+    {
+        out << "["s;
+        if (!cards.empty())
+        {
+            span<card const>::iterator iter{ cards.begin() };
+            span<card const>::iterator end{ cards.end() };
+            out << *iter;
+            iter++;
+            while (iter != end)
+            {
+                out << ", "s;
+                out << *iter;
+                iter++;
+            }
+        }
+        out << "]"s;
+        return out;
+    }
+
+    wostream& operator<<(wostream& out, span<card const> const& cards)
+    {
+        out << L"["s;
+        if (!cards.empty())
+        {
+            span<card const>::iterator iter{ cards.begin() };
+            span<card const>::iterator end{ cards.end() };
+            out << *iter;
+            iter++;
+            while (iter != end)
+            {
+                out << L", "s;
+                out << *iter;
+                iter++;
+            }
+        }
+        out << L"]"s;
         return out;
     }
 }

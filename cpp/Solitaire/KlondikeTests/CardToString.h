@@ -36,24 +36,9 @@ namespace Microsoft
 			template<>
 			std::wstring ToString<>(std::vector<silnith::game::deck::card> const& cards)
 			{
-				using namespace std::literals::string_literals;
-				std::wstring str{};
-				str.append(L"["s);
-				std::vector<silnith::game::deck::card>::const_iterator citer{ cards.cbegin() };
-				std::vector<silnith::game::deck::card>::const_iterator cend{ cards.cend() };
-				if (citer != cend)
-				{
-					str.append(silnith::game::deck::to_wstring(*citer));
-					citer++;
-					while (citer != cend)
-					{
-						str.append(L", "s);
-						str.append(silnith::game::deck::to_wstring(*citer));
-						citer++;
-					}
-				}
-				str.append(L"]"s);
-				return str;
+				std::wostringstream buf{};
+				buf << cards;
+				return buf.str();
 			}
 		}
 	}

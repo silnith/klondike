@@ -2,6 +2,7 @@
 
 #include "BoardToString.h"
 #include "CardToString.h"
+#include "CardComparator.h"
 
 #include <silnith/game/solitaire/move/StockPileToColumnMove.h>
 
@@ -21,22 +22,6 @@ using namespace silnith::game::solitaire::move;
 
 using namespace std;
 using namespace std::literals::string_literals;
-
-bool operator<(card const& a, card const& b)
-{
-	if (a.get_value() < b.get_value())
-	{
-		return true;
-	}
-	else if (a.get_value() == b.get_value())
-	{
-		return a.get_suit() < b.get_suit();
-	}
-	else
-	{
-		return false;
-	}
-}
 
 struct StockPileToColumnMoveComparator
 {
