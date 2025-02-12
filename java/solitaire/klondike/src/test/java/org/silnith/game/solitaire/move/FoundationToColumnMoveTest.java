@@ -160,8 +160,11 @@ public class FoundationToColumnMoveTest {
         
         final FoundationToColumnMove move = new FoundationToColumnMove(3, CLUB, board);
         
-        final Board actualBoard = move.apply(board);
+        final Board actual = move.apply(board);
 
+        final List<Column> expectedColumns = new ArrayList<>(emptyColumns);
+        expectedColumns.set(3, new Column(null, Arrays.asList(
+                new Card(KING, CLUB))));
         final Map<Suit, List<Card>> expectedFoundation = new EnumMap<>(emptyFoundation);
         expectedFoundation.put(CLUB, Arrays.asList(
         		new Card(ACE, CLUB),
@@ -176,12 +179,9 @@ public class FoundationToColumnMoveTest {
         		new Card(TEN, CLUB),
         		new Card(JACK, CLUB),
         		new Card(QUEEN, CLUB)));
-        final List<Column> expectedColumns = new ArrayList<>(emptyColumns);
-        expectedColumns.set(3, new Column(null, Arrays.asList(
-        		new Card(KING, CLUB))));
-        final Board expectedBoard = new Board(expectedColumns, emptyListOfCards, 0, expectedFoundation);
+        final Board expected = new Board(expectedColumns, emptyListOfCards, 0, expectedFoundation);
         
-        assertEquals(expectedBoard, actualBoard);
+        assertEquals(expected, actual);
     }
     
     @Test
@@ -197,38 +197,38 @@ public class FoundationToColumnMoveTest {
     
     @Test
     public void testApplyNonEmptyColumn() {
+        final List<Column> columns = new ArrayList<>(emptyColumns);
+        columns.set(3, new Column(
+                Arrays.asList(
+                        new Card(FOUR, SPADE)),
+                Arrays.asList(
+                        new Card(SIX, HEART),
+                        new Card(FIVE, SPADE),
+                        new Card(FOUR, HEART))));
         final Map<Suit, List<Card>> foundation = new EnumMap<>(emptyFoundation);
         foundation.put(CLUB, Arrays.asList(
         		new Card(ACE, CLUB),
         		new Card(TWO, CLUB),
         		new Card(THREE, CLUB)));
-        final List<Column> columns = new ArrayList<>(emptyColumns);
-        columns.set(3, new Column(
-        		Arrays.asList(
-        				new Card(FOUR, SPADE)),
-                Arrays.asList(
-                		new Card(SIX, HEART),
-                		new Card(FIVE, SPADE),
-                		new Card(FOUR, HEART))));
         final Board board = new Board(columns, emptyListOfCards, 0, foundation);
 
         final FoundationToColumnMove move = new FoundationToColumnMove(3, CLUB, board);
         
         final Board actual = move.apply(board);
 
+        final List<Column> expectedColumns = new ArrayList<>(emptyColumns);
+        expectedColumns.set(3, new Column(
+                Arrays.asList(
+                        new Card(FOUR, SPADE)),
+                Arrays.asList(
+                        new Card(SIX, HEART),
+                        new Card(FIVE, SPADE),
+                        new Card(FOUR, HEART),
+                        new Card(THREE, CLUB))));
         final Map<Suit, List<Card>> expectedFoundation = new EnumMap<>(emptyFoundation);
         expectedFoundation.put(CLUB, Arrays.asList(
         		new Card(ACE, CLUB),
         		new Card(TWO, CLUB)));
-        final List<Column> expectedColumns = new ArrayList<>(emptyColumns);
-        expectedColumns.set(3, new Column(
-        		Arrays.asList(
-        				new Card(FOUR, SPADE)),
-        		Arrays.asList(
-        				new Card(SIX, HEART),
-        				new Card(FIVE, SPADE),
-        				new Card(FOUR, HEART),
-        				new Card(THREE, CLUB))));
         final Board expected = new Board(expectedColumns, emptyListOfCards, 0, expectedFoundation);
         
         assertEquals(expected, actual);
@@ -236,33 +236,29 @@ public class FoundationToColumnMoveTest {
     
     @Test
     public void testApplyKeepsStockPile() {
+        final List<Column> columns = new ArrayList<>(emptyColumns);
+        columns.set(3, new Column(
+                Arrays.asList(
+                        new Card(FOUR, SPADE)),
+                Arrays.asList(
+                        new Card(SIX, HEART),
+                        new Card(FIVE, SPADE),
+                        new Card(FOUR, HEART))));
+        final List<Card> stockPile = Arrays.asList(
+                new Card(JACK, CLUB),
+                new Card(TWO, DIAMOND),
+                new Card(SIX, HEART));
         final Map<Suit, List<Card>> foundation = new EnumMap<>(emptyFoundation);
         foundation.put(CLUB, Arrays.asList(
         		new Card(ACE, CLUB),
         		new Card(TWO, CLUB),
         		new Card(THREE, CLUB)));
-        final List<Column> columns = new ArrayList<>(emptyColumns);
-        columns.set(3, new Column(
-        		Arrays.asList(
-        				new Card(FOUR, SPADE)),
-                Arrays.asList(
-                		new Card(SIX, HEART),
-                		new Card(FIVE, SPADE),
-                		new Card(FOUR, HEART))));
-        final List<Card> stockPile = Arrays.asList(
-        		new Card(JACK, CLUB),
-        		new Card(TWO, DIAMOND),
-        		new Card(SIX, HEART));
         final Board board = new Board(columns, stockPile, 0, foundation);
 
         final FoundationToColumnMove move = new FoundationToColumnMove(3, CLUB, board);
         
         final Board actual = move.apply(board);
         
-        final Map<Suit, List<Card>> expectedFoundation = new EnumMap<>(emptyFoundation);
-        expectedFoundation.put(CLUB, Arrays.asList(
-        		new Card(ACE, CLUB),
-        		new Card(TWO, CLUB)));
         final List<Column> expectedColumns = new ArrayList<>(emptyColumns);
         expectedColumns.set(3, new Column(
         		Arrays.asList(
@@ -272,6 +268,10 @@ public class FoundationToColumnMoveTest {
         				new Card(FIVE, SPADE),
         				new Card(FOUR, HEART),
         				new Card(THREE, CLUB))));
+        final Map<Suit, List<Card>> expectedFoundation = new EnumMap<>(emptyFoundation);
+        expectedFoundation.put(CLUB, Arrays.asList(
+                new Card(ACE, CLUB),
+                new Card(TWO, CLUB)));
         final Board expected = new Board(expectedColumns, stockPile, 0, expectedFoundation);
         
         assertEquals(expected, actual);
@@ -279,11 +279,6 @@ public class FoundationToColumnMoveTest {
     
     @Test
     public void testApplyKeepsStockPileIndex() {
-        final Map<Suit, List<Card>> foundation = new EnumMap<>(emptyFoundation);
-        foundation.put(CLUB, Arrays.asList(
-        		new Card(ACE, CLUB),
-        		new Card(TWO, CLUB),
-        		new Card(THREE, CLUB)));
         final List<Column> columns = new ArrayList<>(emptyColumns);
         columns.set(3, new Column(
         		Arrays.asList(
@@ -296,16 +291,17 @@ public class FoundationToColumnMoveTest {
         		new Card(JACK, CLUB),
         		new Card(TWO, DIAMOND),
         		new Card(SIX, HEART));
+        final Map<Suit, List<Card>> foundation = new EnumMap<>(emptyFoundation);
+        foundation.put(CLUB, Arrays.asList(
+                new Card(ACE, CLUB),
+                new Card(TWO, CLUB),
+                new Card(THREE, CLUB)));
         final Board board = new Board(columns, stockPile, 2, foundation);
 
         final FoundationToColumnMove move = new FoundationToColumnMove(3, CLUB, board);
         
         final Board actual = move.apply(board);
         
-        final Map<Suit, List<Card>> expectedFoundation = new EnumMap<>(emptyFoundation);
-        expectedFoundation.put(CLUB, Arrays.asList(
-        		new Card(ACE, CLUB),
-        		new Card(TWO, CLUB)));
         final List<Column> expectedColumns = new ArrayList<>(emptyColumns);
         expectedColumns.set(3, new Column(
         		Arrays.asList(
@@ -315,6 +311,10 @@ public class FoundationToColumnMoveTest {
         				new Card(FIVE, SPADE),
         				new Card(FOUR, HEART),
         				new Card(THREE, CLUB))));
+        final Map<Suit, List<Card>> expectedFoundation = new EnumMap<>(emptyFoundation);
+        expectedFoundation.put(CLUB, Arrays.asList(
+                new Card(ACE, CLUB),
+                new Card(TWO, CLUB)));
         final Board expected = new Board(expectedColumns, stockPile, 2, expectedFoundation);
         
         assertEquals(expected, actual);

@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\move">
+      <UniqueIdentifier>{175f8e53-d9d6-490c-867e-5f6321e0add3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\move">
+      <UniqueIdentifier>{7e69b54b-21de-48cc-8735-eb3a3be2a06d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="silnith\game\solitaire\column.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="silnith\game\solitaire\board.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="silnith\game\solitaire\klondike.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="silnith\game\solitaire\move\solitaire_move.h">
+      <Filter>Header Files\move</Filter>
+    </ClInclude>
+    <ClInclude Include="silnith\game\solitaire\move\StockPileAdvanceMove.h">
+      <Filter>Header Files\move</Filter>
+    </ClInclude>
+    <ClInclude Include="silnith\game\solitaire\move\StockPileRecycleMove.h">
+      <Filter>Header Files\move</Filter>
+    </ClInclude>
+    <ClInclude Include="silnith\game\solitaire\move\StockPileToColumnMove.h">
+      <Filter>Header Files\move</Filter>
+    </ClInclude>
+    <ClInclude Include="silnith\game\solitaire\move\ColumnToColumnMove.h">
+      <Filter>Header Files\move</Filter>
+    </ClInclude>
+    <ClInclude Include="silnith\game\solitaire\move\ColumnToFoundationMove.h">
+      <Filter>Header Files\move</Filter>
+    </ClInclude>
+    <ClInclude Include="silnith\game\solitaire\move\StockPileToFoundationMove.h">
+      <Filter>Header Files\move</Filter>
+    </ClInclude>
+    <ClInclude Include="silnith\game\solitaire\move\FoundationToColumnMove.h">
+      <Filter>Header Files\move</Filter>
+    </ClInclude>
+    <ClInclude Include="silnith\game\solitaire\move\DealMove.h">
+      <Filter>Header Files\move</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="silnith\game\solitaire\column.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="silnith\game\solitaire\board.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="silnith\game\solitaire\klondike.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="silnith\game\solitaire\move\solitaire_move.cpp">
+      <Filter>Source Files\move</Filter>
+    </ClCompile>
+    <ClCompile Include="silnith\game\solitaire\move\StockPileAdvanceMove.cpp">
+      <Filter>Source Files\move</Filter>
+    </ClCompile>
+    <ClCompile Include="silnith\game\solitaire\move\StockPileRecycleMove.cpp">
+      <Filter>Source Files\move</Filter>
+    </ClCompile>
+    <ClCompile Include="silnith\game\solitaire\move\StockPileToColumnMove.cpp">
+      <Filter>Source Files\move</Filter>
+    </ClCompile>
+    <ClCompile Include="silnith\game\solitaire\move\ColumnToColumnMove.cpp">
+      <Filter>Source Files\move</Filter>
+    </ClCompile>
+    <ClCompile Include="silnith\game\solitaire\move\ColumnToFoundationMove.cpp">
+      <Filter>Source Files\move</Filter>
+    </ClCompile>
+    <ClCompile Include="silnith\game\solitaire\move\StockPileToFoundationMove.cpp">
+      <Filter>Source Files\move</Filter>
+    </ClCompile>
+    <ClCompile Include="silnith\game\solitaire\move\FoundationToColumnMove.cpp">
+      <Filter>Source Files\move</Filter>
+    </ClCompile>
+    <ClCompile Include="silnith\game\solitaire\move\DealMove.cpp">
+      <Filter>Source Files\move</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
