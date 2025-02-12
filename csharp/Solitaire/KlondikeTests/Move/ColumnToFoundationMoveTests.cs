@@ -225,6 +225,76 @@ namespace Silnith.Game.Klondike.Move.Tests
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void TestApplyKeepsStockPile()
+        {
+            List<Card> run = new()
+            {
+                new Card(Value.Ace, Suit.Club),
+            };
+            List<Column> columns = new(EmptyColumns)
+            {
+                [2] = new Column(null, run),
+            };
+            List<Card> stockPile = new()
+            {
+                new Card(Value.Four, Suit.Spade),
+                new Card(Value.Six, Suit.Heart),
+                new Card(Value.Queen, Suit.Heart),
+            };
+            Board board = new(columns, stockPile, 0, EmptyFoundation);
+
+            ColumnToFoundationMove move = new(2, board);
+
+            Board actual = move.Apply(board);
+
+            Dictionary<Suit, IReadOnlyList<Card>> expectedFoundation = new(EmptyFoundation)
+            {
+                [Suit.Club] = new List<Card>()
+                {
+                    new Card(Value.Ace, Suit.Club),
+                },
+            };
+            Board expected = new(EmptyColumns, stockPile, 0, expectedFoundation);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestApplyKeepsStockPileIndex()
+        {
+            List<Card> run = new()
+            {
+                new Card(Value.Ace, Suit.Club),
+            };
+            List<Column> columns = new(EmptyColumns)
+            {
+                [2] = new Column(null, run),
+            };
+            List<Card> stockPile = new()
+            {
+                new Card(Value.Four, Suit.Spade),
+                new Card(Value.Six, Suit.Heart),
+                new Card(Value.Queen, Suit.Heart),
+            };
+            Board board = new(columns, stockPile, 2, EmptyFoundation);
+
+            ColumnToFoundationMove move = new(2, board);
+
+            Board actual = move.Apply(board);
+
+            Dictionary<Suit, IReadOnlyList<Card>> expectedFoundation = new(EmptyFoundation)
+            {
+                [Suit.Club] = new List<Card>()
+                {
+                    new Card(Value.Ace, Suit.Club),
+                },
+            };
+            Board expected = new(EmptyColumns, stockPile, 2, expectedFoundation);
+
+            Assert.AreEqual(expected, actual);
+        }
+
         #endregion
 
         #region Equals & GetHashCode

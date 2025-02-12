@@ -10,6 +10,8 @@ import static org.silnith.deck.Suit.HEART;
 import static org.silnith.deck.Suit.SPADE;
 import static org.silnith.deck.Value.ACE;
 import static org.silnith.deck.Value.FOUR;
+import static org.silnith.deck.Value.QUEEN;
+import static org.silnith.deck.Value.SIX;
 import static org.silnith.deck.Value.THREE;
 import static org.silnith.deck.Value.TWO;
 
@@ -188,6 +190,52 @@ public class ColumnToFoundationMoveTest {
         
         assertEquals(expected, actual);
     }
+    
+    @Test
+    public void testApplyKeepsStockPile() {
+        final List<Column> columns = new ArrayList<>(emptyColumns);
+        columns.set(2, new Column(null, Arrays.asList(
+                new Card(ACE, CLUB))));
+        final List<Card> stockPile = Arrays.asList(
+                new Card(FOUR, SPADE),
+                new Card(SIX, HEART),
+                new Card(QUEEN, HEART));
+        final Board board = new Board(columns, stockPile, 0, emptyFoundation);
+        
+        final ColumnToFoundationMove move = new ColumnToFoundationMove(2, board);
+        
+        final Board actual = move.apply(board);
+
+        final Map<Suit, List<Card>> expectedFoundation = new EnumMap<>(emptyFoundation);
+        expectedFoundation.put(CLUB, Arrays.asList(
+                new Card(ACE, CLUB)));
+        final Board expected = new Board(emptyColumns, stockPile, 0, expectedFoundation);
+        
+        assertEquals(expected, actual);
+    }
+    
+    @Test
+    public void testApplyKeepsStockPileIndex() {
+        final List<Column> columns = new ArrayList<>(emptyColumns);
+        columns.set(2, new Column(null, Arrays.asList(
+                new Card(ACE, CLUB))));
+        final List<Card> stockPile = Arrays.asList(
+                new Card(FOUR, SPADE),
+                new Card(SIX, HEART),
+                new Card(QUEEN, HEART));
+        final Board board = new Board(columns, stockPile, 2, emptyFoundation);
+        
+        final ColumnToFoundationMove move = new ColumnToFoundationMove(2, board);
+        
+        final Board actual = move.apply(board);
+
+        final Map<Suit, List<Card>> expectedFoundation = new EnumMap<>(emptyFoundation);
+        expectedFoundation.put(CLUB, Arrays.asList(
+                new Card(ACE, CLUB)));
+        final Board expected = new Board(emptyColumns, stockPile, 2, expectedFoundation);
+        
+        assertEquals(expected, actual);
+    }
 
 	@Test
 	public void testEquals() {
@@ -216,7 +264,7 @@ public class ColumnToFoundationMoveTest {
 	@Test
 	public void testEqualsDifferentCard() {
 		final ColumnToFoundationMove move1 = new ColumnToFoundationMove(4, new Card(ACE, CLUB));
-		final ColumnToFoundationMove move2 = new ColumnToFoundationMove(4, new Card(ACE, Suit.HEART));
+		final ColumnToFoundationMove move2 = new ColumnToFoundationMove(4, new Card(ACE, HEART));
 		
 		assertFalse(move1.equals(move2));
 	}
