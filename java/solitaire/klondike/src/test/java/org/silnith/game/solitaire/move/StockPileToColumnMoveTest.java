@@ -229,15 +229,15 @@ public class StockPileToColumnMoveTest {
     
     @Test
     public void testApplyNonEmpty() {
-        final List<Card> stockPile = Arrays.asList(
-        		new Card(FOUR, SPADE));
-        final List<Column> columns = new ArrayList<>(emptyColumns);
         final List<Card> run = Arrays.asList(
-        		new Card(EIGHT, SPADE),
-        		new Card(SEVEN, HEART),
-        		new Card(SIX, CLUB),
+                new Card(EIGHT, SPADE),
+                new Card(SEVEN, HEART),
+                new Card(SIX, CLUB),
                 new Card(FIVE, DIAMOND));
+        final List<Column> columns = new ArrayList<>(emptyColumns);
 		columns.set(4, new Column(null, run));
+        final List<Card> stockPile = Arrays.asList(
+                new Card(FOUR, SPADE));
         final Board board = new Board(columns, stockPile, 1, emptyFoundation);
 
         final StockPileToColumnMove move = new StockPileToColumnMove(4, board);
@@ -259,27 +259,23 @@ public class StockPileToColumnMoveTest {
     
     @Test
     public void testApplyFromBeginningNonEmpty() {
-        final List<Card> stockPile = Arrays.asList(
-        		new Card(FOUR, SPADE),
-        		new Card(SIX, SPADE),
-        		new Card(JACK, CLUB),
-        		new Card(QUEEN, CLUB));
         final List<Column> columns = new ArrayList<>(emptyColumns);
         columns.set(4, new Column(null, Arrays.asList(
         		new Card(EIGHT, SPADE),
         		new Card(SEVEN, HEART),
         		new Card(SIX, CLUB),
                 new Card(FIVE, DIAMOND))));
+        final List<Card> stockPile = Arrays.asList(
+                new Card(FOUR, SPADE),
+                new Card(SIX, SPADE),
+                new Card(JACK, CLUB),
+                new Card(QUEEN, CLUB));
         final Board board = new Board(columns, stockPile, 1, emptyFoundation);
 
         final StockPileToColumnMove move = new StockPileToColumnMove(4, board);
         
         final Board actual = move.apply(board);
 
-        final List<Card> expectedStockPile = Arrays.asList(
-        		new Card(SIX, SPADE),
-        		new Card(JACK, CLUB),
-        		new Card(QUEEN, CLUB));
         final List<Column> expectedColumns = new ArrayList<>(emptyColumns);
         expectedColumns.set(4, new Column(null, Arrays.asList(
         		new Card(EIGHT, SPADE),
@@ -287,6 +283,10 @@ public class StockPileToColumnMoveTest {
                 new Card(SIX, CLUB),
                 new Card(FIVE, DIAMOND),
                 new Card(FOUR, SPADE))));
+        final List<Card> expectedStockPile = Arrays.asList(
+                new Card(SIX, SPADE),
+                new Card(JACK, CLUB),
+                new Card(QUEEN, CLUB));
         final Board expected = new Board(expectedColumns, expectedStockPile, 0, emptyFoundation);
         
         assertEquals(expected, actual);
@@ -294,27 +294,23 @@ public class StockPileToColumnMoveTest {
     
     @Test
     public void testApplyFromMiddleNonEmpty() {
-        final List<Card> stockPile = Arrays.asList(
-        		new Card(SIX, SPADE),
-        		new Card(FOUR, SPADE),
-        		new Card(JACK, CLUB),
-        		new Card(QUEEN, CLUB));
         final List<Column> columns = new ArrayList<>(emptyColumns);
         columns.set(4, new Column(null, Arrays.asList(
         		new Card(EIGHT, SPADE),
         		new Card(SEVEN, HEART),
         		new Card(SIX, CLUB),
                 new Card(FIVE, DIAMOND))));
+        final List<Card> stockPile = Arrays.asList(
+                new Card(SIX, SPADE),
+                new Card(FOUR, SPADE),
+                new Card(JACK, CLUB),
+                new Card(QUEEN, CLUB));
         final Board board = new Board(columns, stockPile, 2, emptyFoundation);
 
         final StockPileToColumnMove move = new StockPileToColumnMove(4, board);
         
         final Board actual = move.apply(board);
 
-        final List<Card> expectedStockPile = Arrays.asList(
-        		new Card(SIX, SPADE),
-        		new Card(JACK, CLUB),
-        		new Card(QUEEN, CLUB));
         final List<Column> expectedColumns = new ArrayList<>(emptyColumns);
         expectedColumns.set(4, new Column(null, Arrays.asList(
         		new Card(EIGHT, SPADE),
@@ -322,6 +318,10 @@ public class StockPileToColumnMoveTest {
                 new Card(SIX, CLUB),
                 new Card(FIVE, DIAMOND),
                 new Card(FOUR, SPADE))));
+        final List<Card> expectedStockPile = Arrays.asList(
+                new Card(SIX, SPADE),
+                new Card(JACK, CLUB),
+                new Card(QUEEN, CLUB));
         final Board expected = new Board(expectedColumns, expectedStockPile, 1, emptyFoundation);
         
         assertEquals(expected, actual);
@@ -329,27 +329,23 @@ public class StockPileToColumnMoveTest {
     
     @Test
     public void testApplyFromEndNonEmpty() {
-        final List<Card> stockPile = Arrays.asList(
-        		new Card(SIX, SPADE),
-        		new Card(JACK, CLUB),
-        		new Card(QUEEN, CLUB),
-        		new Card(FOUR, SPADE));
         final List<Column> columns = new ArrayList<>(emptyColumns);
         columns.set(4, new Column(null, Arrays.asList(
         		new Card(EIGHT, SPADE),
         		new Card(SEVEN, HEART),
         		new Card(SIX, CLUB),
                 new Card(FIVE, DIAMOND))));
+        final List<Card> stockPile = Arrays.asList(
+                new Card(SIX, SPADE),
+                new Card(JACK, CLUB),
+                new Card(QUEEN, CLUB),
+                new Card(FOUR, SPADE));
         final Board board = new Board(columns, stockPile, 4, emptyFoundation);
 
         final StockPileToColumnMove move = new StockPileToColumnMove(4, board);
         
         final Board actual = move.apply(board);
 
-        final List<Card> expectedStockPile = Arrays.asList(
-        		new Card(SIX, SPADE),
-        		new Card(JACK, CLUB),
-        		new Card(QUEEN, CLUB));
         final List<Column> expectedColumns = new ArrayList<>(emptyColumns);
         expectedColumns.set(4, new Column(null, Arrays.asList(
         		new Card(EIGHT, SPADE),
@@ -357,6 +353,10 @@ public class StockPileToColumnMoveTest {
                 new Card(SIX, CLUB),
                 new Card(FIVE, DIAMOND),
                 new Card(FOUR, SPADE))));
+        final List<Card> expectedStockPile = Arrays.asList(
+                new Card(SIX, SPADE),
+                new Card(JACK, CLUB),
+                new Card(QUEEN, CLUB));
         final Board expected = new Board(expectedColumns, expectedStockPile, 3, emptyFoundation);
         
         assertEquals(expected, actual);
@@ -364,13 +364,13 @@ public class StockPileToColumnMoveTest {
     
     @Test
     public void testApplyKeepsFoundation() {
+        final List<Card> stockPile = Arrays.asList(
+                new Card(KING, CLUB));
         final Map<Suit, List<Card>> foundation = new EnumMap<>(emptyFoundation);
         foundation.put(DIAMOND, Arrays.asList(
         		new Card(ACE, DIAMOND),
         		new Card(TWO, DIAMOND),
         		new Card(THREE, DIAMOND)));
-        final List<Card> stockPile = Arrays.asList(
-        		new Card(KING, CLUB));
         final Board board = new Board(emptyColumns, stockPile, 1, foundation);
 
         final StockPileToColumnMove move = new StockPileToColumnMove(4, board);

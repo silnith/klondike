@@ -179,7 +179,7 @@ public class Column {
      * @param numberOfCards the number of cards to take from the current column run
      * @return a pair of the run and a new column
      * @throws IllegalArgumentException if the column does not have {@code numberOfCards}
-     *         available in the current run
+     *         cards available in the current run
      */
     public Pair<List<Card>, Column> extractRun(final int numberOfCards) {
     	if (numberOfCards < 1) {
@@ -242,6 +242,7 @@ public class Column {
      * 
      * @param run the run of cards to add to this column
      * @return {@code true} if it is legal to add the given run of cards to this column
+     * @throws IllegalArgumentException if the run is {@code null} or empty
      */
     public boolean canAddRun(final List<Card> run) {
     	if (run == null) {

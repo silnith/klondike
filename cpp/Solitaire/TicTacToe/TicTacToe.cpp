@@ -69,7 +69,7 @@ vector<shared_ptr<TicTacToeMove>> TicTacToe::find_all_moves(
 }
 
 class GameLostFilter :
-    public silnith::game::move_filter<TicTacToeMove, TicTacToeBoard>
+    public move_filter<TicTacToeMove, TicTacToeBoard>
 {
 public:
     GameLostFilter(void) = default;
@@ -79,13 +79,15 @@ public:
     GameLostFilter& operator=(GameLostFilter&&) noexcept = default;
     virtual ~GameLostFilter(void) = default;
 
-    virtual std::string get_statistics_key()
+    [[nodiscard]]
+    virtual string get_statistics_key() const override
     {
         using namespace std::literals::string_literals;
         return "Game Lost"s;
     }
 
-    virtual bool should_filter(std::shared_ptr<silnith::game::linked_node<silnith::game::game_state<TicTacToeMove, TicTacToeBoard>>> game_state_history)
+    [[nodiscard]]
+    virtual bool should_filter(shared_ptr<linked_node<game_state<TicTacToeMove, TicTacToeBoard>>> game_state_history) const override
     {
         game_state<TicTacToeMove, TicTacToeBoard> game_state{ game_state_history->get_value() };
         return isWinForPlayer(TicTacToePlayer::O, *(game_state.get_board()));

@@ -233,7 +233,7 @@ public class ColumnToColumnMove implements SolitaireMove {
         if (cards.size() == 1) {
             return "Move " + cards.get(0) + " from column " + sourceColumnIndex + " to column " + destinationColumnIndex + ".";
         } else {
-            return "Move stack " + cards + " from column " + sourceColumnIndex + " to column " + destinationColumnIndex + ".";
+            return "Move run " + cards + " from column " + sourceColumnIndex + " to column " + destinationColumnIndex + ".";
         }
     }
 

@@ -19,8 +19,10 @@ public:
 
     explicit TicTacToeBoard(TicTacToePlayer const&, std::array<std::array<TicTacToePlayer, 3>, 3> const&);
 
+    [[nodiscard]]
     TicTacToePlayer getPlayer(void) const;
 
+    [[nodiscard]]
     std::array<std::array<TicTacToePlayer, 3>, 3> getBoard(void) const;
 
     friend void printTo(std::ostream& out, TicTacToeBoard const& board);

@@ -1,27 +1,55 @@
 #include <silnith/game/deck/card.h>
 
-using namespace silnith::game::deck;
+#include <silnith/game/deck/suit.h>
+#include <silnith/game/deck/value.h>
 
+#include <ostream>
+#include <string>
+
+using namespace std;
 using namespace std::literals::string_literals;
 
-std::string silnith::game::deck::to_string(card const& card)
+namespace silnith::game::deck
 {
-    return to_string(card.get_value()) + " of "s + to_string(card.get_suit()) + "s"s;
-}
+    card::card(value const& v, suit const& s)
+        : _value{ v },
+        _suit{ s }
+    {}
 
-std::wstring silnith::game::deck::to_wstring(card const& card)
-{
-    return to_wstring(card.get_value()) + L" of "s + to_wstring(card.get_suit()) + L"s"s;
-}
+    value const& card::get_value(void) const noexcept
+    {
+        return _value;
+    }
 
-std::ostream& silnith::game::deck::operator<<(std::ostream& out, card const& card)
-{
-    out << to_string(card);
-    return out;
-}
+    suit const& card::get_suit(void) const noexcept
+    {
+        return _suit;
+    }
 
-std::wostream& silnith::game::deck::operator<<(std::wostream& out, card const& card)
-{
-    out << to_wstring(card);
-    return out;
+    bool card::operator==(card const& other) const
+    {
+        return _value == other._value && _suit == other._suit;
+    }
+
+    string to_string(card const& card)
+    {
+        return to_string(card.get_value()) + " of "s + to_string(card.get_suit()) + "s"s;
+    }
+
+    wstring to_wstring(card const& card)
+    {
+        return to_wstring(card.get_value()) + L" of "s + to_wstring(card.get_suit()) + L"s"s;
+    }
+
+    ostream& operator<<(ostream& out, card const& card)
+    {
+        out << to_string(card);
+        return out;
+    }
+
+    wostream& operator<<(wostream& out, card const& card)
+    {
+        out << to_wstring(card);
+        return out;
+    }
 }

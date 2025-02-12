@@ -17,7 +17,7 @@ namespace silnith
             public:
                 card(void) = delete;
                 card(card const&) = default;
-                card& operator=(card const&) = default;
+                card& operator=(card const&) = delete;
                 card(card&&) noexcept = default;
                 card& operator=(card&&) noexcept = default;
                 ~card(void) = default;
@@ -27,42 +27,31 @@ namespace silnith
                 /// </summary>
                 /// <param name="value">The value for the card.</param>
                 /// <param name="suit">The suit for the card.</param>
-                explicit card(value const value, suit const suit) : value{ value }, suit{ suit }
-                {
-                }
+                explicit card(value const& value, suit const& suit);
 
                 /// <summary>
                 /// Returns the card value.
                 /// </summary>
                 /// <returns>The card value.</returns>
                 [[nodiscard]]
-                value get_value(void) const noexcept
-                {
-                    return value;
-                }
+                value const& get_value(void) const noexcept;
 
                 /// <summary>
                 /// Returns the card suit.
                 /// </summary>
                 /// <returns>The card suit.</returns>
                 [[nodiscard]]
-                suit get_suit(void) const noexcept
-                {
-                    return suit;
-                }
+                suit const& get_suit(void) const noexcept;
 
                 [[nodiscard]]
-                bool operator==(card const& other) const
-                {
-                    return value == other.value && suit == other.suit;
-                }
+                bool operator==(card const&) const;
 
                 [[nodiscard]]
-                bool operator!=(card const& other) const = default;
+                bool operator!=(card const&) const = default;
 
             private:
-                value const value;
-                suit const suit;
+                value const _value;
+                suit const _suit;
             };
 
             /// <summary>
@@ -90,7 +79,7 @@ namespace silnith
             std::ostream& operator<<(std::ostream& out, card const& card);
 
             /// <summary>
-            /// Formats a card into the output stream.
+            /// Formats a card into the wide output stream.
             /// </summary>
             /// <param name="out">The output stream.</param>
             /// <param name="card">The card.</param>

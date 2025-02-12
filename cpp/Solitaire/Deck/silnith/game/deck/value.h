@@ -77,7 +77,7 @@ namespace silnith
             /// <param name="value">The card value.</param>
             /// <returns>The numeric equivalent for the card value.</returns>
             [[nodiscard]]
-            int get_value(value value);
+            int get_value(value const& value);
 
             /// <summary>
             /// Converts a value to a <c>std::string</c>.
@@ -85,7 +85,7 @@ namespace silnith
             /// <param name="value">The value.</param>
             /// <returns>A string representation of the value.</returns>
             [[nodiscard]]
-            std::string to_string(value value);
+            std::string to_string(value const& value);
 
             /// <summary>
             /// Converts a value to a <c>std::wstring</c>.
@@ -93,7 +93,7 @@ namespace silnith
             /// <param name="value">The value.</param>
             /// <returns>A string representation of the value.</returns>
             [[nodiscard]]
-            std::wstring to_wstring(value value);
+            std::wstring to_wstring(value const& value);
 
             /// <summary>
             /// Formats a value into the output stream.
@@ -101,7 +101,7 @@ namespace silnith
             /// <param name="out">The output stream.</param>
             /// <param name="value">The value.</param>
             /// <returns>The same output stream.</returns>
-            std::ostream& operator<<(std::ostream& out, value value);
+            std::ostream& operator<<(std::ostream& out, value const& value);
 
             /// <summary>
             /// Formats a value into the wide output stream.
@@ -109,7 +109,7 @@ namespace silnith
             /// <param name="out">The output stream.</param>
             /// <param name="value">The value.</param>
             /// <returns>The same output stream.</returns>
-            std::wostream& operator<<(std::wostream& out, value value);
+            std::wostream& operator<<(std::wostream& out, value const& value);
         }
     }
 }

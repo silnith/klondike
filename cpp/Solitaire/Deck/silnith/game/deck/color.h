@@ -30,7 +30,7 @@ namespace silnith
             /// <param name="color">The color.</param>
             /// <returns>A string representation of the color.</returns>
             [[nodiscard]]
-            std::string to_string(color color);
+            std::string to_string(color const& color);
 
             /// <summary>
             /// Converts a color to a <c>std::wstring</c>.
@@ -38,7 +38,7 @@ namespace silnith
             /// <param name="color">The color.</param>
             /// <returns>A string representation of the color.</returns>
             [[nodiscard]]
-            std::wstring to_wstring(color color);
+            std::wstring to_wstring(color const& color);
 
             /// <summary>
             /// Formats a color into the output stream.
@@ -46,7 +46,7 @@ namespace silnith
             /// <param name="out">The output stream.</param>
             /// <param name="color">The color.</param>
             /// <returns>The same output stream.</returns>
-            std::ostream& operator<<(std::ostream& out, color color);
+            std::ostream& operator<<(std::ostream& out, color const& color);
 
             /// <summary>
             /// Formats a color into the wide output stream.
@@ -54,7 +54,7 @@ namespace silnith
             /// <param name="out">The output stream.</param>
             /// <param name="color">The color.</param>
             /// <returns>The same output stream.</returns>
-            std::wostream& operator<<(std::wostream& out, color color);
+            std::wostream& operator<<(std::wostream& out, color const& color);
         }
     }
 }

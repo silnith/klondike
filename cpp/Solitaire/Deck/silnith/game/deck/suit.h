@@ -40,15 +40,15 @@ namespace silnith
             /// <param name="suit">The suit.</param>
             /// <returns>The color of the suit.</returns>
             [[nodiscard]]
-            color get_color(suit suit);
+            color get_color(suit const& suit);
 
             /// <summary>
-            /// Converts a suit to a string.
+            /// Converts a suit to a <c>std::string</c>.
             /// </summary>
             /// <param name="suit">The suit.</param>
             /// <returns>A string representation of the suit.</returns>
             [[nodiscard]]
-            std::string to_string(suit suit);
+            std::string to_string(suit const& suit);
 
             /// <summary>
             /// Returns the Unicode symbol for the card suit.
@@ -80,7 +80,7 @@ namespace silnith
             /// <param name="suit">The suit.</param>
             /// <returns>A single Unicode glyph.</returns>
             [[nodiscard]]
-            std::wstring to_wstring(suit suit);
+            std::wstring to_wstring(suit const& suit);
 
             /// <summary>
             /// Formats a suit into the output stream.
@@ -88,15 +88,15 @@ namespace silnith
             /// <param name="out">The output stream.</param>
             /// <param name="suit">The suit.</param>
             /// <returns>The same output stream.</returns>
-            std::ostream& operator<<(std::ostream& out, suit suit);
+            std::ostream& operator<<(std::ostream& out, suit const& suit);
 
             /// <summary>
-            /// Formats a suit into the output stream.
+            /// Formats a suit into the wide output stream.
             /// </summary>
             /// <param name="out">The output stream.</param>
             /// <param name="suit">The suit.</param>
             /// <returns>The same output stream.</returns>
-            std::wostream& operator<<(std::wostream& out, suit suit);
+            std::wostream& operator<<(std::wostream& out, suit const& suit);
         }
     }
 }

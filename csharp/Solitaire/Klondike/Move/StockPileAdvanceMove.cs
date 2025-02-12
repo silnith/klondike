@@ -119,6 +119,7 @@ namespace Silnith.Game.Klondike.Move
         /// </summary>
         /// <param name="increment">The number of cards that the stock pile index advances.</param>
         /// <param name="board">The board from which to take the beginning index.</param>
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="increment"/> is not positive.</exception>
         public StockPileAdvanceMove(int increment, Board board) : this(board.StockPileIndex, increment)
         {
         }

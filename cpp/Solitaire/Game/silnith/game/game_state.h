@@ -5,6 +5,7 @@
 
 #include <concepts>
 #include <memory>
+#include <ostream>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -71,5 +72,51 @@ namespace silnith
 
         private:
         };
+
+        /// <summary>
+        /// Formats a game state into the output stream.
+        /// </summary>
+        /// <typeparam name="M">The move type for the game.</typeparam>
+        /// <typeparam name="B">The board type for the game.</typeparam>
+        /// <param name="out">The output stream.</param>
+        /// <param name="state">The game state.</param>
+        /// <returns>The same output stream.</returns>
+        template<class M, class B>
+        std::ostream& operator<<(std::ostream& out, game_state<M, B> const& state)
+        {
+            std::shared_ptr<M> move_ptr{ state.get_move() };
+            std::shared_ptr<B> board_ptr{ state.get_board() };
+
+            using namespace std::literals::string_literals;
+            out << "game_state{"s;
+            out << *move_ptr;
+            out << ", "s;
+            out << *board_ptr;
+            out << "}"s;
+            return out;
+        }
+
+        /// <summary>
+        /// Formats a game state into the wide output stream.
+        /// </summary>
+        /// <typeparam name="M">The move type for the game.</typeparam>
+        /// <typeparam name="B">The board type for the game.</typeparam>
+        /// <param name="out">The output stream.</param>
+        /// <param name="state">The game state.</param>
+        /// <returns>The same output stream.</returns>
+        template<class M, class B>
+        std::wostream& operator<<(std::wostream& out, game_state<M, B> const& state)
+        {
+            std::shared_ptr<M> move_ptr{ state.get_move() };
+            std::shared_ptr<B> board_ptr{ state.get_board() };
+
+            using namespace std::literals::string_literals;
+            out << L"game_state{"s;
+            out << *move_ptr;
+            out << L", "s;
+            out << *board_ptr;
+            out << L"}"s;
+            return out;
+        }
     }
 }

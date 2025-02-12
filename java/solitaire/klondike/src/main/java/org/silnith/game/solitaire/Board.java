@@ -137,7 +137,7 @@ public class Board {
      */
     public boolean canRecycleStockPile() {
         // 0 represents no cards flipped, so offset by one
-        return stockPileIndex > 0 && stockPileIndex >= stockPile.size();
+        return !stockPile.isEmpty() && stockPileIndex >= stockPile.size();
     }
     
     /**
@@ -205,6 +205,8 @@ public class Board {
      * both the card and the remaining stock pile missing the card.
      * 
      * @return a pair of the card, and the remaining stock pile
+     * @throws IndexOutOfBoundsException if no card is available
+     *         to be drawn from the stock pile
      */
     public Pair<Card, List<Card>> extractStockPileCard() {
     	final Card card = getStockPileCard();

@@ -7,4 +7,5 @@ enum class TicTacToePlayer
     O
 };
 
+[[nodiscard]]
 TicTacToePlayer otherPlayer(TicTacToePlayer);

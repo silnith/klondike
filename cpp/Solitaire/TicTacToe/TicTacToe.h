@@ -23,17 +23,21 @@ public:
     virtual ~TicTacToe(void) = default;
 
     /// <inheritdoc/>
-    virtual bool is_win(TicTacToeBoard const& board) const;
+    [[nodiscard]]
+    virtual bool is_win(TicTacToeBoard const& board) const override;
 
     /// <inheritdoc/>
-    virtual bool is_win(silnith::game::game_state<TicTacToeMove, TicTacToeBoard> const& game_state) const;
+    [[nodiscard]]
+    virtual bool is_win(silnith::game::game_state<TicTacToeMove, TicTacToeBoard> const& game_state) const override;
 
     /// <inheritdoc/>
+    [[nodiscard]]
     virtual std::vector<std::shared_ptr<TicTacToeMove>> find_all_moves(
-        std::shared_ptr<silnith::game::linked_node<silnith::game::game_state<TicTacToeMove, TicTacToeBoard>>> const& game_state_history) const;
+        std::shared_ptr<silnith::game::linked_node<silnith::game::game_state<TicTacToeMove, TicTacToeBoard>>> const& game_state_history) const override;
 
     /// <inheritdoc/>
-    virtual std::vector<std::shared_ptr<silnith::game::move_filter<TicTacToeMove, TicTacToeBoard>>> get_filters(void) const;
+    [[nodiscard]]
+    virtual std::vector<std::shared_ptr<silnith::game::move_filter<TicTacToeMove, TicTacToeBoard>>> get_filters(void) const override;
 
 private:
 };

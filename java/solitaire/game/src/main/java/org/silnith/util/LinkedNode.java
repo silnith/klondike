@@ -98,7 +98,7 @@ public class LinkedNode<E> extends AbstractSequentialList<E> {
     }
     
     /**
-     * Appends one element to the start of an existing list as a new list.
+     * Prepends one element to the start of an existing list as a new list.
      * 
      * @param e the element to prepend to the list
      * @param list the list to extend
