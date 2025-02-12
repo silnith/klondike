@@ -210,8 +210,9 @@ ostream& board::print_to(ostream& out) const
     for (size_t i{ 0 }; i < num_columns; i++)
     {
         out << "  "s;
-        out << "("s << columns[i].get_number_of_face_down_cards() << ")"s;
-        iterators[i] = columns[i].get_face_up_cards().cbegin();
+        out << "("s << columns.at(i).get_number_of_face_down_cards() << ")"s;
+        vector<card>::const_iterator iter{ columns.at(i).get_face_up_cards().cbegin() };
+        iterators.emplace_back(iter);
     }
     out << endl;
     bool printed_something;
@@ -219,11 +220,13 @@ ostream& board::print_to(ostream& out) const
         printed_something = false;
         for (size_t i{ 0 }; i < num_columns; i++)
         {
-            if (iterators[i] != columns[i].get_face_up_cards().cend())
+            out << "  "s;
+            vector<card>::const_iterator& iter{ iterators.at(i) };
+            if (iter != columns.at(i).get_face_up_cards().cend())
             {
-                card c{ *(iterators[i]) };
-                out << to_symbol(c);
-                iterators[i]++;
+                string symbol{ to_symbol(*iter) };
+                out << symbol;
+                iter++;
                 printed_something = true;
             }
             else
