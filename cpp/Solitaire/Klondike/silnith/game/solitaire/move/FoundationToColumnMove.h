@@ -86,6 +86,14 @@ namespace silnith
 
                     /// <inheritdoc/>
                     [[nodiscard]]
+                    virtual bool is_stock_pile_advance(void) const override;
+
+                    /// <inheritdoc/>
+                    [[nodiscard]]
+                    virtual bool is_stock_pile_recycle(void) const override;
+
+                    /// <inheritdoc/>
+                    [[nodiscard]]
                     virtual bool is_from_stock_pile(void) const override;
 
                     /// <inheritdoc/>

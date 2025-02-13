@@ -60,6 +60,16 @@ namespace silnith::game::solitaire::move
         return false;
     }
 
+    bool ColumnToFoundationMove::is_stock_pile_advance(void) const
+    {
+        return false;
+    }
+
+    bool ColumnToFoundationMove::is_stock_pile_recycle(void) const
+    {
+        return false;
+    }
+
     bool ColumnToFoundationMove::is_from_stock_pile(void) const
     {
         return false;

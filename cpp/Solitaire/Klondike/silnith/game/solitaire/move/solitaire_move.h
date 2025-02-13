@@ -56,6 +56,20 @@ namespace silnith
                     virtual bool is_stock_pile_modification(void) const = 0;
 
                     /// <summary>
+                    /// Returns <see langword="true"/> if this move advances the stock pile.
+                    /// </summary>
+                    /// <returns><see langword="true"/> if this move advances the stock pile.</returns>
+                    [[nodiscard]]
+                    virtual bool is_stock_pile_advance(void) const = 0;
+
+                    /// <summary>
+                    /// Returns <see langword="true"/> if this move recycles the stock pile.
+                    /// </summary>
+                    /// <returns><see langword="true"/> if this move recycles the stock pile.</returns>
+                    [[nodiscard]]
+                    virtual bool is_stock_pile_recycle(void) const = 0;
+
+                    /// <summary>
                     /// Returns <see langword="true"/> if this move takes a card from the stock pile.
                     /// </summary>
                     /// <returns><see langword="true"/> if this move takes a card from the stock pile.</returns>

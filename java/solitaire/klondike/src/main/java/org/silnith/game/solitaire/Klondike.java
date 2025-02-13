@@ -5,8 +5,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -36,8 +38,8 @@ import org.silnith.game.solitaire.move.filter.KingMoveMustExposeFaceDownCardFilt
 import org.silnith.game.solitaire.move.filter.MoveCapFilter;
 import org.silnith.game.solitaire.move.filter.RunMoveMustBeFollowedBySomethingUsefulFilter;
 import org.silnith.game.solitaire.move.filter.SolitaireMoveFilter;
-import org.silnith.game.solitaire.move.filter.StockPileAdvanceMustBeFollowedBySomethingUseful;
-import org.silnith.game.solitaire.move.filter.StockPileRecycleMustBeFollowedByAdvance;
+import org.silnith.game.solitaire.move.filter.StockPileAdvanceMustBeFollowedBySomethingUsefulFilter;
+import org.silnith.game.solitaire.move.filter.StockPileRecycleMustBeFollowedByAdvanceFilter;
 import org.silnith.util.LinkedNode;
 
 /**
@@ -49,8 +51,8 @@ public class Klondike implements Game<SolitaireMove, Board> {
     private static final Collection<SolitaireMoveFilter> filters = Arrays.asList(
             new MoveCapFilter(150),
             new KingMoveMustExposeFaceDownCardFilter(),
-            new StockPileRecycleMustBeFollowedByAdvance(),
-            new StockPileAdvanceMustBeFollowedBySomethingUseful(),
+            new StockPileRecycleMustBeFollowedByAdvanceFilter(),
+            new StockPileAdvanceMustBeFollowedBySomethingUsefulFilter(),
             new DrawFromFoundationMustBeUsefulFilter(),
             new DrawFromStockPileFilter(),
             new RunMoveMustBeFollowedBySomethingUsefulFilter(),
@@ -183,7 +185,8 @@ public class Klondike implements Game<SolitaireMove, Board> {
 		System.out.println("Finished.");
 	}
 
-	private static void runSearch0(final Game<SolitaireMove, Board> game, final GameState<SolitaireMove, Board> initialState) {
+	@SuppressWarnings("unused")
+    private static void runSearch0(final Game<SolitaireMove, Board> game, final GameState<SolitaireMove, Board> initialState) {
 		final Deque<LinkedNode<GameState<SolitaireMove, Board>>> deque = new ConcurrentLinkedDeque<>();
 		final Deque<List<GameState<SolitaireMove, Board>>> wins = new ConcurrentLinkedDeque<>();
 		deque.add(new LinkedNode<>(initialState));
@@ -309,7 +312,8 @@ public class Klondike implements Game<SolitaireMove, Board> {
 		searcher.printStatistics(System.out);
 	}
 
-	private static void parallelDFS(final Game<SolitaireMove, Board> game,
+	@SuppressWarnings("unused")
+    private static void parallelDFS(final Game<SolitaireMove, Board> game,
 			final GameState<SolitaireMove, Board> initialState,
 			final int numThreads) throws InterruptedException {
 		final WorkerThreadDepthFirstSearch<SolitaireMove, Board> searcher = new WorkerThreadDepthFirstSearch<>(game, initialState, numThreads);
@@ -351,5 +355,5 @@ public class Klondike implements Game<SolitaireMove, Board> {
         thread.join();
         searcher.printStatistics(System.out);
 	}
-
+	
 }

@@ -19,6 +19,12 @@
     <Filter Include="Source Files\move">
       <UniqueIdentifier>{7e69b54b-21de-48cc-8735-eb3a3be2a06d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\move\filter">
+      <UniqueIdentifier>{7e557e41-881c-4929-afdd-addf9a5302e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\move\filter">
+      <UniqueIdentifier>{b26856bd-f447-4743-9b41-1d2236038104}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="silnith\game\solitaire\column.h">
@@ -57,6 +63,30 @@
     <ClInclude Include="silnith\game\solitaire\move\DealMove.h">
       <Filter>Header Files\move</Filter>
     </ClInclude>
+    <ClInclude Include="silnith\game\solitaire\move\filter\BoardCycleFilter.h">
+      <Filter>Header Files\move\filter</Filter>
+    </ClInclude>
+    <ClInclude Include="silnith\game\solitaire\move\filter\DrawFromFoundationMustBeUsefulFilter.h">
+      <Filter>Header Files\move\filter</Filter>
+    </ClInclude>
+    <ClInclude Include="silnith\game\solitaire\move\filter\DrawFromStockPileFilter.h">
+      <Filter>Header Files\move\filter</Filter>
+    </ClInclude>
+    <ClInclude Include="silnith\game\solitaire\move\filter\RunMoveMustBeFollowedBySomethingUsefulFilter.h">
+      <Filter>Header Files\move\filter</Filter>
+    </ClInclude>
+    <ClInclude Include="silnith\game\solitaire\move\filter\MoveCapFilter.h">
+      <Filter>Header Files\move\filter</Filter>
+    </ClInclude>
+    <ClInclude Include="silnith\game\solitaire\move\filter\KingMoveMustExposeFaceDownCardFilter.h">
+      <Filter>Header Files\move\filter</Filter>
+    </ClInclude>
+    <ClInclude Include="silnith\game\solitaire\move\filter\StockPileRecycleMustBeFollowedByAdvanceFilter.h">
+      <Filter>Header Files\move\filter</Filter>
+    </ClInclude>
+    <ClInclude Include="silnith\game\solitaire\move\filter\StockPileAdvanceMustBeFollowedBySomethingUsefulFilter.h">
+      <Filter>Header Files\move\filter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="silnith\game\solitaire\column.cpp">
@@ -94,6 +124,30 @@
     </ClCompile>
     <ClCompile Include="silnith\game\solitaire\move\DealMove.cpp">
       <Filter>Source Files\move</Filter>
+    </ClCompile>
+    <ClCompile Include="silnith\game\solitaire\move\filter\BoardCycleFilter.cpp">
+      <Filter>Source Files\move\filter</Filter>
+    </ClCompile>
+    <ClCompile Include="silnith\game\solitaire\move\filter\DrawFromFoundationMustBeUsefulFilter.cpp">
+      <Filter>Source Files\move\filter</Filter>
+    </ClCompile>
+    <ClCompile Include="silnith\game\solitaire\move\filter\DrawFromStockPileFilter.cpp">
+      <Filter>Source Files\move\filter</Filter>
+    </ClCompile>
+    <ClCompile Include="silnith\game\solitaire\move\filter\RunMoveMustBeFollowedBySomethingUsefulFilter.cpp">
+      <Filter>Source Files\move\filter</Filter>
+    </ClCompile>
+    <ClCompile Include="silnith\game\solitaire\move\filter\MoveCapFilter.cpp">
+      <Filter>Source Files\move\filter</Filter>
+    </ClCompile>
+    <ClCompile Include="silnith\game\solitaire\move\filter\KingMoveMustExposeFaceDownCardFilter.cpp">
+      <Filter>Source Files\move\filter</Filter>
+    </ClCompile>
+    <ClCompile Include="silnith\game\solitaire\move\filter\StockPileRecycleMustBeFollowedByAdvanceFilter.cpp">
+      <Filter>Source Files\move\filter</Filter>
+    </ClCompile>
+    <ClCompile Include="silnith\game\solitaire\move\filter\StockPileAdvanceMustBeFollowedBySomethingUsefulFilter.cpp">
+      <Filter>Source Files\move\filter</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

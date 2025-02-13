@@ -72,6 +72,16 @@ public class StockPileRecycleMove implements SolitaireMove {
     }
 
     @Override
+    public boolean isStockPileAdvance() {
+        return false;
+    }
+
+    @Override
+    public boolean isStockPileRecycle() {
+        return true;
+    }
+
+    @Override
     public boolean isFromStockPile() {
         return false;
     }

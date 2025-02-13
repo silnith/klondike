@@ -87,7 +87,7 @@ public:
     }
 
     [[nodiscard]]
-    virtual bool should_filter(shared_ptr<linked_node<game_state<TicTacToeMove, TicTacToeBoard>>> game_state_history) const override
+    virtual bool should_filter(shared_ptr<linked_node<game_state<TicTacToeMove, TicTacToeBoard>>> const& game_state_history) const override
     {
         game_state<TicTacToeMove, TicTacToeBoard> game_state{ game_state_history->get_value() };
         return isWinForPlayer(TicTacToePlayer::O, *(game_state.get_board()));

@@ -6,9 +6,8 @@ import java.util.List;
 import org.silnith.game.GameState;
 import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.move.SolitaireMove;
-import org.silnith.game.solitaire.move.StockPileAdvanceMove;
 
-public class StockPileAdvanceMustBeFollowedBySomethingUseful implements SolitaireMoveFilter {
+public class StockPileAdvanceMustBeFollowedBySomethingUsefulFilter implements SolitaireMoveFilter {
 
     @Override
     public Object getStatisticsKey() {
@@ -33,7 +32,7 @@ public class StockPileAdvanceMustBeFollowedBySomethingUseful implements Solitair
 		final GameState<SolitaireMove, Board> previousGameState = iterator.next();
 		final SolitaireMove previousMove = previousGameState.getMove();
 		
-		if (previousMove instanceof StockPileAdvanceMove) {
+		if (previousMove.isStockPileAdvance()) {
 			if (currentMove.isStockPileModification()
                     || currentMove.isFromStockPile()
                     || currentMove.isFromFoundation()) {

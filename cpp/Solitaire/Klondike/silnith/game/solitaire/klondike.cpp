@@ -8,6 +8,15 @@
 #include <silnith/game/solitaire/move/StockPileToColumnMove.h>
 #include <silnith/game/solitaire/move/StockPileToFoundationMove.h>
 
+#include <silnith/game/solitaire/move/filter/BoardCycleFilter.h>
+#include <silnith/game/solitaire/move/filter/DrawFromFoundationMustBeUsefulFilter.h>
+#include <silnith/game/solitaire/move/filter/DrawFromStockPileFilter.h>
+#include <silnith/game/solitaire/move/filter/KingMoveMustExposeFaceDownCardFilter.h>
+#include <silnith/game/solitaire/move/filter/MoveCapFilter.h>
+#include <silnith/game/solitaire/move/filter/RunMoveMustBeFollowedBySomethingUsefulFilter.h>
+#include <silnith/game/solitaire/move/filter/StockPileAdvanceMustBeFollowedBySomethingUsefulFilter.h>
+#include <silnith/game/solitaire/move/filter/StockPileRecycleMustBeFollowedByAdvanceFilter.h>
+
 using namespace silnith::game;
 using namespace silnith::game::deck;
 using namespace silnith::game::solitaire;
@@ -84,5 +93,15 @@ vector<shared_ptr<solitaire_move>> klondike::find_all_moves(
 
 vector<shared_ptr<move_filter<solitaire_move, board>>> klondike::get_filters(void) const
 {
-    return {};
+    vector<shared_ptr<move_filter<solitaire_move, board>>> filters{
+        make_shared<filter::MoveCapFilter>(150),
+        make_shared<filter::KingMoveMustExposeFaceDownCardFilter>(),
+        make_shared<filter::StockPileRecycleMustBeFollowedByAdvanceFilter>(),
+        make_shared<filter::StockPileAdvanceMustBeFollowedBySomethingUsefulFilter>(),
+        make_shared<filter::DrawFromFoundationMustBeUsefulFilter>(),
+        make_shared<filter::DrawFromStockPileFilter>(),
+        make_shared<filter::RunMoveMustBeFollowedBySomethingUsefulFilter>(),
+        make_shared<filter::BoardCycleFilter>(),
+    };
+    return filters;
 }

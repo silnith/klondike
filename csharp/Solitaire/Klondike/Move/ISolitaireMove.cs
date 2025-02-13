@@ -61,6 +61,22 @@ namespace Silnith.Game.Klondike.Move
         }
 
         /// <summary>
+        /// <see langword="true"/> if this move advances the stock pile.
+        /// </summary>
+        bool IsStockPileAdvance
+        {
+            get;
+        }
+
+        /// <summary>
+        /// <see langword="true"/> if this move recycles the stock pile.
+        /// </summary>
+        bool IsStockPileRecycle
+        {
+            get;
+        }
+
+        /// <summary>
         /// <see langword="true"/> if this move draws a card from the stock pile.
         /// </summary>
         bool IsFromStockPile

@@ -6,9 +6,8 @@ import java.util.List;
 import org.silnith.game.GameState;
 import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.move.SolitaireMove;
-import org.silnith.game.solitaire.move.StockPileRecycleMove;
 
-public class StockPileRecycleMustBeFollowedByAdvance implements SolitaireMoveFilter {
+public class StockPileRecycleMustBeFollowedByAdvanceFilter implements SolitaireMoveFilter {
 
     @Override
     public Object getStatisticsKey() {
@@ -33,7 +32,7 @@ public class StockPileRecycleMustBeFollowedByAdvance implements SolitaireMoveFil
         final GameState<SolitaireMove, Board> previousGameState = iterator.next();
         final SolitaireMove previousMove = previousGameState.getMove();
 		
-		if (previousMove instanceof StockPileRecycleMove) {
+		if (previousMove.isStockPileRecycle()) {
 			if (currentMove.isStockPileModification()) { 
 				/*
 				 * This is acceptable, no need to filter.

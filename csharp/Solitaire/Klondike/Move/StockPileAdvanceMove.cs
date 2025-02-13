@@ -82,6 +82,12 @@ namespace Silnith.Game.Klondike.Move
         public bool IsStockPileModification => true;
 
         /// <inheritdoc/>
+        public bool IsStockPileAdvance => true;
+
+        /// <inheritdoc/>
+        public bool IsStockPileRecycle => false;
+
+        /// <inheritdoc/>
         public bool IsFromStockPile => false;
 
         /// <inheritdoc/>

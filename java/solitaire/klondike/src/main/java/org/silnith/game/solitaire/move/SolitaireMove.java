@@ -40,6 +40,20 @@ public interface SolitaireMove extends Move<Board> {
     public boolean isStockPileModification();
     
     /**
+     * Returns {@code true} if this move advances the stock pile.
+     * 
+     * @return {@code true} if this move advances the stock pile
+     */
+    public boolean isStockPileAdvance();
+    
+    /**
+     * Returns {@code true} if this move recycles the stock pile.
+     * 
+     * @return {@code true} if this move recycles the stock pile
+     */
+    public boolean isStockPileRecycle();
+    
+    /**
      * Returns {@code true} if this move draws a card from the stock pile.
      * 
      * @return {@code true} if this move draws a card from the stock pile

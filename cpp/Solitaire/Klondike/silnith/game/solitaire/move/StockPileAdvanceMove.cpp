@@ -65,6 +65,16 @@ namespace silnith::game::solitaire::move
         return true;
     }
 
+    bool StockPileAdvanceMove::is_stock_pile_advance(void) const
+    {
+        return true;
+    }
+
+    bool StockPileAdvanceMove::is_stock_pile_recycle(void) const
+    {
+        return false;
+    }
+
     bool StockPileAdvanceMove::is_from_stock_pile(void) const
     {
         return false;

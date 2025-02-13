@@ -30,7 +30,7 @@ namespace Silnith.Game.Klondike.Move.Filter
             GameState<ISolitaireMove, Board> previousGameState = enumerator.Current;
             ISolitaireMove previousMove = previousGameState.Move;
 
-            if (previousMove is StockPileRecycleMove)
+            if (previousMove.IsStockPileRecycle)
             {
                 if (currentMove.IsStockPileModification)
                 {

@@ -123,6 +123,16 @@ public class StockPileToColumnMove implements SolitaireMove {
     }
 
     @Override
+    public boolean isStockPileAdvance() {
+        return false;
+    }
+
+    @Override
+    public boolean isStockPileRecycle() {
+        return false;
+    }
+
+    @Override
     public boolean isFromStockPile() {
         return true;
     }
