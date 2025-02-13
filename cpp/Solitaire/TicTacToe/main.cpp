@@ -1,9 +1,6 @@
 // TicTacToe.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include <iostream>
-#include <memory>
-
 #include <silnith/game/game_state.h>
 #include <silnith/game/sequential_depth_first_search.h>
 
@@ -12,18 +9,22 @@
 #include "TicTacToeMove.h"
 #include "TicTacToePlayer.h"
 
+#include <future>
+#include <iostream>
+#include <memory>
+
 using namespace silnith::game;
 using namespace std;
 
 int main()
 {
-    cout.imbue(locale{ "en_US" });
-    shared_ptr<TicTacToe> game{ make_shared<TicTacToe>() };
+    cout.imbue(locale{ "en-US" });
+    shared_ptr<TicTacToe> engine{ make_shared<TicTacToe>() };
     shared_ptr<TicTacToeMove> initial_move{ make_shared<TicTacToeMove>(0, 0, TicTacToePlayer::nobody) };
     shared_ptr<TicTacToeBoard> initial_board{ make_shared<TicTacToeBoard>(TicTacToePlayer::X) };
     game_state<TicTacToeMove, TicTacToeBoard> initial_game_state{ initial_move, initial_board };
     printTo(cout, *initial_board);
-    sequential_depth_first_search<TicTacToeMove, TicTacToeBoard> searcher{ game, initial_game_state };
+    sequential_depth_first_search<TicTacToeMove, TicTacToeBoard> searcher{ engine, initial_game_state };
     cout << "Hello World!" << endl;
     list<shared_ptr<linked_node<game_state<TicTacToeMove, TicTacToeBoard>>>> results{ searcher.search() };
     cout << results.size() << endl;

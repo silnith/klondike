@@ -8,6 +8,7 @@
 #include <silnith/game/game.h>
 #include <silnith/game/game_state.h>
 #include <silnith/game/linked_node.h>
+#include <silnith/game/sequential_depth_first_search.h>
 
 #include <silnith/game/solitaire/board.h>
 #include <silnith/game/solitaire/klondike.h>
@@ -16,6 +17,7 @@
 
 #include <deque>
 #include <forward_list>
+#include <future>
 #include <iostream>
 #include <memory>
 #include <random>
@@ -54,9 +56,9 @@ vector<card> shuffle(span<card const> const& span)
     return shuffled;
 }
 
-void run_search_0(game<solitaire_move, board> const& engine, game_state<solitaire_move, board> const& initial_state)
+void run_search_0(shared_ptr<game<solitaire_move, board>> const& engine, game_state<solitaire_move, board> const& initial_state)
 {
-    vector<shared_ptr<move_filter<solitaire_move, board>>> filters{ engine.get_filters() };
+    vector<shared_ptr<move_filter<solitaire_move, board>>> filters{ engine->get_filters() };
 
     deque<shared_ptr<linked_node<game_state<solitaire_move, board>>>> pending_nodes{};
     deque<shared_ptr<linked_node<game_state<solitaire_move, board>>>> wins{};
@@ -71,7 +73,7 @@ void run_search_0(game<solitaire_move, board> const& engine, game_state<solitair
         pending_nodes.pop_back();
         nodes_examined++;
 
-        vector<shared_ptr<solitaire_move>> moves{ engine.find_all_moves(game_state_history) };
+        vector<shared_ptr<solitaire_move>> moves{ engine->find_all_moves(game_state_history) };
         shared_ptr<board> current_board{ game_state_history->get_value().get_board() };
         /*
         cout << endl;
@@ -128,7 +130,7 @@ void run_search_0(game<solitaire_move, board> const& engine, game_state<solitair
                 continue;
             }
 
-            if (engine.is_win(new_game_state))
+            if (engine->is_win(new_game_state))
             {
                 wins.push_back(new_history);
             }
@@ -159,6 +161,35 @@ void run_search_0(game<solitaire_move, board> const& engine, game_state<solitair
         //cout << node_ptr->get_value() << endl;
         node_ptr->get_value().get_board()->print_to(cout);
     }
+}
+
+void sequential_dfs(shared_ptr<game<solitaire_move, board>> const& engine, game_state<solitaire_move, board> const& initial_state)
+{
+    sequential_depth_first_search<solitaire_move, board> searcher{ engine, initial_state };
+
+    future<list<shared_ptr<linked_node<game_state<solitaire_move, board>>>>> foo{
+        async(launch::async, &sequential_depth_first_search<solitaire_move, board>::search, &searcher)
+    };
+
+    long states_examined{ 0 };
+    long boards_generated{ 0 };
+    while (foo.valid())
+    {
+        searcher.print_statistics(cout);
+        long next_states_examined{ searcher.get_number_of_game_states_examined() };
+        long next_boards_generated{ searcher.get_boards_generated() };
+        long nodes_per_second{ next_states_examined - states_examined };
+        long boards_per_second{ next_boards_generated - boards_generated };
+        cout << "Nodes per second: "s << nodes_per_second << endl;
+        cout << "Boards per second: "s << boards_per_second << endl;
+        cout << endl;
+        states_examined = next_states_examined;
+        boards_generated = next_boards_generated;
+        this_thread::sleep_for(1s);
+    }
+
+    list<shared_ptr<linked_node<game_state<solitaire_move, board>>>> wins{ foo.get() };
+    searcher.print_statistics(cout);
 }
 
 int main()
@@ -194,15 +225,16 @@ int main()
     }
     vector<card> deck{ shuffle(cards) };
 
-    klondike game{};
+    shared_ptr<game<solitaire_move, board>> engine{ make_shared<klondike>() };
     shared_ptr<solitaire_move> deal_move{ make_shared<DealMove>(deck) };
     shared_ptr<board> dealt_board{ deal_move->apply(nullptr) };
     game_state<solitaire_move, board> initial_game_state{ deal_move, dealt_board };
 
-    cout.imbue(locale{ "en_US" });
+    cout.imbue(locale{ "en-US" });
     dealt_board->print_to(std::cout);
 
-    run_search_0(game, initial_game_state);
+    //run_search_0(engine, initial_game_state);
+    sequential_dfs(engine, initial_game_state);
 
     std::cout << "Hello World!" << endl;
 }

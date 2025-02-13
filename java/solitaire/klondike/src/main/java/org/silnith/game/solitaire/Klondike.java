@@ -298,13 +298,18 @@ public class Klondike implements Game<SolitaireMove, Board> {
 		thread.start();
 		
 		long statesExamined = 0;
+		long boardsGenerated = 0;
 		while (thread.isAlive()) {
 			searcher.printStatistics(System.out);
 			final long nextStatesExamined = searcher.getNumberOfGameStatesExamined();
+			final long nextBoardsGenerated = searcher.getBoardsGenerated();
 			final long nodesPerSecond = nextStatesExamined - statesExamined;
+			final long boardsPerSecond = nextBoardsGenerated - boardsGenerated;
 			System.out.format(Locale.US, "Nodes per second: %,d\n", nodesPerSecond);
+			System.out.format(Locale.US, "Boards per second: %,d\n", boardsPerSecond);
 			System.out.println();
 			statesExamined = nextStatesExamined;
+			boardsGenerated = nextBoardsGenerated;
 			Thread.sleep(TimeUnit.SECONDS.toMillis(1));
 		}
 		
@@ -355,5 +360,5 @@ public class Klondike implements Game<SolitaireMove, Board> {
         thread.join();
         searcher.printStatistics(System.out);
 	}
-	
+
 }

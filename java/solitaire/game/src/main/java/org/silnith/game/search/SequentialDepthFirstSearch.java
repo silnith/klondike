@@ -26,8 +26,9 @@ public class SequentialDepthFirstSearch<M extends Move<B>, B> {
 	private final Deque<LinkedNode<GameState<M, B>>> queue;
 	private final Collection<List<GameState<M, B>>> wins;
 	private final AtomicLong gameStatesExamined;
-	private final AtomicLong gameStatesPrunedTotal;
-	private final Map<Object, AtomicLong> gameStatesPruned;
+	private final AtomicLong boardsGenerated;
+	private final AtomicLong movesPrunedTotal;
+	private final Map<Object, AtomicLong> movesPruned;
 
 	public SequentialDepthFirstSearch(final Game<M, B> game, final GameState<M, B> initialState) {
 		super();
@@ -41,12 +42,13 @@ public class SequentialDepthFirstSearch<M extends Move<B>, B> {
 		this.queue = new ArrayDeque<>();
 		this.wins = new ArrayList<>();
 		this.gameStatesExamined = new AtomicLong();
-		this.gameStatesPrunedTotal = new AtomicLong();
+		this.boardsGenerated = new AtomicLong();
+		this.movesPrunedTotal = new AtomicLong();
         final Map<Object, AtomicLong> tempMap = new HashMap<>();
         for (final MoveFilter<M, B> filter : this.game.getFilters()) {
             tempMap.put(filter.getStatisticsKey(), new AtomicLong());
         }
-        this.gameStatesPruned = Collections.unmodifiableMap(tempMap);
+        this.movesPruned = Collections.unmodifiableMap(tempMap);
 		
 		this.queue.add(new LinkedNode<>(initialState));
 	}
@@ -54,19 +56,21 @@ public class SequentialDepthFirstSearch<M extends Move<B>, B> {
 	public void printStatistics(final PrintStream out) {
 		out.printf(Locale.US,
 				"Nodes examined: %,d\n"
-				+ "Nodes pruned: %,d\n"
+		        + "Boards generated: %,d\n"
+				+ "Moves pruned: %,d\n"
 				+ "Queue size: %,d\n"
 				+ "Wins: %,d\n",
 				gameStatesExamined.get(),
-				gameStatesPrunedTotal.get(),
+				boardsGenerated.get(),
+				movesPrunedTotal.get(),
 				queue.size(),
 				wins.size());
         for (final MoveFilter<M, B> filter : game.getFilters()) {
             final Object statisticsKey = filter.getStatisticsKey();
             out.printf(Locale.US,
-                    "Nodes pruned by filter %s: %,d\n",
+                    "Moves pruned by filter %s: %,d\n",
                     statisticsKey,
-                    gameStatesPruned.get(statisticsKey).get());
+                    movesPruned.get(statisticsKey).get());
         }
 		out.flush();
 	}
@@ -74,24 +78,29 @@ public class SequentialDepthFirstSearch<M extends Move<B>, B> {
 	public long getNumberOfGameStatesExamined() {
 		return gameStatesExamined.get();
 	}
-
+	
+	public long getBoardsGenerated() {
+	    return boardsGenerated.get();
+	}
+    
 	public Future<Collection<List<GameState<M, B>>>> search() {
         final Collection<? extends MoveFilter<M, B>> filters = game.getFilters();
         
 	    LinkedNode<GameState<M, B>> gameStateHistory = queue.pollLast();
 		while (gameStateHistory != null) {
-			gameStatesExamined.incrementAndGet();
+			gameStatesExamined.getAndIncrement();
             final GameState<M, B> gameState = gameStateHistory.getFirst();
             final B board = gameState.getBoard();
 			final Collection<M> moves = game.findAllMoves(gameStateHistory);
 			movesLoop: for (final M move : moves) {
 			    final B newBoard = move.apply(board);
+			    boardsGenerated.getAndIncrement();
 				final GameState<M, B> newGameState = new GameState<>(move, newBoard);
                 final LinkedNode<GameState<M, B>> newHistory = new LinkedNode<>(newGameState, gameStateHistory);
                 for (final MoveFilter<M, B> filter : filters) {
 				    if (filter.shouldFilter(newHistory)) {
-				        gameStatesPrunedTotal.incrementAndGet();
-				        gameStatesPruned.get(filter.getStatisticsKey()).incrementAndGet();
+				        movesPrunedTotal.getAndIncrement();
+				        movesPruned.get(filter.getStatisticsKey()).getAndIncrement();
 				        continue movesLoop;
 				    }
 				}

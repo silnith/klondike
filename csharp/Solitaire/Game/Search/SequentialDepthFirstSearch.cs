@@ -11,8 +11,9 @@ namespace Silnith.Game.Search
         private readonly Stack<LinkedNode<GameState<M, B>>> stack;
         private readonly ICollection<IReadOnlyList<GameState<M, B>>> wins;
         private long gameStatesExamined;
-        private long gameStatesPrunedTotal;
-        private readonly ConcurrentDictionary<object, long> gameStatesPruned;
+        private long boardsGenerated;
+        private long movesPrunedTotal;
+        private readonly ConcurrentDictionary<object, long> movesPruned;
 
         public SequentialDepthFirstSearch(IGame<M, B> game, GameState<M, B> initialGameState)
         {
@@ -20,11 +21,12 @@ namespace Silnith.Game.Search
             stack = new Stack<LinkedNode<GameState<M, B>>>();
             wins = new List<IReadOnlyList<GameState<M, B>>>();
             gameStatesExamined = 0;
-            gameStatesPrunedTotal = 0;
-            gameStatesPruned = new ConcurrentDictionary<object, long>();
+            boardsGenerated = 0;
+            movesPrunedTotal = 0;
+            movesPruned = new ConcurrentDictionary<object, long>();
             foreach (IMoveFilter<M, B> filter in this.game.GetFilters())
             {
-                gameStatesPruned[filter.StatisticsKey] = 0;
+                movesPruned[filter.StatisticsKey] = 0;
             }
 
             stack.Push(new LinkedNode<GameState<M, B>>(initialGameState));
@@ -34,19 +36,22 @@ namespace Silnith.Game.Search
         {
             Console.WriteLine(
                 "Nodes examined: {0:N0}\n"
-                + "Nodes pruned: {1:N0}\n"
-                + "Queue size: {2:N0}\n"
-                + "Wins: {3:N0}",
+                + "Boards generated: {1:N0}\n"
+                + "Moves pruned: {2:N0}\n"
+                + "Queue size: {3:N0}\n"
+                + "Wins: {4:N0}",
                 gameStatesExamined,
-                gameStatesPrunedTotal,
+                boardsGenerated,
+                movesPrunedTotal,
                 stack.Count,
                 wins.Count);
-            foreach (KeyValuePair<object, long> keyValuePair in gameStatesPruned)
+            foreach (IMoveFilter<M, B> filter in game.GetFilters())
             {
+                object statisticsKey = filter.StatisticsKey;
                 Console.WriteLine(
-                    "Nodes pruned by filter {0}: {1:N0}",
-                    keyValuePair.Key,
-                    keyValuePair.Value);
+                    "Moves pruned by filter {0}: {1:N0}",
+                    statisticsKey,
+                    movesPruned[statisticsKey]);
             }
         }
 
@@ -55,6 +60,14 @@ namespace Silnith.Game.Search
             get
             {
                 return gameStatesExamined;
+            }
+        }
+
+        public long BoardsGenerated
+        {
+            get
+            {
+                return boardsGenerated;
             }
         }
 
@@ -70,6 +83,7 @@ namespace Silnith.Game.Search
                 foreach (M move in game.FindAllMoves(gameStateHistory))
                 {
                     B newBoard = move.Apply(board);
+                    Interlocked.Increment(ref boardsGenerated);
                     GameState<M, B> newGameState = new GameState<M, B>(move, newBoard);
                     LinkedNode<GameState<M, B>> newHistory = new LinkedNode<GameState<M, B>>(newGameState, gameStateHistory);
                     bool broken = false;
@@ -77,12 +91,12 @@ namespace Silnith.Game.Search
                     {
                         if (filter.ShouldFilter(newHistory))
                         {
-                            Interlocked.Increment(ref gameStatesPrunedTotal);
+                            Interlocked.Increment(ref movesPrunedTotal);
                             object key = filter.StatisticsKey;
-                            long value = gameStatesPruned[key];
-                            while (!gameStatesPruned.TryUpdate(key, value + 1, value))
+                            long value = movesPruned[key];
+                            while (!movesPruned.TryUpdate(key, value + 1, value))
                             {
-                                value = gameStatesPruned[key];
+                                value = movesPruned[key];
                             }
                             broken = true;
                             break;

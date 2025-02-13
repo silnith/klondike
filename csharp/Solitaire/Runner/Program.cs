@@ -181,14 +181,19 @@ namespace Runner
             thread.Start();
 
             long statesExamined = 0;
+            long boardsGenerated = 0;
             while (thread.IsAlive)
             {
                 searcher.PrintStatistics();
                 long nextStatesExamined = searcher.NumberOfGameStatesExamined;
+                long nextBoardsGenerated = searcher.BoardsGenerated;
                 long nodesPerSecond = nextStatesExamined - statesExamined;
+                long boardsPerSecond = nextBoardsGenerated - boardsGenerated;
                 Console.WriteLine("Nodes per second: {0:N0}", nodesPerSecond);
+                Console.WriteLine("Boards per second: {0:N0}", boardsPerSecond);
                 Console.WriteLine();
                 statesExamined = nextStatesExamined;
+                boardsGenerated = nextBoardsGenerated;
                 Thread.Sleep(TimeSpan.FromSeconds(1));
             }
 
