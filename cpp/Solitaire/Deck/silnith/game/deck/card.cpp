@@ -1,5 +1,6 @@
 #include <silnith/game/deck/card.h>
 
+#include <silnith/game/deck/color.h>
 #include <silnith/game/deck/suit.h>
 #include <silnith/game/deck/value.h>
 
@@ -25,6 +26,11 @@ namespace silnith::game::deck
     suit const& card::get_suit(void) const noexcept
     {
         return _suit;
+    }
+
+    color card::get_color(void) const noexcept
+    {
+        return silnith::game::deck::get_color(_suit);
     }
 
     bool card::operator==(card const& other) const

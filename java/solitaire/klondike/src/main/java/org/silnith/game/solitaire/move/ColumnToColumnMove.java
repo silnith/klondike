@@ -64,7 +64,7 @@ public class ColumnToColumnMove implements SolitaireMove {
 						final int runLength = runStartValue - sourceRunMinValue + 1;
 						
 						final List<Card> run = sourceColumn.getTopCards(runLength);
-						if (destinationTopCard.getSuit().getColor() != run.get(0).getSuit().getColor()) {
+						if (destinationTopCard.getColor() != run.get(0).getColor()) {
 							moves.add(new ColumnToColumnMove(sourceIndex, destinationIndex, run));
 						}
 					}

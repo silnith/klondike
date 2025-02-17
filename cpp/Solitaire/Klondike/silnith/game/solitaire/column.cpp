@@ -139,7 +139,7 @@ bool column::can_add_run(span<card const> run) const
     {
         card top_card_of_column{ get_top_card() };
         return get_value(top_card_of_column.get_value()) == 1 + get_value(first_card_of_run_to_add.get_value())
-            && get_color(top_card_of_column.get_suit()) != get_color(first_card_of_run_to_add.get_suit());
+            && top_card_of_column.get_color() != first_card_of_run_to_add.get_color();
     }
     else
     {

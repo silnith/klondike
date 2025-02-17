@@ -46,7 +46,7 @@ namespace silnith::game::solitaire::move
                         int run_length{ run_start_value - source_run_min_value + 1 };
 
                         vector<card> run{ source_column.get_top_cards(run_length) };
-                        if (get_color(destination_top_card.get_suit()) != get_color(run.front().get_suit()))
+                        if (destination_top_card.get_color() != run.front().get_color())
                         {
                             moves.emplace_back(
                                 static_cast<shared_ptr<solitaire_move>>(

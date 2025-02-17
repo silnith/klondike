@@ -24,6 +24,11 @@ namespace Silnith.Game.Deck
         }
 
         /// <summary>
+        /// The card color.
+        /// </summary>
+        public Color Color => Suit.GetColor();
+
+        /// <summary>
         /// Constructs a new playing card with the given value and suit.
         /// </summary>
         /// <param name="value">The value for the card.</param>

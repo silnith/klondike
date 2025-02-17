@@ -39,7 +39,7 @@ public class RunValidator implements Validator<List<Card>> {
                 throw new IllegalArgumentException(
                         "Cannot stack " + currentCard.getValue() + " on top of " + previousCard.getValue() + ".");
             }
-            if (currentCard.getSuit().getColor() == previousCard.getSuit().getColor()) {
+            if (currentCard.getColor() == previousCard.getColor()) {
                 throw new IllegalArgumentException(
                         "Cannot stack " + currentCard.getSuit() + " on top of " + previousCard.getSuit() + ".");
             }

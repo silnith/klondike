@@ -57,7 +57,7 @@ namespace Silnith.Game.Klondike.Move
                             int runCount = runStartValue - sourceRunMinValue + 1;
 
                             IReadOnlyList<Card> run = sourceColumn.GetTopCards(runCount);
-                            if (destinationTopCard.Suit.GetColor() != run[0].Suit.GetColor())
+                            if (destinationTopCard.Color != run[0].Color)
                             {
                                 moves.Add(new ColumnToColumnMove(sourceIndex, destinationIndex, run));
                             }

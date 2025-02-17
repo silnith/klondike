@@ -1,5 +1,6 @@
 #pragma once
 
+#include <silnith/game/deck/color.h>
 #include <silnith/game/deck/suit.h>
 #include <silnith/game/deck/value.h>
 
@@ -43,6 +44,13 @@ namespace silnith
                 /// <returns>The card suit.</returns>
                 [[nodiscard]]
                 suit const& get_suit(void) const noexcept;
+
+                /// <summary>
+                /// Returns the card color.
+                /// </summary>
+                /// <returns>The card color.</returns>
+                [[nodiscard]]
+                color get_color(void) const noexcept;
 
                 [[nodiscard]]
                 bool operator==(card const&) const;

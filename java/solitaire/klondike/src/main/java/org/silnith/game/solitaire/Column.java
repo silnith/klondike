@@ -256,7 +256,7 @@ public class Column {
     	if (hasFaceUpCards()) {
     		final Card topCardOfColumn = getTopCard();
     		return topCardOfColumn.getValue().getValue() == 1 + firstCardOfRunToAdd.getValue().getValue()
-    				&& topCardOfColumn.getSuit().getColor() != firstCardOfRunToAdd.getSuit().getColor();
+    				&& topCardOfColumn.getColor() != firstCardOfRunToAdd.getColor();
     	} else {
     		return firstCardOfRunToAdd.getValue() == Value.KING;
     	}

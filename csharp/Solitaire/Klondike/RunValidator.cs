@@ -27,7 +27,7 @@ namespace Silnith.Game.Klondike
                 {
                     throw new ArgumentException("Cannot stack " + currentCard.Value + " on top of " + previousCard.Value + ".");
                 }
-                if (currentCard.Suit.GetColor() == previousCard.Suit.GetColor())
+                if (currentCard.Color == previousCard.Color)
                 {
                     throw new ArgumentException("Cannot stack " + currentCard.Suit + " on top of " + previousCard.Suit + ".");
                 }

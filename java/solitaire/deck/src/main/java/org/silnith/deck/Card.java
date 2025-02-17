@@ -2,6 +2,8 @@ package org.silnith.deck;
 
 import java.beans.ConstructorProperties;
 
+import org.silnith.deck.Suit.Color;
+
 
 /**
  * A playing card.
@@ -48,6 +50,15 @@ public class Card {
      */
     public Suit getSuit() {
         return suit;
+    }
+    
+    /**
+     * Returns the color for the playing card&rsquo;s suit.
+     * 
+     * @return the card color
+     */
+    public Color getColor() {
+        return suit.getColor();
     }
     
     @Override

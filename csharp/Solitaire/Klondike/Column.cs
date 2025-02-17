@@ -265,7 +265,7 @@ namespace Silnith.Game.Klondike
             {
                 Card topCardOfColumn = FaceUp[FaceUp.Count - 1];
                 return topCardOfColumn.Value.GetValue() == 1 + firstCardOfRunToAdd.Value.GetValue()
-                    && topCardOfColumn.Suit.GetColor() != firstCardOfRunToAdd.Suit.GetColor();
+                    && topCardOfColumn.Color != firstCardOfRunToAdd.Color;
             }
             else
             {
