@@ -48,22 +48,22 @@ namespace DeckTests
 
 		TEST_METHOD(TestToStringClub)
 		{
-			Assert::AreEqual("club"s, to_string(suit::club));
+			Assert::AreEqual("\u2663"s, to_string(suit::club));
 		}
 
 		TEST_METHOD(TestToStringDiamond)
 		{
-			Assert::AreEqual("diamond"s, to_string(suit::diamond));
+			Assert::AreEqual("\u2666"s, to_string(suit::diamond));
 		}
 
 		TEST_METHOD(TestToStringHeart)
 		{
-			Assert::AreEqual("heart"s, to_string(suit::heart));
+			Assert::AreEqual("\u2665"s, to_string(suit::heart));
 		}
 
 		TEST_METHOD(TestToStringSpade)
 		{
-			Assert::AreEqual("spade"s, to_string(suit::spade));
+			Assert::AreEqual("\u2660"s, to_string(suit::spade));
 		}
 
 		TEST_METHOD(TestToStringInvalidValue)

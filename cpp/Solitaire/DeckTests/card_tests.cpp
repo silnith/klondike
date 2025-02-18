@@ -81,7 +81,7 @@ namespace DeckTests
 		{
 			card card{ value::ace, suit::spade };
 
-			Assert::AreEqual("ace of spades"s, to_string(card));
+			Assert::AreEqual("ace of \u2660s"s, to_string(card));
 		}
 	};
 }
