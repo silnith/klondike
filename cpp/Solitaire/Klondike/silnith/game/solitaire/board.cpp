@@ -138,23 +138,6 @@ bool board::can_add_to_foundation(card _card) const
     return get_value(_card.get_value()) == 1 + foundation.at(_card.get_suit()).size();
 }
 
-string board::to_symbol(suit s) const
-{
-    switch (s)
-    {
-    case suit::club:
-        return "C"s;
-    case suit::diamond:
-        return "D"s;
-    case suit::heart:
-        return "H"s;
-    case suit::spade:
-        return "S"s;
-    default:
-        return std::to_string(static_cast<int>(s));
-    }
-}
-
 string board::to_symbol(value v) const
 {
     switch (v)
@@ -176,7 +159,7 @@ string board::to_symbol(value v) const
 
 string board::to_symbol(card c) const
 {
-    return to_symbol(c.get_value()) + to_symbol(c.get_suit());
+    return to_symbol(c.get_value()) + to_string(c.get_suit());
 }
 
 ostream& board::print_to(ostream& out) const

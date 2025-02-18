@@ -26,7 +26,6 @@ public:
     std::array<std::array<TicTacToePlayer, 3>, 3> getBoard(void) const;
 
     friend void printTo(std::ostream& out, TicTacToeBoard const& board);
-    friend void printTo(std::wostream& out, TicTacToeBoard const& board);
 
 private:
     TicTacToePlayer const _player;

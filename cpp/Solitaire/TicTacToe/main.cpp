@@ -13,12 +13,16 @@
 #include <iostream>
 #include <memory>
 
+#include <cstdlib>
+
 using namespace silnith::game;
 using namespace std;
 
 int main()
 {
+    system("chcp 65001");
     cout.imbue(locale{ "en-US" });
+
     shared_ptr<TicTacToe> engine{ make_shared<TicTacToe>() };
     shared_ptr<TicTacToeMove> initial_move{ make_shared<TicTacToeMove>(0, 0, TicTacToePlayer::nobody) };
     shared_ptr<TicTacToeBoard> initial_board{ make_shared<TicTacToeBoard>(TicTacToePlayer::X) };

@@ -24,6 +24,8 @@
 #include <vector>
 #include <list>
 
+#include <cstdlib>
+
 using namespace silnith::game;
 using namespace silnith::game::deck;
 using namespace silnith::game::solitaire;
@@ -75,6 +77,7 @@ void run_search_0(shared_ptr<game<solitaire_move, board>> const& engine, game_st
 
         vector<shared_ptr<solitaire_move>> moves{ engine->find_all_moves(game_state_history) };
         shared_ptr<board> current_board{ game_state_history->get_value().get_board() };
+        current_board->print_to(cout);
         /*
         cout << endl;
         cout << "Scenario: "s << endl;
@@ -167,13 +170,13 @@ void sequential_dfs(shared_ptr<game<solitaire_move, board>> const& engine, game_
 {
     sequential_depth_first_search<solitaire_move, board> searcher{ engine, initial_state };
 
-    future<list<shared_ptr<linked_node<game_state<solitaire_move, board>>>>> foo{
+    future<list<shared_ptr<linked_node<game_state<solitaire_move, board>>>>> future{
         async(launch::async, &sequential_depth_first_search<solitaire_move, board>::search, &searcher)
     };
 
     long states_examined{ 0 };
     long boards_generated{ 0 };
-    while (foo.valid())
+    while (future.valid())
     {
         searcher.print_statistics(cout);
         long next_states_examined{ searcher.get_number_of_game_states_examined() };
@@ -188,12 +191,20 @@ void sequential_dfs(shared_ptr<game<solitaire_move, board>> const& engine, game_
         this_thread::sleep_for(1s);
     }
 
-    list<shared_ptr<linked_node<game_state<solitaire_move, board>>>> wins{ foo.get() };
+    list<shared_ptr<linked_node<game_state<solitaire_move, board>>>> wins{ future.get() };
+    for (shared_ptr<linked_node<game_state<solitaire_move, board>>> win : wins)
+    {
+        ;
+    }
     searcher.print_statistics(cout);
 }
 
 int main()
 {
+    system("chcp");
+    system("chcp 65001");
+    cout.imbue(locale{ "en-US" });
+
     vector<value> const values{
         value::ace,
         value::two,
@@ -230,13 +241,10 @@ int main()
     shared_ptr<board> dealt_board{ deal_move->apply(nullptr) };
     game_state<solitaire_move, board> initial_game_state{ deal_move, dealt_board };
 
-    cout.imbue(locale{ "en-US" });
     dealt_board->print_to(std::cout);
 
     //run_search_0(engine, initial_game_state);
     sequential_dfs(engine, initial_game_state);
-
-    std::cout << "Hello World!" << endl;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

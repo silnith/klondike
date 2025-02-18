@@ -202,9 +202,6 @@ namespace silnith
 
             private:
                 [[nodiscard]]
-                std::string to_symbol(deck::suit s) const;
-
-                [[nodiscard]]
                 std::string to_symbol(deck::value v) const;
 
                 [[nodiscard]]

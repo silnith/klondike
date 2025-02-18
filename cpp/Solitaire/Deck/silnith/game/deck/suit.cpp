@@ -30,16 +30,24 @@ namespace silnith::game::deck
 
     string to_string(suit const& suit)
     {
+        /*
+         * If these produces warnings about "cannot be represented in the current code page",
+         * ensure that the /utf-8 compiler switch is specified for all projects.
+         */
         switch (suit)
         {
         case suit::club:
-            return "club"s;
+            //return "\xE2\x99\xA3"s;
+            return "\u2663"s;
         case suit::diamond:
-            return "diamond"s;
+            //return "\xE2\x99\xA6"s;
+            return "\u2666"s;
         case suit::heart:
-            return "heart"s;
+            //return "\xE2\x99\xA5"s;
+            return "\u2665"s;
         case suit::spade:
-            return "spade"s;
+            //return "\xE2\x99\xA5"s;
+            return "\u2660"s;
         default:
             return std::to_string(static_cast<int>(suit));
         }
