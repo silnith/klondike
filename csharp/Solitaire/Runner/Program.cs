@@ -167,22 +167,11 @@ namespace Runner
         private static void SequentialDFS(IGame<ISolitaireMove, Board> game, GameState<ISolitaireMove, Board> initialState)
         {
             SequentialDepthFirstSearch<ISolitaireMove, Board> searcher = new(game, initialState);
-            void Run()
-            {
-                IEnumerable<IReadOnlyList<GameState<ISolitaireMove, Board>>> wins = searcher.Search();
-
-                foreach (IReadOnlyList<GameState<ISolitaireMove, Board>> win in wins)
-                {
-                    Console.WriteLine(win);
-                    win[0].Board.PrintTo();
-                }
-            }
-            Thread thread = new(Run);
-            thread.Start();
+            Task<IEnumerable<IReadOnlyList<GameState<ISolitaireMove, Board>>>> task = Task.Run(searcher.Search);
 
             long statesExamined = 0;
             long boardsGenerated = 0;
-            while (thread.IsAlive)
+            while (!task.IsCompleted)
             {
                 searcher.PrintStatistics();
                 long nextStatesExamined = searcher.NumberOfGameStatesExamined;
@@ -197,7 +186,14 @@ namespace Runner
                 Thread.Sleep(TimeSpan.FromSeconds(1));
             }
 
-            thread.Join();
+            IEnumerable<IReadOnlyList<GameState<ISolitaireMove, Board>>> wins = task.GetAwaiter().GetResult();
+
+            foreach (IReadOnlyList<GameState<ISolitaireMove, Board>> win in wins)
+            {
+                Console.WriteLine(win);
+                win[0].Board.PrintTo();
+            }
+
             searcher.PrintStatistics();
         }
 
