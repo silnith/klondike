@@ -53,5 +53,8 @@
     <ClCompile Include="silnith\game\validator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="silnith\game\move_filter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

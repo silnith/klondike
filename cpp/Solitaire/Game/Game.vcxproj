@@ -188,6 +188,7 @@
     <ClCompile Include="silnith\game\game_state.cpp" />
     <ClCompile Include="silnith\game\linked_node.cpp" />
     <ClCompile Include="silnith\game\move.cpp" />
+    <ClCompile Include="silnith\game\move_filter.cpp" />
     <ClCompile Include="silnith\game\validator.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
