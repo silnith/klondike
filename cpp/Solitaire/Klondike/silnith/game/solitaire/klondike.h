@@ -34,7 +34,7 @@ namespace silnith
                 //static std::size_t const draw_advance{ 3 };
 
             public:
-                klondike(void) = default;
+                klondike(void);
                 klondike(klondike const&) = default;
                 klondike& operator=(klondike const&) = default;
                 klondike(klondike&&) noexcept = default;
@@ -61,6 +61,7 @@ namespace silnith
             private:
                 std::size_t const number_of_columns{ board::num_columns };
                 std::size_t const draw_advance{ 3 };
+                std::vector<std::shared_ptr<move_filter<move::solitaire_move, board>>> const filters;
             };
         }
     }

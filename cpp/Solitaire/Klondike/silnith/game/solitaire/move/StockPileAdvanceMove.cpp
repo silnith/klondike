@@ -13,8 +13,7 @@ namespace silnith::game::solitaire::move
     {
         if (board.can_advance_stock_pile())
         {
-            shared_ptr<solitaire_move> move{ make_shared<StockPileAdvanceMove>(stock_pile_advance, board) };
-            return vector<shared_ptr<solitaire_move>>{ move };
+            return vector<shared_ptr<solitaire_move>>{ make_shared<StockPileAdvanceMove>(stock_pile_advance, board) };
         }
         else
         {
@@ -122,7 +121,7 @@ namespace silnith::game::solitaire::move
 
     shared_ptr<board> StockPileAdvanceMove::apply(shared_ptr<board> const& b) const
     {
-        vector<card> const stock_pile{ b->get_stock_pile() };
+        vector<card> const& stock_pile{ b->get_stock_pile() };
         size_t const new_index{ min(b->get_stock_pile_index() + increment, stock_pile.size()) };
         return make_shared<board>(
             b->get_columns(),

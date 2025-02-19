@@ -17,7 +17,7 @@ namespace silnith::game::solitaire::move
             column const& source_column{ b.get_column(index) };
             if (source_column.has_face_up_cards())
             {
-                card top_card{ source_column.get_top_card() };
+                card const& top_card{ source_column.get_top_card() };
                 if (b.can_add_to_foundation(top_card))
                 {
                     moves.emplace_back(make_shared<ColumnToFoundationMove>(index, top_card));
@@ -117,7 +117,7 @@ namespace silnith::game::solitaire::move
 
     shared_ptr<board> ColumnToFoundationMove::apply(shared_ptr<board> const& b) const
     {
-        column source_column{ b->get_column(source_column_index) };
+        column const& source_column{ b->get_column(source_column_index) };
         pair<card, column> pair{ source_column.extract_card() };
         card moved_card{ pair.first };
         column new_column{ pair.second };
@@ -135,9 +135,9 @@ namespace silnith::game::solitaire::move
             }
         }
 
-        vector<card> stock_pile{ b->get_stock_pile() };
+        vector<card> const& stock_pile{ b->get_stock_pile() };
         size_t stock_pile_index{ b->get_stock_pile_index() };
-        map<suit, vector<card>> new_foundation{ b->get_foundation_plus_card(moved_card) };
+        map<suit, vector<card>> const& new_foundation{ b->get_foundation_plus_card(moved_card) };
 
         return make_shared<board>(new_columns, stock_pile, stock_pile_index, new_foundation);
     }

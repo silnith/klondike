@@ -14,15 +14,14 @@ namespace silnith::game::solitaire::move
         vector<shared_ptr<solitaire_move>> moves{};
         for (size_t source_index{ 0 }; source_index < board::num_columns; source_index++)
         {
-            column source_column{ board.get_column(source_index) };
+            column const& source_column{ board.get_column(source_index) };
             if (!source_column.has_face_up_cards())
             {
                 continue;
             }
-            vector<card> source_run{ source_column.get_face_up_cards() };
-            size_t source_run_length{ source_run.size() };
-            card source_top_card{ source_run.back() };
-            card source_bottom_card{ source_run.front() };
+            vector<card> const& source_run{ source_column.get_face_up_cards() };
+            card const& source_top_card{ source_run.back() };
+            card const& source_bottom_card{ source_run.front() };
             int source_run_min_value{ get_value(source_top_card.get_value()) };
             int source_run_max_value{ get_value(source_bottom_card.get_value()) };
 
@@ -33,25 +32,22 @@ namespace silnith::game::solitaire::move
                     // Cannot move from a column to itself.
                     continue;
                 }
-                column destination_column{ board.get_column(destination_index) };
+                column const& destination_column{ board.get_column(destination_index) };
 
                 if (destination_column.has_face_up_cards())
                 {
                     // Destination has cards already.
-                    card destination_top_card{ destination_column.get_top_card() };
+                    card const& destination_top_card{ destination_column.get_top_card() };
                     int run_start_value{ get_value(destination_top_card.get_value()) - 1 };
 
                     if (source_run_min_value <= run_start_value && source_run_max_value >= run_start_value)
                     {
                         int run_length{ run_start_value - source_run_min_value + 1 };
 
-                        vector<card> run{ source_column.get_top_cards(run_length) };
+                        span<card const> run{ source_column.get_top_cards(run_length) };
                         if (destination_top_card.get_color() != run.front().get_color())
                         {
-                            moves.emplace_back(
-                                static_cast<shared_ptr<solitaire_move>>(
-                                    make_shared<ColumnToColumnMove>(source_index, destination_index, run)));
-                            //moves.emplace_back(make_shared<ColumnToColumnMove>(source_index, destination_index, run));
+                            moves.emplace_back(make_shared<ColumnToColumnMove>(source_index, destination_index, run));
                         }
                     }
                 }
@@ -60,9 +56,7 @@ namespace silnith::game::solitaire::move
                     // Destination is empty, only a king may be moved to it.
                     if (source_bottom_card.get_value() == value::king)
                     {
-                        moves.emplace_back(
-                            static_cast<shared_ptr<solitaire_move>>(
-                                make_shared<ColumnToColumnMove>(source_index, destination_index, source_run)));
+                        moves.emplace_back(make_shared<ColumnToColumnMove>(source_index, destination_index, source_run));
                     }
                 }
             }
@@ -185,13 +179,13 @@ namespace silnith::game::solitaire::move
 
     shared_ptr<board> ColumnToColumnMove::apply(shared_ptr<board> const& b) const
     {
-        vector<column> columns{ b->get_columns() };
-        vector<card> stock_pile{ b->get_stock_pile() };
+        vector<column> const& columns{ b->get_columns() };
+        vector<card> const& stock_pile{ b->get_stock_pile() };
         size_t stock_pile_index{ b->get_stock_pile_index() };
-        map<suit, vector<card>> foundation{ b->get_foundation() };
+        map<suit, vector<card>> const& foundation{ b->get_foundation() };
 
-        column from_column{ columns.at(source_column_index) };
-        column to_column{ columns.at(destination_column_index) };
+        column const& from_column{ columns.at(source_column_index) };
+        column const& to_column{ columns.at(destination_column_index) };
         pair<vector<card>, column> pair{ from_column.extract_run(cards.size()) };
         vector<card> run{ pair.first };
         column new_from_column{ pair.second };

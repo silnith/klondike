@@ -13,8 +13,7 @@ namespace silnith::game::solitaire::move
     {
         if (board.can_recycle_stock_pile())
         {
-            shared_ptr<solitaire_move> move{ make_shared<StockPileRecycleMove>(board) };
-            return vector<shared_ptr<solitaire_move>>{ move };
+            return vector<shared_ptr<solitaire_move>>{ make_shared<StockPileRecycleMove>(board) };
         }
         else
         {

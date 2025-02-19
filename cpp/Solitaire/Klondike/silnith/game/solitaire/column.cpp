@@ -59,7 +59,7 @@ card const& column::get_top_card(void) const
     return face_up.back();
 }
 
-vector<card> column::get_top_cards(size_t number_of_cards) const
+span<card const> column::get_top_cards(size_t number_of_cards) const
 {
     if (number_of_cards < 1)
     {
@@ -71,8 +71,7 @@ vector<card> column::get_top_cards(size_t number_of_cards) const
     }
 
     span<card const> face_up_span{ face_up };
-    span<card const> run_span{ face_up_span.last(number_of_cards) };
-    return vector<card>{ run_span.begin(), run_span.end() };
+    return face_up_span.last(number_of_cards);
 }
 
 pair<card, column> column::extract_card(void) const

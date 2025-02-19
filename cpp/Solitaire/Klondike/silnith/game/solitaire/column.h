@@ -112,7 +112,7 @@ namespace silnith
                 /// <exception cref="std::out_of_range">If the number of cards is less than <c>1</c>,
                 /// or exceeds the number of face-up cards.</exception>
                 [[nodiscard]]
-                std::vector<deck::card> get_top_cards(std::size_t number_of_cards) const;
+                std::span<deck::card const> get_top_cards(std::size_t number_of_cards) const;
 
                 /// <summary>
                 /// Returns a pair containing the top card from the column,

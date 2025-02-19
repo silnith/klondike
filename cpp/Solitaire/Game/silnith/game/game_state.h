@@ -53,7 +53,7 @@ namespace silnith
             /// </summary>
             /// <returns>The move.</returns>
             [[nodiscard]]
-            std::shared_ptr<M> get_move(void) const
+            std::shared_ptr<M> const& get_move(void) const
             {
                 //return std::pair<M, B>::first;
                 return this->first;
@@ -64,7 +64,7 @@ namespace silnith
             /// </summary>
             /// <returns>The board.</returns>
             [[nodiscard]]
-            std::shared_ptr<B> get_board(void) const
+            std::shared_ptr<B> const& get_board(void) const
             {
                 //return std::pair<M, B>::second;
                 return this->second;

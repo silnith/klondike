@@ -34,7 +34,7 @@ namespace silnith
             explicit sequential_depth_first_search(std::shared_ptr<silnith::game::game<M, B>> game_engine, silnith::game::game_state<M, B> const& initial_game_state)
                 : _game{ game_engine }
             {
-                for (std::shared_ptr<silnith::game::move_filter<M, B>> filter : _game->get_filters())
+                for (std::shared_ptr<silnith::game::move_filter<M, B>> const& filter : _game->get_filters())
                 {
                     moves_pruned.emplace(filter->get_statistics_key(), 0);
                 }
@@ -77,17 +77,17 @@ namespace silnith
                     std::shared_ptr<silnith::game::linked_node<silnith::game::game_state<M, B>>> game_state_history{ _stack.top() };
                     _stack.pop();
                     game_states_examined++;
-                    silnith::game::game_state<M, B> game_state{ game_state_history->get_value() };
-                    std::shared_ptr<B> board{ game_state.get_board() };
+                    silnith::game::game_state<M, B> const& game_state{ game_state_history->get_value() };
+                    std::shared_ptr<B> const& board{ game_state.get_board() };
                     std::vector<std::shared_ptr<M>> moves{ _game->find_all_moves(game_state_history) };
-                    for (std::shared_ptr<M> move : moves)
+                    for (std::shared_ptr<M> const& move : moves)
                     {
                         std::shared_ptr<B> new_board{ move->apply(board) };
                         boards_generated++;
                         silnith::game::game_state<M, B> new_game_state{ move, new_board };
                         std::shared_ptr<silnith::game::linked_node<silnith::game::game_state<M, B>>> new_history{ std::make_shared<silnith::game::linked_node<silnith::game::game_state<M, B>>>(new_game_state, game_state_history) };
                         bool broken{ false };
-                        for (std::shared_ptr<silnith::game::move_filter<M, B>> filter : filters)
+                        for (std::shared_ptr<silnith::game::move_filter<M, B>> const& filter : filters)
                         {
                             if (filter->should_filter(new_history))
                             {

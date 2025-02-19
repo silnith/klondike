@@ -54,7 +54,7 @@ namespace silnith
                 {}
 
                 [[nodiscard]]
-                T const operator*(void) const
+                T const& operator*(void) const
                 {
                     return current->get_value();
                 }
@@ -125,7 +125,7 @@ namespace silnith
             /// </summary>
             /// <returns>The <c>car</c> of this node.</returns>
             [[nodiscard]]
-            T get_value(void) const
+            T const& get_value(void) const
             {
                 return _value;
             }
@@ -136,7 +136,7 @@ namespace silnith
             /// </summary>
             /// <returns>The <c>cdr</c> of this node.</returns>
             [[nodiscard]]
-            std::shared_ptr<linked_node<T>> get_next(void) const
+            std::shared_ptr<linked_node<T>> const& get_next(void) const
             {
                 return _next;
             }
@@ -156,7 +156,7 @@ namespace silnith
             }
 
             [[nodiscard]]
-            T& operator*(void) const
+            T const& operator*(void) const
             {
                 return _value;
             }

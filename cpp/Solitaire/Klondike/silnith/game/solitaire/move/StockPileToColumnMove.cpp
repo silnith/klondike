@@ -14,16 +14,13 @@ namespace silnith::game::solitaire::move
         if (board.get_stock_pile_index() > 0)
         {
             vector<shared_ptr<solitaire_move>> moves{};
-            card stock_pile_card{ board.get_stock_pile_card() };
-            vector<card> run{};
-            run.emplace_back(stock_pile_card);
+            card const& stock_pile_card{ board.get_stock_pile_card() };
+            vector<card> run{ stock_pile_card };
             for (size_t index{ 0 }; index < board::num_columns; index++)
             {
                 if (board.get_column(index).can_add_run(run))
                 {
-                    moves.emplace_back(
-                        static_cast<shared_ptr<solitaire_move>>(
-                            make_shared<StockPileToColumnMove>(index, board)));
+                    moves.emplace_back(make_shared<StockPileToColumnMove>(index, board));
                 }
             }
             return moves;
@@ -60,9 +57,7 @@ namespace silnith::game::solitaire::move
 
     vector<card> StockPileToColumnMove::get_cards(void) const
     {
-        vector<card> cards{};
-        cards.emplace_back(_card);
-        return cards;
+        return vector<card>{ _card };
     }
 
     bool StockPileToColumnMove::is_stock_pile_modification(void) const
@@ -134,7 +129,7 @@ namespace silnith::game::solitaire::move
         size_t stock_pile_index{ b->get_stock_pile_index() };
         size_t new_stock_pile_index{ stock_pile_index - 1 };
 
-        vector<column> columns{ b->get_columns() };
+        vector<column> const& columns{ b->get_columns() };
         column old_column{ columns.at(destination_column_index) };
         column new_column{ old_column.with_card(drawn_card) };
 

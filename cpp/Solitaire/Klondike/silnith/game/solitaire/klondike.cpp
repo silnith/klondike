@@ -24,6 +24,19 @@ using namespace silnith::game::solitaire::move;
 
 using namespace std;
 
+klondike::klondike(void)
+    : filters{
+        make_shared<move::filter::MoveCapFilter>(150),
+        make_shared<move::filter::KingMoveMustExposeFaceDownCardFilter>(),
+        make_shared<move::filter::StockPileRecycleMustBeFollowedByAdvanceFilter>(),
+        make_shared<move::filter::StockPileAdvanceMustBeFollowedBySomethingUsefulFilter>(),
+        make_shared<move::filter::DrawFromFoundationMustBeUsefulFilter>(),
+        make_shared<move::filter::DrawFromStockPileFilter>(),
+        make_shared<move::filter::RunMoveMustBeFollowedBySomethingUsefulFilter>(),
+        make_shared<move::filter::BoardCycleFilter>(),
+    }
+{}
+
 bool klondike::is_win(board const& board) const
 {
     constexpr size_t const thirteen{ static_cast<std::size_t>(value::king) };
@@ -49,42 +62,43 @@ bool klondike::is_win(board const& board) const
 
 bool klondike::is_win(game_state<solitaire_move, board> const& game_state) const
 {
-    shared_ptr<board> ptr{ game_state.get_board() };
+    shared_ptr<board> const& ptr{ game_state.get_board() };
     return is_win(*ptr);
 }
 
 vector<shared_ptr<solitaire_move>> klondike::find_all_moves(
     shared_ptr<linked_node<game_state<solitaire_move, board>>> const& game_state_history) const
 {
-    game_state<solitaire_move, board> game_state{ game_state_history->get_value() };
-    shared_ptr<board> board_ptr{ game_state.get_board() };
+    game_state<solitaire_move, board> const& game_state{ game_state_history->get_value() };
+    shared_ptr<board> const& board_ptr{ game_state.get_board() };
+    board const& b{ *board_ptr };
 
     vector<shared_ptr<solitaire_move>> moves{};
-    for (shared_ptr<solitaire_move> move : StockPileRecycleMove::find_moves(*board_ptr))
+    for (shared_ptr<solitaire_move> move : StockPileRecycleMove::find_moves(b))
     {
         moves.emplace_back(move);
     }
-    for (shared_ptr<solitaire_move> move : StockPileAdvanceMove::find_moves(draw_advance, *board_ptr))
+    for (shared_ptr<solitaire_move> move : StockPileAdvanceMove::find_moves(draw_advance, b))
     {
         moves.emplace_back(move);
     }
-    for (shared_ptr<solitaire_move> move : FoundationToColumnMove::find_moves(*board_ptr))
+    for (shared_ptr<solitaire_move> move : FoundationToColumnMove::find_moves(b))
     {
         moves.emplace_back(move);
     }
-    for (shared_ptr<solitaire_move> move : ColumnToColumnMove::find_moves(*board_ptr))
+    for (shared_ptr<solitaire_move> move : ColumnToColumnMove::find_moves(b))
     {
         moves.emplace_back(move);
     }
-    for (shared_ptr<solitaire_move> move : StockPileToColumnMove::find_moves(*board_ptr))
+    for (shared_ptr<solitaire_move> move : StockPileToColumnMove::find_moves(b))
     {
         moves.emplace_back(move);
     }
-    for (shared_ptr<solitaire_move> move : ColumnToFoundationMove::find_moves(*board_ptr))
+    for (shared_ptr<solitaire_move> move : ColumnToFoundationMove::find_moves(b))
     {
         moves.emplace_back(move);
     }
-    for (shared_ptr<solitaire_move> move : StockPileToFoundationMove::find_moves(*board_ptr))
+    for (shared_ptr<solitaire_move> move : StockPileToFoundationMove::find_moves(b))
     {
         moves.emplace_back(move);
     }
@@ -93,15 +107,5 @@ vector<shared_ptr<solitaire_move>> klondike::find_all_moves(
 
 vector<shared_ptr<move_filter<solitaire_move, board>>> klondike::get_filters(void) const
 {
-    vector<shared_ptr<move_filter<solitaire_move, board>>> filters{
-        make_shared<filter::MoveCapFilter>(150),
-        make_shared<filter::KingMoveMustExposeFaceDownCardFilter>(),
-        make_shared<filter::StockPileRecycleMustBeFollowedByAdvanceFilter>(),
-        make_shared<filter::StockPileAdvanceMustBeFollowedBySomethingUsefulFilter>(),
-        make_shared<filter::DrawFromFoundationMustBeUsefulFilter>(),
-        make_shared<filter::DrawFromStockPileFilter>(),
-        make_shared<filter::RunMoveMustBeFollowedBySomethingUsefulFilter>(),
-        make_shared<filter::BoardCycleFilter>(),
-    };
     return filters;
 }

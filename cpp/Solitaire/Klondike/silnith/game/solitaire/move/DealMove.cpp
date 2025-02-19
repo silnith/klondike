@@ -119,7 +119,7 @@ namespace silnith::game::solitaire::move
         vector<card> empty{};
 
         vector<column> columns{};
-        for (vector<card> stack : stacks)
+        for (vector<card> const& stack : stacks)
         {
             columns.emplace_back(column{ stack, empty });
         }

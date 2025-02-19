@@ -360,7 +360,7 @@ namespace SolitaireTests
 
 			Assert::ExpectException<out_of_range>([new_column]()
 				{
-					vector<card> run{ new_column.get_top_cards(5) };
+					span<card const> run{ new_column.get_top_cards(5) };
 				});
 		}
 
@@ -380,7 +380,8 @@ namespace SolitaireTests
 
 			column new_column{ face_down, face_up };
 
-			vector<card> actual{ new_column.get_top_cards(4) };
+			span<card const> actual_span{ new_column.get_top_cards(4) };
+			vector<card> actual{ actual_span.begin(), actual_span.end() };
 
 			vector<card> expected{
 				card{ value::king, suit::club },
@@ -407,7 +408,8 @@ namespace SolitaireTests
 
 			column new_column{ face_down, face_up };
 
-			vector<card> actual{ new_column.get_top_cards(3) };
+			span<card const> actual_span{ new_column.get_top_cards(3) };
+			vector<card> actual{ actual_span.begin(), actual_span.end() };
 
 			vector<card> expected{
 				card{ value::queen, suit::diamond},
@@ -433,7 +435,8 @@ namespace SolitaireTests
 
 			column new_column{ face_down, face_up };
 
-			vector<card> actual{ new_column.get_top_cards(2) };
+			span<card const> actual_span{ new_column.get_top_cards(2) };
+			vector<card> actual{ actual_span.begin(), actual_span.end() };
 
 			vector<card> expected{
 				card{ value::jack, suit::club },
@@ -458,7 +461,8 @@ namespace SolitaireTests
 
 			column new_column{ face_down, face_up };
 
-			vector<card> actual{ new_column.get_top_cards(1) };
+			span<card const> actual_span{ new_column.get_top_cards(1) };
+			vector<card> actual{ actual_span.begin(), actual_span.end() };
 
 			vector<card> expected{
 				card{ value::ten, suit::diamond },
@@ -484,7 +488,7 @@ namespace SolitaireTests
 
 			Assert::ExpectException<out_of_range>([new_column]()
 				{
-					vector<card> run{ new_column.get_top_cards(0) };
+					span<card const> run{ new_column.get_top_cards(0) };
 				});
 		}
 

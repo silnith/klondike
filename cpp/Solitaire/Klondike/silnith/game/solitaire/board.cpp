@@ -113,7 +113,7 @@ pair<card, map<suit, vector<card>>> board::extract_card_from_foundation(suit _su
 
 pair<card, vector<card>> board::extract_stock_pile_card(void) const
 {
-    card stock_pile_card{ get_stock_pile_card() };
+    card const& stock_pile_card{ get_stock_pile_card() };
     /*
      * StockPile: [a, b, c]
      * StockPileIndex: 2
@@ -122,11 +122,11 @@ pair<card, vector<card>> board::extract_stock_pile_card(void) const
      */
     vector<card> new_stock_pile{};
     span<card const> stock_pile_span{ stock_pile };
-    for (card c : stock_pile_span.first(stock_pile_index - 1))
+    for (card const& c : stock_pile_span.first(stock_pile_index - 1))
     {
         new_stock_pile.emplace_back(c);
     }
-    for (card c : stock_pile_span.last(stock_pile_span.size() - stock_pile_index))
+    for (card const& c : stock_pile_span.last(stock_pile_span.size() - stock_pile_index))
     {
         new_stock_pile.emplace_back(c);
     }
