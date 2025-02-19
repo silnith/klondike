@@ -15,7 +15,7 @@ class TicTacToe :
     public silnith::game::game<TicTacToeMove, TicTacToeBoard>
 {
 public:
-    TicTacToe(void) = default;
+    TicTacToe(void);
     TicTacToe(TicTacToe const&) = default;
     TicTacToe& operator=(TicTacToe const&) = default;
     TicTacToe(TicTacToe&&) noexcept = default;
@@ -37,7 +37,8 @@ public:
 
     /// <inheritdoc/>
     [[nodiscard]]
-    virtual std::vector<std::shared_ptr<silnith::game::move_filter<TicTacToeMove, TicTacToeBoard>>> get_filters(void) const override;
+    virtual std::span<std::shared_ptr<silnith::game::move_filter<TicTacToeMove, TicTacToeBoard>> const> get_filters(void) const override;
 
 private:
+    std::vector<std::shared_ptr<silnith::game::move_filter<TicTacToeMove, TicTacToeBoard>>> const filters;
 };

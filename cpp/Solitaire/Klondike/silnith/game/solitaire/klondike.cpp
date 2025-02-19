@@ -105,7 +105,7 @@ vector<shared_ptr<solitaire_move>> klondike::find_all_moves(
     return moves;
 }
 
-vector<shared_ptr<move_filter<solitaire_move, board>>> klondike::get_filters(void) const
+span<shared_ptr<move_filter<solitaire_move, board>> const> klondike::get_filters(void) const
 {
     return filters;
 }

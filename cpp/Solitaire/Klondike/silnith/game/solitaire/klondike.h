@@ -9,6 +9,7 @@
 #include <silnith/game/solitaire/move/solitaire_move.h>
 
 #include <memory>
+#include <span>
 #include <vector>
 
 namespace silnith
@@ -56,7 +57,7 @@ namespace silnith
 
                 /// <inheritdoc/>
                 [[nodiscard]]
-                virtual std::vector<std::shared_ptr<move_filter<move::solitaire_move, board>>> get_filters(void) const override;
+                virtual std::span<std::shared_ptr<move_filter<move::solitaire_move, board>> const> get_filters(void) const override;
 
             private:
                 std::size_t const number_of_columns{ board::num_columns };

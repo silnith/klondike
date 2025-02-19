@@ -70,7 +70,7 @@ namespace silnith
             [[nodiscard]]
             std::list<std::shared_ptr<silnith::game::linked_node<silnith::game::game_state<M, B>>>> search()
             {
-                std::vector<std::shared_ptr<silnith::game::move_filter<M, B>>> filters{ _game->get_filters() };
+                std::span<std::shared_ptr<silnith::game::move_filter<M, B>> const> filters{ _game->get_filters() };
 
                 while (!_stack.empty())
                 {

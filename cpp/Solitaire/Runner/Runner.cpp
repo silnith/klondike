@@ -60,7 +60,7 @@ vector<card> shuffle(span<card const> const& span)
 
 void run_search_0(shared_ptr<game<solitaire_move, board>> const& engine, game_state<solitaire_move, board> const& initial_state)
 {
-    vector<shared_ptr<move_filter<solitaire_move, board>>> filters{ engine->get_filters() };
+    span<shared_ptr<move_filter<solitaire_move, board>> const> filters{ engine->get_filters() };
 
     deque<shared_ptr<linked_node<game_state<solitaire_move, board>>>> pending_nodes{};
     deque<shared_ptr<linked_node<game_state<solitaire_move, board>>>> wins{};
@@ -76,7 +76,7 @@ void run_search_0(shared_ptr<game<solitaire_move, board>> const& engine, game_st
         nodes_examined++;
 
         vector<shared_ptr<solitaire_move>> moves{ engine->find_all_moves(game_state_history) };
-        shared_ptr<board> current_board{ game_state_history->get_value().get_board() };
+        shared_ptr<board> const& current_board{ game_state_history->get_value().get_board() };
         current_board->print_to(cout);
         /*
         cout << endl;
@@ -112,14 +112,14 @@ void run_search_0(shared_ptr<game<solitaire_move, board>> const& engine, game_st
         cout << endl;
         */
 
-        for (shared_ptr<solitaire_move> move : moves)
+        for (shared_ptr<solitaire_move> const& move : moves)
         {
             shared_ptr<board> new_board{ move->apply(current_board) };
             game_state<solitaire_move, board> new_game_state{ move, new_board };
             shared_ptr<linked_node<game_state<solitaire_move, board>>> new_history{ make_shared<linked_node<game_state<solitaire_move, board>>>(new_game_state, game_state_history) };
             
             bool broken{ false };
-            for (shared_ptr<move_filter<solitaire_move, board>> filter : filters)
+            for (shared_ptr<move_filter<solitaire_move, board>> const& filter : filters)
             {
                 if (filter->should_filter(new_history))
                 {
@@ -158,7 +158,7 @@ void run_search_0(shared_ptr<game<solitaire_move, board>> const& engine, game_st
     }
 
     // print out wins
-    for (shared_ptr<linked_node<game_state<solitaire_move, board>>> node_ptr : wins)
+    for (shared_ptr<linked_node<game_state<solitaire_move, board>>> const& node_ptr : wins)
     {
         // TODO: Print entire history.
         //cout << node_ptr->get_value() << endl;
@@ -192,7 +192,7 @@ void sequential_dfs(shared_ptr<game<solitaire_move, board>> const& engine, game_
     }
 
     list<shared_ptr<linked_node<game_state<solitaire_move, board>>>> wins{ future.get() };
-    for (shared_ptr<linked_node<game_state<solitaire_move, board>>> win : wins)
+    for (shared_ptr<linked_node<game_state<solitaire_move, board>>> const& win : wins)
     {
         ;
     }
@@ -227,9 +227,9 @@ int main()
         suit::spade,
     };
     vector<card> cards{};
-    for (suit s : suits)
+    for (suit const& s : suits)
     {
-        for (value v : values)
+        for (value const& v : values)
         {
             cards.emplace_back(card{ v, s });
         }
