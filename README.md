@@ -20,7 +20,7 @@ The original implementation was in Java.  The C# version was initially for the
 purpose of learning the language.  As a side-effect, it also ended up
 demonstrating an order-of-magnitude performance difference between the two
 language platforms (JVM and CLR).  This was over a decade ago.  I resurrected
-the project recently for a few reasons, and rewrote the .NET version to work on
+the project recently for a few reasons, and updated the .NET version to work on
 .NET Core instead of .NET Framework.  I expected some performance improvement,
 but the exact same performance disparity still existed even after a decade of
 .NET improvements.
@@ -52,7 +52,7 @@ out at 160,000 and sometimes fell to 80,000.)  Most runs were in the 150,000
 to 200,000 range.
 
 The Java version ranges between 750,000 and 1,000,000 boards per second,
-sometimes rising as high as 1,300,000 boards per second on good game threes.
+sometimes rising as high as 1,300,000 boards per second on good game trees.
 (There is no such thing as a "Release" build for Java, all builds are Debug
 builds.  When I set a conditional breakpoint it would fall to 200 boards per
 second, when I disabled the breakpoint it was back up to 800,000 and higher.)
