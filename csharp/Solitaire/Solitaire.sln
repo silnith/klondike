@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\.editorconfig = ..\.editorconfig
 		..\.gitignore = ..\.gitignore
 		..\Directory.Build.props = ..\Directory.Build.props
+		..\..\LICENSE = ..\..\LICENSE
+		..\..\README.md = ..\..\README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeckTests", "DeckTests\DeckTests.csproj", "{DD5E04D0-C362-4A52-8F05-182C7862C79D}"
@@ -18,11 +20,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game", "Game\Game.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameTests", "GameTests\GameTests.csproj", "{8185FE1E-EAA5-4686-80CA-AC33A6B0DD25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Klondike", "Klondike\Klondike.csproj", "{425C8FB8-3C99-4338-A87C-0B63D4628794}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Klondike", "Klondike\Klondike.csproj", "{425C8FB8-3C99-4338-A87C-0B63D4628794}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KlondikeTests", "KlondikeTests\KlondikeTests.csproj", "{A622C247-1F67-42B1-B073-E80FFDCEFF29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KlondikeTests", "KlondikeTests\KlondikeTests.csproj", "{A622C247-1F67-42B1-B073-E80FFDCEFF29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Runner", "Runner\Runner.csproj", "{FD00D449-7B3B-459E-98F1-D749C73AADBC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Runner", "Runner\Runner.csproj", "{FD00D449-7B3B-459E-98F1-D749C73AADBC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
