@@ -7,6 +7,7 @@ using Silnith.Game.Search;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,7 +15,7 @@ namespace Runner
 {
     class Program
     {
-        static int Main(string[] args)
+        static async Task<int> Main(string[] args)
         {
             List<Value> values = new(13)
             {
@@ -67,13 +68,16 @@ namespace Runner
 
             Console.WriteLine("Processor count: {0:N}", Environment.ProcessorCount);
 
-            //RunSearch0(klondike, initialGameState);
-            SequentialDFS(klondike, initialGameState);
+            //await RunSearch0(klondike, initialGameState);
+            await SequentialDFS(klondike, initialGameState);
+            //await ParallelDFS(klondike, initialGameState, Math.Max(Environment.ProcessorCount - 2, 1));
+            //await ParallelDFS(klondike, initialGameState, 1);
 
             return 0;
         }
 
-        private static void RunSearch0(IGame<ISolitaireMove, Board> klondike, GameState<ISolitaireMove, Board> initialGameState)
+        [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "I keep switching between methods.")]
+        private static Task RunSearch0(IGame<ISolitaireMove, Board> klondike, GameState<ISolitaireMove, Board> initialGameState)
         {
             Stack<LinkedNode<GameState<ISolitaireMove, Board>>> stack = new();
             Stack<IReadOnlyList<GameState<ISolitaireMove, Board>>> wins = new();
@@ -162,12 +166,21 @@ namespace Runner
                 Console.WriteLine(gameState);
                 gameState[0].Board.PrintTo();
             }
+
+            return Task.CompletedTask;
         }
 
-        private static void SequentialDFS(IGame<ISolitaireMove, Board> game, GameState<ISolitaireMove, Board> initialState)
+        [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "I keep switching between methods.")]
+        private static async Task SequentialDFS(IGame<ISolitaireMove, Board> game, GameState<ISolitaireMove, Board> initialState)
         {
             SequentialDepthFirstSearch<ISolitaireMove, Board> searcher = new(game, initialState);
-            Task<IEnumerable<IReadOnlyList<GameState<ISolitaireMove, Board>>>> task = Task.Run(searcher.Search);
+
+            async Task<IEnumerable<IReadOnlyList<GameState<ISolitaireMove, Board>>>> RunSearchAsync()
+            {
+                return await searcher.SearchAsync(CancellationToken.None);
+            }
+
+            Task<IEnumerable<IReadOnlyList<GameState<ISolitaireMove, Board>>>> task = Task.Run(RunSearchAsync, CancellationToken.None);
 
             long statesExamined = 0;
             long boardsGenerated = 0;
@@ -186,7 +199,7 @@ namespace Runner
                 Thread.Sleep(TimeSpan.FromSeconds(1));
             }
 
-            IEnumerable<IReadOnlyList<GameState<ISolitaireMove, Board>>> wins = task.GetAwaiter().GetResult();
+            IEnumerable<IReadOnlyList<GameState<ISolitaireMove, Board>>> wins = await task;
 
             foreach (IReadOnlyList<GameState<ISolitaireMove, Board>> win in wins)
             {
@@ -197,33 +210,43 @@ namespace Runner
             searcher.PrintStatistics();
         }
 
-        private static void ParallelDFS(IGame<ISolitaireMove, Board> game, GameState<ISolitaireMove, Board> initialState, int numThreads)
+        [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "I keep switching between methods.")]
+        private static async Task ParallelDFS(IGame<ISolitaireMove, Board> game, GameState<ISolitaireMove, Board> initialState, int numThreads)
         {
             WorkerThreadDepthFirstSearch<ISolitaireMove, Board> searcher = new(game, initialState, numThreads);
-            async Task RunAsync()
-            {
-                IEnumerable<IReadOnlyList<GameState<ISolitaireMove, Board>>> wins = await searcher.SearchAsync();
 
-                foreach (IReadOnlyList<GameState<ISolitaireMove, Board>> win in wins)
-                {
-                    Console.WriteLine(win);
-                    win[0].Board.PrintTo();
-                }
+            async Task<IEnumerable<IReadOnlyList<GameState<ISolitaireMove, Board>>>> RunSearchAsync()
+            {
+                return await searcher.SearchAsync(CancellationToken.None);
             }
-            Task task = Task.Run(RunAsync);
+
+            Task<IEnumerable<IReadOnlyList<GameState<ISolitaireMove, Board>>>> task = Task.Run(RunSearchAsync, CancellationToken.None);
 
             long statesExamined = 0;
+            long boardsGenerated = 0;
             while (!task.IsCompleted)
             {
                 searcher.PrintStatistics();
                 long nextStatesExamined = searcher.NumberOfGameStatesExamined;
+                long nextBoardsGenerated = searcher.BoardsGenerated;
                 long nodesPerSecond = nextStatesExamined - statesExamined;
+                long boardsPerSecond = nextBoardsGenerated - boardsGenerated;
                 Console.WriteLine("Nodes per second: {0:N0}", nodesPerSecond);
+                Console.WriteLine("Boards per second: {0:N0}", boardsPerSecond);
+                Console.WriteLine();
                 statesExamined = nextStatesExamined;
+                boardsGenerated = nextBoardsGenerated;
                 Thread.Sleep(TimeSpan.FromSeconds(1));
             }
 
-            task.GetAwaiter().GetResult();
+            IEnumerable<IReadOnlyList<GameState<ISolitaireMove, Board>>> wins = await task;
+
+            foreach (IReadOnlyList<GameState<ISolitaireMove, Board>> win in wins)
+            {
+                Console.WriteLine(win);
+                win[0].Board.PrintTo();
+            }
+
             searcher.PrintStatistics();
         }
     }

@@ -1,139 +1,79 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Silnith.Game.Search
 {
-    public class WorkerThreadDepthFirstSearch<M, B> where M : IMove<B>
+    public class WorkerThreadDepthFirstSearch<M, B> : GameTreeSearcher<M, B> where M : IMove<B>
     {
-        private readonly IGame<M, B> game;
-        private readonly List<Thread> threads;
-        private readonly ConcurrentStack<LinkedNode<GameState<M, B>>> stack;
+        private readonly int numWorkers;
+        private readonly BlockingCollection<LinkedNode<GameState<M, B>>> stack;
         private readonly ConcurrentQueue<IReadOnlyList<GameState<M, B>>> wins;
-        private long gameStatesExamined;
-        private long gameStatesPrunedTotal;
-        private readonly ConcurrentDictionary<object, long> gameStatesPruned;
-        private volatile bool cancelled;
 
         public WorkerThreadDepthFirstSearch(IGame<M, B> game, GameState<M, B> initialGameState, int numThreads)
+            : base(game)
         {
-            this.game = game ?? throw new ArgumentNullException(nameof(game));
-            this.threads = new List<Thread>(numThreads);
-            this.stack = new ConcurrentStack<LinkedNode<GameState<M, B>>>();
-            this.wins = new ConcurrentQueue<IReadOnlyList<GameState<M, B>>>();
-            this.gameStatesExamined = 0;
-            this.gameStatesPrunedTotal = 0;
-            this.gameStatesPruned = new ConcurrentDictionary<object, long>();
-            foreach (IMoveFilter<M, B> filter in this.game.GetFilters())
-            {
-                gameStatesPruned[filter.StatisticsKey] = 0;
-            }
-            this.cancelled = false;
+            numWorkers = numThreads;
+            stack = new BlockingCollection<LinkedNode<GameState<M, B>>>(new ConcurrentStack<LinkedNode<GameState<M, B>>>());
+            wins = new ConcurrentQueue<IReadOnlyList<GameState<M, B>>>();
 
-            this.stack.Push(new LinkedNode<GameState<M, B>>(initialGameState));
-
-            for (int i = 0; i < numThreads; i++)
-            {
-                threads.Add(new Thread(Work));
-            }
+            stack.Add(new LinkedNode<GameState<M, B>>(initialGameState));
         }
 
-        public void PrintStatistics()
+        /// <inheritdoc/>
+        protected override int QueueSize => stack.Count;
+
+        /// <inheritdoc/>
+        protected override int WinCount => wins.Count;
+
+        /// <inheritdoc/>
+        public override IEnumerable<IReadOnlyList<GameState<M, B>>> Search()
         {
-            Console.WriteLine(
-                "Nodes examined: {0:N0}\n"
-                + "Nodes pruned: {1:N0}\n"
-                + "Queue size: {2:N0}\n"
-                + "Wins: {3:N0}",
-                gameStatesExamined,
-                gameStatesPrunedTotal,
-                stack.Count,
-                wins.Count);
-            foreach (KeyValuePair<object, long> keyValuePair in gameStatesPruned)
-            {
-                Console.WriteLine(
-                    "Nodes pruned by filter {0}: {1:N0}",
-                    keyValuePair.Key,
-                    keyValuePair.Value);
-            }
+            return SearchAsync(CancellationToken.None).GetAwaiter().GetResult();
         }
 
-        public long NumberOfGameStatesExamined
+        /// <inheritdoc/>
+        public override async Task<IEnumerable<IReadOnlyList<GameState<M, B>>>> SearchAsync(CancellationToken cancellationToken)
         {
-            get
+            async Task DoWorkAsync()
             {
-                return gameStatesExamined;
-            }
-        }
-
-        public async Task<IEnumerable<IReadOnlyList<GameState<M, B>>>> SearchAsync()
-        {
-            foreach (Thread thread in threads)
-            {
-                thread.Start();
+                await WorkAsync(cancellationToken);
             }
 
-            foreach (Thread thread in threads)
+            List<Task> tasks = new List<Task>();
+            for (int i = 0; i < numWorkers; i++)
             {
-                thread.Join();
+                tasks.Add(Task.Run(DoWorkAsync, cancellationToken));
             }
+
+            await Task.WhenAll(tasks);
 
             return wins;
         }
 
-        public void Work()
+        private Task WorkAsync(CancellationToken cancellationToken = default)
         {
-            IEnumerable<IMoveFilter<M, B>> filters = game.GetFilters();
-
-            do
+            int millis = (int) TimeSpan.FromSeconds(1).TotalMilliseconds;
+            while (stack.TryTake(out LinkedNode<GameState<M, B>> node, millis, cancellationToken))
             {
-                while (stack.TryPop(out LinkedNode<GameState<M, B>> gameStateHistory))
-                {
-                    Interlocked.Increment(ref gameStatesExamined);
-                    GameState<M, B> gameState = gameStateHistory.Value;
-                    B board = gameState.Board;
-                    IEnumerable<M> moves = game.FindAllMoves(gameStateHistory);
-                    bool broken = false;
-                    foreach (M move in moves)
-                    {
-                        B newBoard = move.Apply(board);
-                        GameState<M, B> newGameState = new GameState<M, B>(move, newBoard);
-                        LinkedNode<GameState<M, B>> newHistory = new LinkedNode<GameState<M, B>>(newGameState, gameStateHistory);
-                        foreach (IMoveFilter<M, B> filter in filters)
-                        {
-                            if (filter.ShouldFilter(newHistory))
-                            {
-                                Interlocked.Increment(ref gameStatesPrunedTotal);
-                                object key = filter.StatisticsKey;
-                                long value = gameStatesPruned[key];
-                                while (!gameStatesPruned.TryUpdate(key, value + 1, value))
-                                {
-                                    value = gameStatesPruned[key];
-                                }
-                                broken = true;
-                                break;
-                            }
-                        }
-                        if (broken)
-                        {
-                            continue;
-                        }
+                ExamineNode(node);
+            }
+            return Task.CompletedTask;
+        }
 
-                        if (game.IsWin(newGameState))
-                        {
-                            wins.Enqueue(newHistory);
-                        }
-                        else
-                        {
-                            stack.Push(newHistory);
-                        }
-                    }
-                }
-                Thread.Sleep(TimeSpan.FromSeconds(1));
-            } while (!cancelled);
+        /// <inheritdoc/>
+        protected override void AddWin(IReadOnlyList<GameState<M, B>> node)
+        {
+            wins.Enqueue(node);
+        }
+
+        /// <inheritdoc/>
+        protected override void QueueNode(LinkedNode<GameState<M, B>> node)
+        {
+            stack.Add(node);
         }
     }
 }
