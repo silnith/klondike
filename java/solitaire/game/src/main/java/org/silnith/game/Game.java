@@ -19,12 +19,17 @@ import org.silnith.game.move.MoveFilter;
 public interface Game<M extends Move<B>, B> {
 
     /**
-     * Returns whether the given game state is a winning game state for this game.
+     * Returns whether the given reverse list of game states culminates in a win for this game.
+     * The list begins with the most recent move and resulting board, and ends with the initial
+     * move and board of the game.
+     * The most recent game state is {@code gameStates.get(0)}.
+     * The current board is {@code gameStates.get(0).getBoard()}.
      * 
-     * @param state the game state to check
-     * @return {@code true} if the game state represents a win
+     * @param gameStates the reverse list of game states to check.  The list is guaranteed
+     *         to have at least one game state in it.
+     * @return {@code true} if the reverse sequence of game states culminates in a win
      */
-    boolean isWin(GameState<M, B> state);
+    boolean isWin(List<GameState<M, B>> gameStates);
 
     /**
      * Returns all the legal moves for the provided game state history.
@@ -33,11 +38,11 @@ public interface Game<M extends Move<B>, B> {
      * <p>The set of moves returned may vary depending on the configuration of the
      * game engine. See the individual engines for configuration parameters.</p>
      * 
-     * @param gameState the game state history.  The list is guaranteed to have
+     * @param gameStates the game state history.  The list is guaranteed to have
      *         at least one game state in it.
      * @return a collection of legal moves for the given game state
      */
-    Collection<M> findAllMoves(List<GameState<M, B>> gameState);
+    Collection<M> findAllMoves(List<GameState<M, B>> gameStates);
 
     /**
      * Returns filters for pruning the game search space.

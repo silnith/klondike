@@ -52,7 +52,11 @@ out at 160,000 and sometimes fell to 80,000.)  Most runs were in the 150,000
 to 200,000 range.
 
 The Java version ranges between 750,000 and 1,000,000 boards per second,
-sometimes rising as high as 1,300,000 boards per second on good game trees.
+sometimes rising as high as 1,700,000 boards per second on good game trees.
 (There is no such thing as a "Release" build for Java, all builds are Debug
 builds.  When I set a conditional breakpoint it would fall to 200 boards per
 second, when I disabled the breakpoint it was back up to 800,000 and higher.)
+
+I have tried throwing multiple cores at the Java version and seen it surpass
+six million boards per second.  That is with no attempt to optimize it for
+processor affinity or cache-awareness.

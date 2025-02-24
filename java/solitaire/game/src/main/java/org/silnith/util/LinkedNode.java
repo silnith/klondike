@@ -125,7 +125,7 @@ public class LinkedNode<E> extends AbstractSequentialList<E> {
      * @return the {@code car} of this list
      * @see #getNext()
      */
-    public E getFirst() {
+    public E getValue() {
         return value;
     }
     
@@ -134,7 +134,7 @@ public class LinkedNode<E> extends AbstractSequentialList<E> {
      * {@code null}.
      * 
      * @return the {@code cdr} of this node
-     * @see #getFirst()
+     * @see #getValue()
      */
     public LinkedNode<E> getNext() {
         return next;

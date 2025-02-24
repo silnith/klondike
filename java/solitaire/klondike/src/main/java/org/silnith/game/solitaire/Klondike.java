@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -20,6 +21,7 @@ import org.silnith.deck.Value;
 import org.silnith.game.Game;
 import org.silnith.game.GameState;
 import org.silnith.game.move.MoveFilter;
+import org.silnith.game.search.SearcherBase;
 import org.silnith.game.search.SequentialDepthFirstSearch;
 import org.silnith.game.search.WorkerThreadDepthFirstSearch;
 import org.silnith.game.solitaire.move.ColumnToColumnMove;
@@ -122,12 +124,16 @@ public class Klondike implements Game<SolitaireMove, Board> {
 		return true;
 	}
 
-	@Override
 	public boolean isWin(final GameState<SolitaireMove, Board> state) {
 		return isWin(state.getBoard());
 	}
 
-	/**
+	@Override
+    public boolean isWin(final List<GameState<SolitaireMove, Board>> gameStates) {
+        return isWin(gameStates.get(0));
+    }
+
+    /**
 	 * Returns all the legal moves for the given board.
 	 * 
 	 * @param board the board to examine for legal moves
@@ -155,7 +161,7 @@ public class Klondike implements Game<SolitaireMove, Board> {
 		return filters;
 	}
 
-	public static void main(final String[] args) throws InterruptedException {
+	public static void main(final String[] args) throws Exception {
 		final List<Card> deck = new ArrayList<>(52);
 		for (final Suit suit : Suit.values()) {
 			for (final Value value : Value.values()) {
@@ -175,7 +181,7 @@ public class Klondike implements Game<SolitaireMove, Board> {
 		board.printTo(System.out);
 
 		final int availableProcessors = Runtime.getRuntime().availableProcessors();
-		System.out.format(Locale.US, "Runtime processors: %d", availableProcessors);
+		System.out.format(Locale.US, "Runtime processors: %d\n", availableProcessors);
 		
 		//runSearch0(klondike, initialState);
 		sequentialDFS(klondike, initialState);
@@ -207,7 +213,7 @@ public class Klondike implements Game<SolitaireMove, Board> {
 			}
 			System.out.format(Locale.US, "Moves made: %,d\n", history.size());
 			System.out.format(Locale.US, "Game states to examine: %,d\n", deque.size());
-			final Board currentBoard = gameStateHistory.getFirst().getBoard();
+			final Board currentBoard = gameStateHistory.getValue().getBoard();
 			currentBoard.printTo(System.out);
 			System.out.println("Choices:");
 			for (final SolitaireMove move : moves) {
@@ -242,7 +248,7 @@ public class Klondike implements Game<SolitaireMove, Board> {
                     }
                 }
                 
-				if (game.isWin(newGameState)) {
+				if (game.isWin(newHistory)) {
 					wins.add(newHistory);
 				} else {
 					deque.addFirst(newHistory);
@@ -270,95 +276,183 @@ public class Klondike implements Game<SolitaireMove, Board> {
 		}
 	}
 
+    @SuppressWarnings("unused")
 	private static void sequentialDFS(final Game<SolitaireMove, Board> game,
-			final GameState<SolitaireMove, Board> initialState) throws InterruptedException {
-		final SequentialDepthFirstSearch<SolitaireMove, Board> searcher = new SequentialDepthFirstSearch<>(game, initialState);
-		final Runnable runnable = new Runnable() {
-			
-			@Override
-			public void run() {
-				final Future<Collection<List<GameState<SolitaireMove, Board>>>> future = searcher.search();
-				
-				final Collection<List<GameState<SolitaireMove, Board>>> wins;
-				try {
-					wins = future.get();
-				} catch (InterruptedException e) {
-					throw new RuntimeException(e);
-				} catch (ExecutionException e) {
-					throw new RuntimeException(e);
-				}
-				
-				for (final List<GameState<SolitaireMove, Board>> gameState : wins) {
-					System.out.println(gameState);
-					gameState.get(0).getBoard().printTo(System.out);
-				}
-			}
-		};
-		final Thread thread = new Thread(runnable);
-		thread.start();
-		
-		long statesExamined = 0;
-		long boardsGenerated = 0;
-		while (thread.isAlive()) {
-			searcher.printStatistics(System.out);
-			final long nextStatesExamined = searcher.getNumberOfGameStatesExamined();
-			final long nextBoardsGenerated = searcher.getBoardsGenerated();
-			final long nodesPerSecond = nextStatesExamined - statesExamined;
-			final long boardsPerSecond = nextBoardsGenerated - boardsGenerated;
-			System.out.format(Locale.US, "Nodes per second: %,d\n", nodesPerSecond);
-			System.out.format(Locale.US, "Boards per second: %,d\n", boardsPerSecond);
-			System.out.println();
-			statesExamined = nextStatesExamined;
-			boardsGenerated = nextBoardsGenerated;
-			Thread.sleep(TimeUnit.SECONDS.toMillis(1));
-		}
-		
-		thread.join();
-		searcher.printStatistics(System.out);
+			final GameState<SolitaireMove, Board> initialState) throws Exception {
+        final ExecutorService executor = Executors.newSingleThreadExecutor();
+		try (final SearcherBase<SolitaireMove, Board> searcher = new SequentialDepthFirstSearch<>(game, initialState)) {
+		    final Future<Collection<List<GameState<SolitaireMove, Board>>>> future = executor.submit(searcher);
+		    
+            long statesExamined = 0;
+            long boardsGenerated = 0;
+            while (!future.isDone()) {
+            	searcher.printStatistics(System.out);
+            	final long nextStatesExamined = searcher.getNumberOfGameStatesExamined();
+            	final long nextBoardsGenerated = searcher.getBoardsGenerated();
+            	final long nodesPerSecond = nextStatesExamined - statesExamined;
+            	final long boardsPerSecond = nextBoardsGenerated - boardsGenerated;
+            	System.out.format(Locale.US, "Nodes per second: %,d\n", nodesPerSecond);
+            	System.out.format(Locale.US, "Boards per second: %,d\n", boardsPerSecond);
+            	System.out.println();
+            	statesExamined = nextStatesExamined;
+            	boardsGenerated = nextBoardsGenerated;
+            	Thread.sleep(TimeUnit.SECONDS.toMillis(1));
+            }
+            
+            final Collection<List<GameState<SolitaireMove, Board>>> wins = future.get();
+            
+            for (final List<GameState<SolitaireMove, Board>> gameState : wins) {
+                System.out.println(gameState);
+                gameState.get(0).getBoard().printTo(System.out);
+            }
+            
+            searcher.printStatistics(System.out);
+        }
+		executor.shutdown();
 	}
 
 	@SuppressWarnings("unused")
     private static void parallelDFS(final Game<SolitaireMove, Board> game,
 			final GameState<SolitaireMove, Board> initialState,
-			final int numThreads) throws InterruptedException {
-		final WorkerThreadDepthFirstSearch<SolitaireMove, Board> searcher = new WorkerThreadDepthFirstSearch<>(game, initialState, numThreads);
-		final Runnable runnable = new Runnable() {
-			
-			@Override
-			public void run() {
-				final Future<Collection<List<GameState<SolitaireMove, Board>>>> future = searcher.search();
-				
-				final Collection<List<GameState<SolitaireMove, Board>>> wins;
-				try {
-					wins = future.get();
-				} catch (InterruptedException e) {
-					throw new RuntimeException(e);
-				} catch (ExecutionException e) {
-					throw new RuntimeException(e);
-				}
-				
-				for (final List<GameState<SolitaireMove, Board>> gameState : wins) {
-					System.out.println(gameState);
-					gameState.get(0).getBoard().printTo(System.out);
-				}
-			}
-		};
-		final Thread thread = new Thread(runnable);
-		thread.start();
-		
-		long statesExamined = 0;
-		while (thread.isAlive()) {
-			searcher.printStatistics(System.out);
-			final long nextStatesExamined = searcher.getNumberOfGameStatesExamined();
-			final long nodesPerSecond = nextStatesExamined - statesExamined;
-			System.out.format(Locale.US, "Nodes per second: %,d\n", nodesPerSecond);
-			System.out.println();
-			statesExamined = nextStatesExamined;
-			Thread.sleep(TimeUnit.SECONDS.toMillis(1));
+			final int numThreads) throws Exception {
+	    final ExecutorService executor = Executors.newSingleThreadExecutor();
+		try (final SearcherBase<SolitaireMove, Board> searcher = new WorkerThreadDepthFirstSearch<>(game, initialState, numThreads);) {
+    		final Future<Collection<List<GameState<SolitaireMove, Board>>>> future = executor.submit(searcher);
+
+            long statesExamined = 0;
+            long boardsGenerated = 0;
+    		while (!future.isDone()) {
+                searcher.printStatistics(System.out);
+                final long nextStatesExamined = searcher.getNumberOfGameStatesExamined();
+                final long nextBoardsGenerated = searcher.getBoardsGenerated();
+                final long nodesPerSecond = nextStatesExamined - statesExamined;
+                final long boardsPerSecond = nextBoardsGenerated - boardsGenerated;
+                System.out.format(Locale.US, "Nodes per second: %,d\n", nodesPerSecond);
+                System.out.format(Locale.US, "Boards per second: %,d\n", boardsPerSecond);
+                System.out.println();
+                statesExamined = nextStatesExamined;
+                boardsGenerated = nextBoardsGenerated;
+                Thread.sleep(TimeUnit.SECONDS.toMillis(1));
+    		}
+    		
+    		final Collection<List<GameState<SolitaireMove, Board>>> wins = future.get();
+            
+            for (final List<GameState<SolitaireMove, Board>> gameState : wins) {
+                System.out.println(gameState);
+                gameState.get(0).getBoard().printTo(System.out);
+            }
+            
+            searcher.printStatistics(System.out);
 		}
-        
-        thread.join();
-        searcher.printStatistics(System.out);
+        executor.shutdown();
 	}
+
+    /**
+     * A fake move that simply produces a pre-arranged board.
+     */
+    private static class PrearrangedMove implements SolitaireMove {
+
+        private final Board board;
+
+        public PrearrangedMove(final Board board) {
+            super();
+            this.board = board;
+        }
+
+        @Override
+        public Board apply(final Board board) {
+            return this.board;
+        }
+
+        @Override
+        public boolean hasCards() {
+            return false;
+        }
+
+        @Override
+        public List<Card> getCards() {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public boolean isStockPileModification() {
+            return false;
+        }
+
+        @Override
+        public boolean isStockPileAdvance() {
+            return false;
+        }
+
+        @Override
+        public boolean isStockPileRecycle() {
+            return false;
+        }
+
+        @Override
+        public boolean isFromStockPile() {
+            return false;
+        }
+
+        @Override
+        public boolean isFromFoundation() {
+            return false;
+        }
+
+        @Override
+        public boolean isFromColumn() {
+            return false;
+        }
+
+        @Override
+        public boolean isFromColumn(int columnIndex) {
+            return false;
+        }
+
+        @Override
+        public int getSourceColumnIndex() {
+            return 0;
+        }
+
+        @Override
+        public boolean isToFoundation() {
+            return false;
+        }
+
+        @Override
+        public boolean isToColumn() {
+            return false;
+        }
+
+        @Override
+        public boolean isToColumn(int columnIndex) {
+            return false;
+        }
+
+        @Override
+        public int getDestinationColumnIndex() {
+            return 0;
+        }
+
+    }
+    
+    private static Board makeBoardThatNeedsCardsWalkedToFoundation() {
+        final List<Column> columns = Arrays.asList(
+                new Column(null, Arrays.asList()),
+                new Column(null, Arrays.asList()),
+                new Column(null, Arrays.asList()),
+                new Column(null, Arrays.asList()),
+                new Column(null, Arrays.asList()),
+                new Column(null, Arrays.asList()),
+                new Column(null, Arrays.asList()));
+        final List<Card> stockPile = Arrays.asList();
+        final int stockPileIndex = 0;
+        final Map<Suit, List<Card>> foundation = new EnumMap<Suit, List<Card>>(Suit.class);
+        foundation.put(Suit.CLUB, Arrays.asList());
+        foundation.put(Suit.DIAMOND, Arrays.asList());
+        foundation.put(Suit.HEART, Arrays.asList());
+        foundation.put(Suit.SPADE, Arrays.asList());
+        return new Board(columns, stockPile, stockPileIndex, foundation);
+    }
 
 }
