@@ -19,21 +19,26 @@ import org.silnith.util.LinkedNode;
 /**
  * Abstract base class for game tree search algorithms.
  * This provides a common implementation of the logic to expand a single node
- * in the game tree
+ * in the game tree.
  * 
  * @param <M> the move type for the game
  * @param <B> the board type for the game
  */
-public abstract class SearcherBase<M extends Move<B>, B> implements AutoCloseable, Callable<Collection<List<GameState<M, B>>>> {
+public abstract class GameTreeSearcher<M extends Move<B>, B> implements AutoCloseable, Callable<Collection<List<GameState<M, B>>>> {
 
-    protected final Game<M, B> game;
-    protected final Collection<? extends MoveFilter<M, B>> gameFilters;
-    protected final AtomicLong gameStatesExamined;
-    protected final AtomicLong boardsGenerated;
-    protected final AtomicLong movesPrunedTotal;
-    protected final Map<Object, AtomicLong> movesPruned;
+    private final Game<M, B> game;
+    private final Collection<? extends MoveFilter<M, B>> gameFilters;
+    private final AtomicLong gameStatesExamined;
+    private final AtomicLong boardsGenerated;
+    private final AtomicLong movesPrunedTotal;
+    private final Map<Object, AtomicLong> movesPruned;
 
-    protected SearcherBase(final Game<M, B> game) {
+    /**
+     * Initializes a game tree search run for the provided game.
+     * 
+     * @param game the game
+     */
+    protected GameTreeSearcher(final Game<M, B> game) {
         super();
         if (game == null) {
             throw new IllegalArgumentException("Game cannot be null.");
@@ -51,10 +56,26 @@ public abstract class SearcherBase<M extends Move<B>, B> implements AutoCloseabl
         this.movesPruned = Collections.unmodifiableMap(tempMap);
     }
 
+    /**
+     * Returns the current size of the queue of nodes to be searched.
+     * 
+     * @return the current size of the queue
+     */
     protected abstract int getQueueSize();
 
+    /**
+     * Returns the current number of winning game states found.
+     * 
+     * @return the current number of wins found
+     */
     protected abstract int getWinCount();
 
+    /**
+     * Prints statistics on the game tree search to the provided
+     * print stream.
+     * 
+     * @param out the print stream to print statistics to
+     */
     public void printStatistics(final PrintStream out) {
         out.printf(Locale.US,
                 "Nodes examined: %,d\n"
@@ -77,10 +98,20 @@ public abstract class SearcherBase<M extends Move<B>, B> implements AutoCloseabl
         out.flush();
     }
     
+    /**
+     * Returns the total number of game states examined.
+     * 
+     * @return the total number of game states examined.
+     */
     public long getNumberOfGameStatesExamined() {
         return gameStatesExamined.get();
     }
     
+    /**
+     * Returns the total number of boards generated.
+     * 
+     * @return the total number of boards generated
+     */
     public long getBoardsGenerated() {
         return boardsGenerated.get();
     }

@@ -9,7 +9,7 @@ import java.util.Locale;
 import org.silnith.game.Game;
 import org.silnith.game.GameState;
 import org.silnith.game.move.MoveFilter;
-import org.silnith.game.search.SearcherBase;
+import org.silnith.game.search.GameTreeSearcher;
 import org.silnith.game.search.SequentialDepthFirstSearch;
 import org.silnith.game.search.WorkerThreadDepthFirstSearch;
 
@@ -104,8 +104,8 @@ public class TicTacToe implements Game<Move, Board> {
         final Board initialBoard = new Board(Player.X);
         final GameState<Move, Board> initialGameState = new GameState<>(initialMove, initialBoard);
         initialBoard.printTo(System.out);
-        //final SearcherBase<Move, Board> searcher = new SequentialDepthFirstSearch<>(game, initialGameState);
-        final SearcherBase<Move, Board> searcher = new WorkerThreadDepthFirstSearch<>(game, initialGameState, Math.max(availableProcessors - 2, 1));
+        final GameTreeSearcher<Move, Board> searcher = new SequentialDepthFirstSearch<>(game, initialGameState);
+        //final GameTreeSearcher<Move, Board> searcher = new WorkerThreadDepthFirstSearch<>(game, initialGameState, Math.max(availableProcessors - 2, 1));
         final Collection<List<GameState<Move, Board>>> results = searcher.call();
         System.out.println(results.size());
         searcher.printStatistics(System.out);

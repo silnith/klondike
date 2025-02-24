@@ -19,12 +19,18 @@ import org.silnith.util.LinkedNode;
  * @param <M> the move type for the game
  * @param <B> the board type for the game
  */
-public class SequentialDepthFirstSearch<M extends Move<B>, B> extends SearcherBase<M, B> {
+public class SequentialDepthFirstSearch<M extends Move<B>, B> extends GameTreeSearcher<M, B> {
 
     private final Deque<LinkedNode<GameState<M, B>>> stack;
 
     private final Collection<List<GameState<M, B>>> wins;
 
+	/**
+	 * Initializes a sequential single-threaded depth-first search.
+	 * 
+	 * @param game the game
+	 * @param initialState the initial game state
+	 */
 	public SequentialDepthFirstSearch(final Game<M, B> game, final GameState<M, B> initialState) {
 		super(game);
 		this.stack = new ArrayDeque<>();

@@ -22,7 +22,7 @@ import org.silnith.util.LinkedNode;
  * @param <B> the board type for the game
  */
 public class WorkerThreadDepthFirstSearch<M extends Move<B>, B>
-        extends SearcherBase<M, B> {
+        extends GameTreeSearcher<M, B> {
 
 	private final List<Worker> workers;
 	private final BlockingDeque<LinkedNode<GameState<M, B>>> queue;

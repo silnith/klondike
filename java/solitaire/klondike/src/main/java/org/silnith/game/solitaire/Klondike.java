@@ -21,7 +21,7 @@ import org.silnith.deck.Value;
 import org.silnith.game.Game;
 import org.silnith.game.GameState;
 import org.silnith.game.move.MoveFilter;
-import org.silnith.game.search.SearcherBase;
+import org.silnith.game.search.GameTreeSearcher;
 import org.silnith.game.search.SequentialDepthFirstSearch;
 import org.silnith.game.search.WorkerThreadDepthFirstSearch;
 import org.silnith.game.solitaire.move.ColumnToColumnMove;
@@ -280,7 +280,7 @@ public class Klondike implements Game<SolitaireMove, Board> {
 	private static void sequentialDFS(final Game<SolitaireMove, Board> game,
 			final GameState<SolitaireMove, Board> initialState) throws Exception {
         final ExecutorService executor = Executors.newSingleThreadExecutor();
-		try (final SearcherBase<SolitaireMove, Board> searcher = new SequentialDepthFirstSearch<>(game, initialState)) {
+		try (final GameTreeSearcher<SolitaireMove, Board> searcher = new SequentialDepthFirstSearch<>(game, initialState)) {
 		    final Future<Collection<List<GameState<SolitaireMove, Board>>>> future = executor.submit(searcher);
 		    
             long statesExamined = 0;
@@ -316,7 +316,7 @@ public class Klondike implements Game<SolitaireMove, Board> {
 			final GameState<SolitaireMove, Board> initialState,
 			final int numThreads) throws Exception {
 	    final ExecutorService executor = Executors.newSingleThreadExecutor();
-		try (final SearcherBase<SolitaireMove, Board> searcher = new WorkerThreadDepthFirstSearch<>(game, initialState, numThreads);) {
+		try (final GameTreeSearcher<SolitaireMove, Board> searcher = new WorkerThreadDepthFirstSearch<>(game, initialState, numThreads);) {
     		final Future<Collection<List<GameState<SolitaireMove, Board>>>> future = executor.submit(searcher);
 
             long statesExamined = 0;
