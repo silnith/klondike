@@ -119,7 +119,7 @@ namespace silnith::game::solitaire::move
         throw invalid_argument("Not a move to a column.");
     }
 
-    shared_ptr<board> StockPileAdvanceMove::apply(shared_ptr<board> const& b) const
+    shared_ptr<board const> StockPileAdvanceMove::apply(shared_ptr<board const> const& b) const
     {
         vector<card> const& stock_pile{ b->get_stock_pile() };
         size_t const new_index{ min(b->get_stock_pile_index() + increment, stock_pile.size()) };

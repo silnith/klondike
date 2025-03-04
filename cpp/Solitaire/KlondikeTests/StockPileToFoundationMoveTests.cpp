@@ -245,7 +245,7 @@ namespace SolitaireMoveTests
 
 			StockPileToFoundationMove move{ board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			map<suit, vector<card>> expected_foundation{
 				{ suit::club, empty_list_of_cards },
@@ -270,7 +270,7 @@ namespace SolitaireMoveTests
 
 			Assert::ExpectException<out_of_range>([board_ptr, move]()
 				{
-					shared_ptr<board> actual{ move.apply(board_ptr) };
+					shared_ptr<board const> actual{ move.apply(board_ptr) };
 				});
 		}
 
@@ -286,7 +286,7 @@ namespace SolitaireMoveTests
 
 			Assert::ExpectException<out_of_range>([board_ptr, move]()
 				{
-					shared_ptr<board> actual{ move.apply(board_ptr) };
+					shared_ptr<board const> actual{ move.apply(board_ptr) };
 				});
 		}
 
@@ -319,7 +319,7 @@ namespace SolitaireMoveTests
 
 			StockPileToFoundationMove move{ board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			map<suit, vector<card>> expected_foundation{
 				{ suit::club, empty_list_of_cards },
@@ -380,7 +380,7 @@ namespace SolitaireMoveTests
 
 			StockPileToFoundationMove move{ board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<card> expected_stock_pile{
 				card{ value::six, suit::spade },
@@ -448,7 +448,7 @@ namespace SolitaireMoveTests
 
 			StockPileToFoundationMove move{ board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<card> expected_stock_pile{
 				card{ value::six, suit::spade },
@@ -516,7 +516,7 @@ namespace SolitaireMoveTests
 
 			StockPileToFoundationMove move{ board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<card> expected_stock_pile{
 				card{ value::six, suit::spade },
@@ -587,7 +587,7 @@ namespace SolitaireMoveTests
 
 			StockPileToFoundationMove move{ board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			map<suit, vector<card>> expected_foundation{
 				{ suit::club, empty_list_of_cards },

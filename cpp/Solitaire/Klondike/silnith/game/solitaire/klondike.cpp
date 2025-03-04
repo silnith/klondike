@@ -60,52 +60,54 @@ bool klondike::is_win(board const& board) const
     return true;
 }
 
-bool klondike::is_win(game_state<solitaire_move, board> const& game_state) const
+bool klondike::is_win(shared_ptr<linked_node<game_state<solitaire_move, board>> const> const& node_ptr) const
 {
-    shared_ptr<board> const& ptr{ game_state.get_board() };
-    return is_win(*ptr);
+    linked_node<game_state<solitaire_move, board>> const& node{ *node_ptr };
+    game_state<solitaire_move, board> const& game_state{ node.get_value() };
+    shared_ptr<board const> const& b{ game_state.get_board() };
+    return is_win(*b);
 }
 
-vector<shared_ptr<solitaire_move>> klondike::find_all_moves(
-    shared_ptr<linked_node<game_state<solitaire_move, board>>> const& game_state_history) const
+vector<shared_ptr<solitaire_move const>> klondike::find_all_moves(
+    shared_ptr<linked_node<game_state<solitaire_move, board>> const> const& game_state_history) const
 {
     game_state<solitaire_move, board> const& game_state{ game_state_history->get_value() };
-    shared_ptr<board> const& board_ptr{ game_state.get_board() };
+    shared_ptr<board const> const& board_ptr{ game_state.get_board() };
     board const& b{ *board_ptr };
 
-    vector<shared_ptr<solitaire_move>> moves{};
-    for (shared_ptr<solitaire_move> move : StockPileRecycleMove::find_moves(b))
+    vector<shared_ptr<solitaire_move const>> moves{};
+    for (shared_ptr<solitaire_move const> move : StockPileRecycleMove::find_moves(b))
     {
         moves.emplace_back(move);
     }
-    for (shared_ptr<solitaire_move> move : StockPileAdvanceMove::find_moves(draw_advance, b))
+    for (shared_ptr<solitaire_move const> move : StockPileAdvanceMove::find_moves(draw_advance, b))
     {
         moves.emplace_back(move);
     }
-    for (shared_ptr<solitaire_move> move : FoundationToColumnMove::find_moves(b))
+    for (shared_ptr<solitaire_move const> move : FoundationToColumnMove::find_moves(b))
     {
         moves.emplace_back(move);
     }
-    for (shared_ptr<solitaire_move> move : ColumnToColumnMove::find_moves(b))
+    for (shared_ptr<solitaire_move const> move : ColumnToColumnMove::find_moves(b))
     {
         moves.emplace_back(move);
     }
-    for (shared_ptr<solitaire_move> move : StockPileToColumnMove::find_moves(b))
+    for (shared_ptr<solitaire_move const> move : StockPileToColumnMove::find_moves(b))
     {
         moves.emplace_back(move);
     }
-    for (shared_ptr<solitaire_move> move : ColumnToFoundationMove::find_moves(b))
+    for (shared_ptr<solitaire_move const> move : ColumnToFoundationMove::find_moves(b))
     {
         moves.emplace_back(move);
     }
-    for (shared_ptr<solitaire_move> move : StockPileToFoundationMove::find_moves(b))
+    for (shared_ptr<solitaire_move const> move : StockPileToFoundationMove::find_moves(b))
     {
         moves.emplace_back(move);
     }
     return moves;
 }
 
-span<shared_ptr<move_filter<solitaire_move, board>> const> klondike::get_filters(void) const
+span<shared_ptr<move_filter<solitaire_move, board> const> const> klondike::get_filters(void) const
 {
     return filters;
 }

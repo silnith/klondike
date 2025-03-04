@@ -133,7 +133,7 @@ namespace silnith
 
                     /// <inheritdoc/>
                     [[nodiscard]]
-                    virtual std::shared_ptr<board> apply(std::shared_ptr<board> const& b) const override;
+                    virtual std::shared_ptr<board const> apply(std::shared_ptr<board const> const& b) const override;
 
                     [[nodiscard]]
                     bool operator==(StockPileToFoundationMove const& other) const;

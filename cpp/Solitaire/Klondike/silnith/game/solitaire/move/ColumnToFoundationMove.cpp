@@ -115,7 +115,7 @@ namespace silnith::game::solitaire::move
         throw invalid_argument("Not a move to a column.");
     }
 
-    shared_ptr<board> ColumnToFoundationMove::apply(shared_ptr<board> const& b) const
+    shared_ptr<board const> ColumnToFoundationMove::apply(shared_ptr<board const> const& b) const
     {
         column const& source_column{ b->get_column(source_column_index) };
         pair<card, column> pair{ source_column.extract_card() };

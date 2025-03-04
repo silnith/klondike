@@ -38,7 +38,7 @@ namespace silnith
                     /// </summary>
                     /// <param name="board">The board to examine.</param>
                     /// <returns>A collection of moves.</returns>
-                    static std::vector<std::shared_ptr<solitaire_move>> find_moves(board const& board);
+                    static std::vector<std::shared_ptr<solitaire_move const>> find_moves(board const& board);
 
                 public:
                     ColumnToColumnMove(void) = default;
@@ -86,7 +86,7 @@ namespace silnith
                     explicit ColumnToColumnMove(std::size_t source_column_index,
                         std::size_t destination_column_index,
                         std::size_t number_of_cards,
-                        std::shared_ptr<board> const& board);
+                        std::shared_ptr<board const> const& board);
 
                     /// <inheritdoc/>
                     [[nodiscard]]
@@ -146,7 +146,7 @@ namespace silnith
 
                     /// <inheritdoc/>
                     [[nodiscard]]
-                    virtual std::shared_ptr<board> apply(std::shared_ptr<board> const& b) const override;
+                    virtual std::shared_ptr<board const> apply(std::shared_ptr<board const> const& b) const override;
 
                     [[nodiscard]]
                     bool operator==(ColumnToColumnMove const& other) const;

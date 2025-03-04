@@ -109,7 +109,7 @@ namespace silnith::game::solitaire::move
         throw invalid_argument("Not a move to a column.");
     }
 
-    shared_ptr<board> StockPileToFoundationMove::apply(shared_ptr<board> const& b) const
+    shared_ptr<board const> StockPileToFoundationMove::apply(shared_ptr<board const> const& b) const
     {
         pair<card, vector<card>> pair{ b->extract_stock_pile_card() };
         card drawn_card{ pair.first };

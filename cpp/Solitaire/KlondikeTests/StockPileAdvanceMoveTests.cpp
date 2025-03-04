@@ -234,7 +234,7 @@ namespace SolitaireMoveTests
 
 			StockPileAdvanceMove move{ 3, *board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			board expected{ empty_columns, stock_pile, 5, empty_foundation };
 			Assert::AreEqual(expected, *actual);
@@ -276,7 +276,7 @@ namespace SolitaireMoveTests
 
 			StockPileAdvanceMove move{ 3, *board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			board expected{ columns, stock_pile, 5, empty_foundation };
 			Assert::AreEqual(expected, *actual);
@@ -318,7 +318,7 @@ namespace SolitaireMoveTests
 
 			StockPileAdvanceMove move{ 3, *board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			board expected{ empty_columns, stock_pile, 5, foundation };
 			Assert::AreEqual(expected, *actual);

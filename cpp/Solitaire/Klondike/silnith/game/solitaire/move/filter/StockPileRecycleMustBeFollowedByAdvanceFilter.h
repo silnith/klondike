@@ -40,7 +40,7 @@ namespace silnith
 
                         /// <inheritdoc/>
                         [[nodiscard]]
-                        virtual bool should_filter(std::shared_ptr<linked_node<game_state<solitaire_move, board>>> const& game_state_history) const override;
+                        virtual bool should_filter(std::shared_ptr<linked_node<game_state<solitaire_move, board>> const> const& game_state_history) const override;
 
                     private:
                     };

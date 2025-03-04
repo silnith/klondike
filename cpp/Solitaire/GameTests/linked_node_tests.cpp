@@ -103,14 +103,63 @@ namespace GameTests
 			Assert::IsTrue(std::equal(node_ptr->cbegin(), node_ptr->cend(), vec.cbegin(), vec.cend()));
 		}
 
-		//TEST_METHOD(TestLinkedNodeRangeBasedForLoopConstValue)
-		//{
-		//	linked_node<int> node{ 5 };
-		//
-		//	for (int const& value : node)
-		//	{
-		//		Assert::AreEqual(5, value);
-		//	}
-		//}
+		TEST_METHOD(TestLinkedNodeRangeBasedForLoopConstValue)
+		{
+			linked_node<int> node{ 5 };
+		
+			for (int const& value : node)
+			{
+				Assert::AreEqual(5, value);
+			}
+		}
+
+		TEST_METHOD(TestLinkedNodeRangeBasedForLoopConstValues)
+		{
+			std::shared_ptr<linked_node<int>> node3{ std::make_shared<linked_node<int>>(3) };
+			std::shared_ptr<linked_node<int>> node2{ std::make_shared<linked_node<int>>(2, node3) };
+			std::shared_ptr<linked_node<int>> node1{ std::make_shared<linked_node<int>>(1, node2) };
+			std::shared_ptr<linked_node<int>> node_ptr{ std::make_shared<linked_node<int>>(0, node1) };
+
+			int count{ 0 };
+			for (int const& value : *node_ptr)
+			{
+				Assert::AreEqual(count, value);
+				count++;
+			}
+		}
+
+		TEST_METHOD(TestSize)
+		{
+			linked_node<int> node{ 5 };
+
+			Assert::AreEqual(size_t{ 1 }, node.size());
+		}
+
+		TEST_METHOD(TestSizeList)
+		{
+			std::shared_ptr<linked_node<int>> node3{ std::make_shared<linked_node<int>>(3) };
+			std::shared_ptr<linked_node<int>> node2{ std::make_shared<linked_node<int>>(2, node3) };
+			std::shared_ptr<linked_node<int>> node1{ std::make_shared<linked_node<int>>(1, node2) };
+			std::shared_ptr<linked_node<int>> node_ptr{ std::make_shared<linked_node<int>>(0, node1) };
+
+			Assert::AreEqual(size_t{ 4 }, node_ptr->size());
+		}
+
+		TEST_METHOD(TestEmpty)
+		{
+			linked_node<int> node{ 5 };
+
+			Assert::IsFalse(node.empty());
+		}
+
+		TEST_METHOD(TestEmptyList)
+		{
+			std::shared_ptr<linked_node<int>> node3{ std::make_shared<linked_node<int>>(3) };
+			std::shared_ptr<linked_node<int>> node2{ std::make_shared<linked_node<int>>(2, node3) };
+			std::shared_ptr<linked_node<int>> node1{ std::make_shared<linked_node<int>>(1, node2) };
+			std::shared_ptr<linked_node<int>> node_ptr{ std::make_shared<linked_node<int>>(0, node1) };
+
+			Assert::IsFalse(node_ptr->empty());
+		}
 	};
 }

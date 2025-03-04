@@ -250,7 +250,7 @@ namespace SolitaireMoveTests
 
 			StockPileRecycleMove move{ stock_pile_index };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			board expected{ columns, stock_pile, 0, foundation };
 			Assert::AreEqual(expected, *actual);

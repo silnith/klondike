@@ -21,7 +21,7 @@ public:
     explicit TicTacToeMove(int row, int column, TicTacToePlayer player);
 
     [[nodiscard]]
-    virtual std::shared_ptr<TicTacToeBoard> apply(std::shared_ptr<TicTacToeBoard> const& board) const override;
+    virtual std::shared_ptr<TicTacToeBoard const> apply(std::shared_ptr<TicTacToeBoard const> const& board) const override;
 
 private:
     int const row_;

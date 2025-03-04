@@ -120,7 +120,7 @@ namespace silnith::game::solitaire::move
         return destination_column_index;
     }
 
-    shared_ptr<board> StockPileToColumnMove::apply(shared_ptr<board> const& b) const
+    shared_ptr<board const> StockPileToColumnMove::apply(shared_ptr<board const> const& b) const
     {
         pair<card, vector<card>> pair{ b->extract_stock_pile_card() };
         card drawn_card{ pair.first };

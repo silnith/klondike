@@ -26,7 +26,7 @@ namespace silnith
             /// </summary>
             /// <returns>The new board after the move has been completed.</returns>
             [[nodiscard]]
-            virtual std::shared_ptr<B> apply(std::shared_ptr<B> const& board) const = 0;
+            virtual std::shared_ptr<B const> apply(std::shared_ptr<B const> const& board) const = 0;
         };
     }
 }

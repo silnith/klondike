@@ -9,9 +9,9 @@ using namespace std::literals::string_literals;
 
 namespace silnith::game::solitaire::move
 {
-    vector<shared_ptr<solitaire_move>> ColumnToColumnMove::find_moves(board const& board)
+    vector<shared_ptr<solitaire_move const>> ColumnToColumnMove::find_moves(board const& board)
     {
-        vector<shared_ptr<solitaire_move>> moves{};
+        vector<shared_ptr<solitaire_move const>> moves{};
         for (size_t source_index{ 0 }; source_index < board::num_columns; source_index++)
         {
             column const& source_column{ board.get_column(source_index) };
@@ -44,7 +44,7 @@ namespace silnith::game::solitaire::move
                     {
                         int run_length{ run_start_value - source_run_min_value + 1 };
 
-                        span<card const> run{ source_column.get_top_cards(run_length) };
+                        span<card const> const& run{ source_column.get_top_cards(run_length) };
                         if (destination_top_card.get_color() != run.front().get_color())
                         {
                             moves.emplace_back(make_shared<ColumnToColumnMove>(source_index, destination_index, run));
@@ -103,7 +103,7 @@ namespace silnith::game::solitaire::move
     ColumnToColumnMove::ColumnToColumnMove(size_t source_column_index,
         size_t destination_column_index,
         size_t number_of_cards,
-        shared_ptr<board> const& board)
+        shared_ptr<board const> const& board)
         : ColumnToColumnMove(source_column_index, destination_column_index, number_of_cards, *board)
     {}
 
@@ -177,7 +177,7 @@ namespace silnith::game::solitaire::move
         return destination_column_index;
     }
 
-    shared_ptr<board> ColumnToColumnMove::apply(shared_ptr<board> const& b) const
+    shared_ptr<board const> ColumnToColumnMove::apply(shared_ptr<board const> const& b) const
     {
         vector<column> const& columns{ b->get_columns() };
         vector<card> const& stock_pile{ b->get_stock_pile() };
@@ -186,10 +186,10 @@ namespace silnith::game::solitaire::move
 
         column const& from_column{ columns.at(source_column_index) };
         column const& to_column{ columns.at(destination_column_index) };
-        pair<vector<card>, column> pair{ from_column.extract_run(cards.size()) };
-        vector<card> run{ pair.first };
-        column new_from_column{ pair.second };
-        column new_to_column{ to_column.with_cards(run) };
+        pair<vector<card>, column> const pair{ from_column.extract_run(cards.size()) };
+        vector<card> const run{ pair.first };
+        column const new_from_column{ pair.second };
+        column const new_to_column{ to_column.with_cards(run) };
 
         vector<column> new_columns{};
         for (size_t index{ 0 }; index < board::num_columns; index++)

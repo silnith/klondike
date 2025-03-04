@@ -177,6 +177,10 @@
       <Project>{0eecf064-8387-47b4-80ec-b4681b5ff3ae}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameStateToString.h" />
+    <ClInclude Include="test_move.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

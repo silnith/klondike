@@ -34,20 +34,13 @@ namespace silnith
             virtual ~game(void) = default;
 
             /// <summary>
-            /// Returns whether the given board is a winning game state for this game.
-            /// </summary>
-            /// <param name="board">The board to check.</param>
-            /// <returns><c>true</c> if the board represents a win.</returns>
-            [[nodiscard]]
-            virtual bool is_win(B const& board) const = 0;
-
-            /// <summary>
             /// Returns whether the given game state is a winning game state for this game.
             /// </summary>
-            /// <param name="game_state">The game state to check.</param>
+            /// <param name="node_ptr">A list of game states.
+            /// The list is guaranteed to have at least one game state in it.</param>
             /// <returns><c>true</c> if the game state is a win.</returns>
             [[nodiscard]]
-            virtual bool is_win(game_state<M, B> const& game_state) const = 0;
+            virtual bool is_win(std::shared_ptr<linked_node<game_state<M, B>> const> const& node_ptr) const = 0;
 
             /// <summary>
             /// Returns all the legal moves for the provided game state.  The current game
@@ -56,7 +49,7 @@ namespace silnith
             /// <param name="game_state_history">The game state to search for legal moves.</param>
             /// <returns>A collection of legal moves for the given game state.</returns>
             [[nodiscard]]
-            virtual std::vector<std::shared_ptr<M>> find_all_moves(std::shared_ptr<linked_node<game_state<M, B>>> const& game_state_history) const = 0;
+            virtual std::vector<std::shared_ptr<M const>> find_all_moves(std::shared_ptr<linked_node<game_state<M, B>> const> const& game_state_history) const = 0;
 
             /// <summary>
             /// Returns filters for pruning the game search space.
@@ -86,7 +79,7 @@ namespace silnith
             /// </remarks>
             /// <returns>A collection of game state filters for pruning the search space.</returns>
             [[nodiscard]]
-            virtual std::span<std::shared_ptr<move_filter<M, B>> const> get_filters(void) const = 0;
+            virtual std::span<std::shared_ptr<move_filter<M, B> const> const> get_filters(void) const = 0;
         };
     }
 }

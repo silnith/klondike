@@ -241,7 +241,7 @@ namespace SolitaireMoveTests
 
 			ColumnToFoundationMove move{ 2, board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			map<suit, vector<card>> expected_foundation{
 				{
@@ -266,7 +266,7 @@ namespace SolitaireMoveTests
 
 			Assert::ExpectException<out_of_range>([board_ptr, move]()
 				{
-					shared_ptr<board> actual{ move.apply(board_ptr) };
+					shared_ptr<board const> actual{ move.apply(board_ptr) };
 				});
 		}
 
@@ -303,7 +303,7 @@ namespace SolitaireMoveTests
 
 			ColumnToFoundationMove move{ 2, board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			map<suit, vector<card>> expected_foundation{
 				{
@@ -348,7 +348,7 @@ namespace SolitaireMoveTests
 
 			ColumnToFoundationMove move{ 2, board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			map<suit, vector<card>> expected_foundation{
 				{
@@ -390,7 +390,7 @@ namespace SolitaireMoveTests
 
 			ColumnToFoundationMove move{ 2, board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			map<suit, vector<card>> expected_foundation{
 				{

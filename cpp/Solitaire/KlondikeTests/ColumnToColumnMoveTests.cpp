@@ -21,7 +21,7 @@ using namespace std::literals::string_literals;
 struct ColumnToColumnMoveComparator
 {
 public:
-	bool operator()(shared_ptr<ColumnToColumnMove> const& lhs, shared_ptr<ColumnToColumnMove> const& rhs) const
+	bool operator()(shared_ptr<ColumnToColumnMove const> const& lhs, shared_ptr<ColumnToColumnMove const> const& rhs) const
 	{
 		if (lhs->get_source_column_index() < rhs->get_source_column_index())
 		{
@@ -49,29 +49,29 @@ public:
 	}
 };
 
-using ColumnToColumnMoveSet = set<shared_ptr<ColumnToColumnMove>, ColumnToColumnMoveComparator>;
+using ColumnToColumnMoveSet = set<shared_ptr<ColumnToColumnMove const>, ColumnToColumnMoveComparator>;
 
 bool operator==(ColumnToColumnMoveSet const& lhs, ColumnToColumnMoveSet const& rhs)
 {
 	vector<ColumnToColumnMove> lhs_moves{};
 	vector<ColumnToColumnMove> rhs_moves{};
-	for (shared_ptr<ColumnToColumnMove> ptr : lhs)
+	for (shared_ptr<ColumnToColumnMove const> ptr : lhs)
 	{
 		lhs_moves.emplace_back(*ptr);
 	}
-	for (shared_ptr<ColumnToColumnMove> ptr : rhs)
+	for (shared_ptr<ColumnToColumnMove const> ptr : rhs)
 	{
 		rhs_moves.emplace_back(*ptr);
 	}
 	return lhs_moves == rhs_moves;
 }
 
-ColumnToColumnMoveSet ToColumnToColumnMoveSet(vector<shared_ptr<solitaire_move>> const& vec)
+ColumnToColumnMoveSet ToColumnToColumnMoveSet(vector<shared_ptr<solitaire_move const>> const& vec)
 {
-	vector<shared_ptr<ColumnToColumnMove>> typed_vec{};
-	for (shared_ptr<solitaire_move> move : vec)
+	vector<shared_ptr<ColumnToColumnMove const>> typed_vec{};
+	for (shared_ptr<solitaire_move const> move : vec)
 	{
-		typed_vec.emplace_back(dynamic_pointer_cast<ColumnToColumnMove>(move));
+		typed_vec.emplace_back(dynamic_pointer_cast<ColumnToColumnMove const>(move));
 	}
 	ColumnToColumnMoveSet s{ typed_vec.begin(), typed_vec.end() };
 	return s;
@@ -92,13 +92,13 @@ wstring Microsoft::VisualStudio::CppUnitTestFramework::ToString<>(ColumnToColumn
 	{
 		ColumnToColumnMoveSet::const_iterator citer{ moves.cbegin() };
 		ColumnToColumnMoveSet::const_iterator cend{ moves.cend() };
-		shared_ptr<ColumnToColumnMove> ptr{ *citer };
+		shared_ptr<ColumnToColumnMove const> ptr{ *citer };
 		out << *ptr;
 		citer++;
 		while (citer != cend)
 		{
 			out << L", "s;
-			shared_ptr<ColumnToColumnMove> ptr{ *citer };
+			shared_ptr<ColumnToColumnMove const> ptr{ *citer };
 			out << *ptr;
 			citer++;
 		}
@@ -147,9 +147,9 @@ namespace SolitaireMoveTests
 				column{ empty_list_of_cards, empty_list_of_cards },
 				column{ empty_list_of_cards, empty_list_of_cards },
 			};
-			shared_ptr<board> board_ptr{ make_shared<board>(columns, empty_list_of_cards, 0, empty_foundation) };
+			shared_ptr<board const> board_ptr{ make_shared<board>(columns, empty_list_of_cards, 0, empty_foundation) };
 
-			vector<shared_ptr<solitaire_move>> moves{ ColumnToColumnMove::find_moves(*board_ptr) };
+			vector<shared_ptr<solitaire_move const>> moves{ ColumnToColumnMove::find_moves(*board_ptr) };
 			ColumnToColumnMoveSet actual{ ToColumnToColumnMoveSet(moves) };
 
 			ColumnToColumnMoveSet expected{
@@ -182,9 +182,9 @@ namespace SolitaireMoveTests
 				column{ empty_list_of_cards, empty_list_of_cards },
 				column{ empty_list_of_cards, empty_list_of_cards },
 			};
-			shared_ptr<board> board_ptr{ make_shared<board>(columns, empty_list_of_cards, 0, empty_foundation) };
+			shared_ptr<board const> board_ptr{ make_shared<board>(columns, empty_list_of_cards, 0, empty_foundation) };
 
-			vector<shared_ptr<solitaire_move>> moves{ ColumnToColumnMove::find_moves(*board_ptr) };
+			vector<shared_ptr<solitaire_move const>> moves{ ColumnToColumnMove::find_moves(*board_ptr) };
 			ColumnToColumnMoveSet actual{ ToColumnToColumnMoveSet(moves) };
 
 			ColumnToColumnMoveSet expected{
@@ -223,9 +223,9 @@ namespace SolitaireMoveTests
 				column{ empty_list_of_cards, empty_list_of_cards },
 				column{ empty_list_of_cards, empty_list_of_cards },
 			};
-			shared_ptr<board> board_ptr{ make_shared<board>(columns, empty_list_of_cards, 0, empty_foundation) };
+			shared_ptr<board const> board_ptr{ make_shared<board>(columns, empty_list_of_cards, 0, empty_foundation) };
 
-			vector<shared_ptr<solitaire_move>> moves{ ColumnToColumnMove::find_moves(*board_ptr) };
+			vector<shared_ptr<solitaire_move const>> moves{ ColumnToColumnMove::find_moves(*board_ptr) };
 			ColumnToColumnMoveSet actual{ ToColumnToColumnMoveSet(moves) };
 
 			ColumnToColumnMoveSet expected{
@@ -263,9 +263,9 @@ namespace SolitaireMoveTests
 				column{ empty_list_of_cards, empty_list_of_cards },
 				column{ empty_list_of_cards, empty_list_of_cards },
 			};
-			shared_ptr<board> board_ptr{ make_shared<board>(columns, empty_list_of_cards, 0, empty_foundation) };
+			shared_ptr<board const> board_ptr{ make_shared<board>(columns, empty_list_of_cards, 0, empty_foundation) };
 
-			vector<shared_ptr<solitaire_move>> moves{ ColumnToColumnMove::find_moves(*board_ptr) };
+			vector<shared_ptr<solitaire_move const>> moves{ ColumnToColumnMove::find_moves(*board_ptr) };
 			ColumnToColumnMoveSet actual{ ToColumnToColumnMoveSet(moves) };
 
 			ColumnToColumnMoveSet expected{};
@@ -304,9 +304,9 @@ namespace SolitaireMoveTests
 				column{ empty_list_of_cards, empty_list_of_cards },
 				column{ empty_list_of_cards, empty_list_of_cards },
 			};
-			shared_ptr<board> board_ptr{ make_shared<board>(columns, empty_list_of_cards, 0, empty_foundation) };
+			shared_ptr<board const> board_ptr{ make_shared<board>(columns, empty_list_of_cards, 0, empty_foundation) };
 
-			vector<shared_ptr<solitaire_move>> moves{ ColumnToColumnMove::find_moves(*board_ptr) };
+			vector<shared_ptr<solitaire_move const>> moves{ ColumnToColumnMove::find_moves(*board_ptr) };
 			ColumnToColumnMoveSet actual{ ToColumnToColumnMoveSet(moves) };
 
 			ColumnToColumnMoveSet expected{
@@ -356,9 +356,9 @@ namespace SolitaireMoveTests
 				column{ empty_list_of_cards, empty_list_of_cards },
 				column{ empty_list_of_cards, empty_list_of_cards },
 			};
-			shared_ptr<board> board_ptr{ make_shared<board>(columns, empty_list_of_cards, 0, empty_foundation) };
+			shared_ptr<board const> board_ptr{ make_shared<board>(columns, empty_list_of_cards, 0, empty_foundation) };
 
-			vector<shared_ptr<solitaire_move>> moves{ ColumnToColumnMove::find_moves(*board_ptr) };
+			vector<shared_ptr<solitaire_move const>> moves{ ColumnToColumnMove::find_moves(*board_ptr) };
 			ColumnToColumnMoveSet actual{ ToColumnToColumnMoveSet(moves) };
 
 			ColumnToColumnMoveSet expected{
@@ -402,9 +402,9 @@ namespace SolitaireMoveTests
 				column{ empty_list_of_cards, empty_list_of_cards },
 				column{ empty_list_of_cards, empty_list_of_cards },
 			};
-			shared_ptr<board> board_ptr{ make_shared<board>(columns, empty_list_of_cards, 0, empty_foundation) };
+			shared_ptr<board const> board_ptr{ make_shared<board>(columns, empty_list_of_cards, 0, empty_foundation) };
 
-			vector<shared_ptr<solitaire_move>> moves{ ColumnToColumnMove::find_moves(*board_ptr) };
+			vector<shared_ptr<solitaire_move const>> moves{ ColumnToColumnMove::find_moves(*board_ptr) };
 			ColumnToColumnMoveSet actual{ ToColumnToColumnMoveSet(moves) };
 
 			ColumnToColumnMoveSet expected{
@@ -443,9 +443,9 @@ namespace SolitaireMoveTests
 				column{ empty_list_of_cards, empty_list_of_cards },
 				column{ empty_list_of_cards, empty_list_of_cards },
 			};
-			shared_ptr<board> board_ptr{ make_shared<board>(columns, empty_list_of_cards, 0, empty_foundation) };
+			shared_ptr<board const> board_ptr{ make_shared<board>(columns, empty_list_of_cards, 0, empty_foundation) };
 
-			vector<shared_ptr<solitaire_move>> moves{ ColumnToColumnMove::find_moves(*board_ptr) };
+			vector<shared_ptr<solitaire_move const>> moves{ ColumnToColumnMove::find_moves(*board_ptr) };
 			ColumnToColumnMoveSet actual{ ToColumnToColumnMoveSet(moves) };
 
 			ColumnToColumnMoveSet expected{};
@@ -477,9 +477,9 @@ namespace SolitaireMoveTests
 				column{ empty_list_of_cards, empty_list_of_cards },
 				column{ empty_list_of_cards, empty_list_of_cards },
 			};
-			shared_ptr<board> board_ptr{ make_shared<board>(columns, empty_list_of_cards, 0, empty_foundation) };
+			shared_ptr<board const> board_ptr{ make_shared<board>(columns, empty_list_of_cards, 0, empty_foundation) };
 
-			vector<shared_ptr<solitaire_move>> moves{ ColumnToColumnMove::find_moves(*board_ptr) };
+			vector<shared_ptr<solitaire_move const>> moves{ ColumnToColumnMove::find_moves(*board_ptr) };
 			ColumnToColumnMoveSet actual{ ToColumnToColumnMoveSet(moves) };
 
 			ColumnToColumnMoveSet expected{};
@@ -579,7 +579,7 @@ namespace SolitaireMoveTests
 
 			ColumnToColumnMove move{ 0, 1, 1, *board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<column> expected_columns{
 				column{ empty_list_of_cards, empty_list_of_cards },
@@ -622,7 +622,7 @@ namespace SolitaireMoveTests
 
 			ColumnToColumnMove move{ 0, 1, 5, *board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<column> expected_columns{
 				column{ empty_list_of_cards, empty_list_of_cards },
@@ -677,7 +677,7 @@ namespace SolitaireMoveTests
 
 			ColumnToColumnMove move{ 4, 2, 3, *board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<column> expected_columns{
 				column{ empty_list_of_cards, empty_list_of_cards },
@@ -736,7 +736,7 @@ namespace SolitaireMoveTests
 
 			ColumnToColumnMove move{ 1, 5, 3, *board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<column> expected_columns{
 				column{ empty_list_of_cards, empty_list_of_cards },
@@ -784,7 +784,7 @@ namespace SolitaireMoveTests
 
 			ColumnToColumnMove move{ 0, 1, 1, *board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<column> expected_columns{
 				column{ empty_list_of_cards, empty_list_of_cards },
@@ -829,7 +829,7 @@ namespace SolitaireMoveTests
 
 			ColumnToColumnMove move{ 0, 1, 1, *board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<column> expected_columns{
 				column{ empty_list_of_cards, empty_list_of_cards },
@@ -887,7 +887,7 @@ namespace SolitaireMoveTests
 
 			ColumnToColumnMove move{ 0, 1, 1, *board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<column> expected_columns{
 				column{ empty_list_of_cards, empty_list_of_cards },

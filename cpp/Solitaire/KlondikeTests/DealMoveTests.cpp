@@ -195,7 +195,7 @@ namespace SolitaireMoveTests
 
 			DealMove move{ deck };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<column> expected_columns{
 				column{

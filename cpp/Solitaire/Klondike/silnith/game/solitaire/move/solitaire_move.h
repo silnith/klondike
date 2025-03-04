@@ -139,7 +139,7 @@ namespace silnith
 
                     /// <inheritdoc/>
                     [[nodiscard]]
-                    virtual std::shared_ptr<silnith::game::solitaire::board> apply(std::shared_ptr<silnith::game::solitaire::board> const& board) const override = 0;
+                    virtual std::shared_ptr<silnith::game::solitaire::board const> apply(std::shared_ptr<silnith::game::solitaire::board const> const& board) const override = 0;
 
                 private:
                 };

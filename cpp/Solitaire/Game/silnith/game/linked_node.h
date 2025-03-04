@@ -28,6 +28,7 @@ namespace silnith
         /// </para>
         /// </remarks>
         /// <typeparam name="T">The type of elements in this list.</typeparam>
+        // TODO: Look into std::enable_shared_from_this
         template<class T>
         class linked_node
         {
@@ -61,7 +62,7 @@ namespace silnith
 
                 const_iterator& operator++(void)
                 {
-                    std::shared_ptr<linked_node<T>> next_ptr{ current->get_next() };
+                    std::shared_ptr<linked_node<T> const> next_ptr{ current->get_next() };
                     if (next_ptr.get() == nullptr)
                     {
                         operator=(const_iterator{ nullptr });
@@ -76,7 +77,7 @@ namespace silnith
                 const_iterator operator++(int huh)
                 {
                     linked_node<T> const* copy{ current };
-                    std::shared_ptr<linked_node<T>> next_ptr{ current->get_next() };
+                    std::shared_ptr<linked_node<T> const> next_ptr{ current->get_next() };
                     current = next_ptr.get();
                     return const_iterator{ copy };
                 }
@@ -109,7 +110,8 @@ namespace silnith
             /// Constructs a new list with one element.
             /// </summary>
             /// <param name="value">The element to put into the list.</param>
-            explicit linked_node(T const& value) : linked_node{ value, nullptr }
+            explicit linked_node(T const& value)
+                : linked_node{ value, nullptr }
             {}
 
             /// <summary>
@@ -117,7 +119,10 @@ namespace silnith
             /// </summary>
             /// <param name="value">The element to prepend to the list.</param>
             /// <param name="next">The list to extend.</param>
-            explicit linked_node(T const& value, std::shared_ptr<linked_node<T>> const& next) : _value{ value }, _next{ next }
+            explicit linked_node(T const& value, std::shared_ptr<linked_node<T> const> const& next)
+                : _value{ value },
+                _next{ next },
+                _size{ next == nullptr ? std::size_t{ 1 } : next->size() + std::size_t{ 1 } }
             {}
 
             /// <summary>
@@ -131,12 +136,22 @@ namespace silnith
             }
 
             /// <summary>
+            /// Returns the first element of the list.
+            /// </summary>
+            /// <returns>The first element of the list.</returns>
+            [[nodiscard]]
+            T const& operator*(void) const
+            {
+                return _value;
+            }
+
+            /// <summary>
             /// Returns the remainder of this list without the first element.
             /// May be a shared pointer containing <c>nullptr</c>.
             /// </summary>
             /// <returns>The <c>cdr</c> of this node.</returns>
             [[nodiscard]]
-            std::shared_ptr<linked_node<T>> const& get_next(void) const
+            std::shared_ptr<linked_node<T> const> const& get_next(void) const
             {
                 return _next;
             }
@@ -155,27 +170,70 @@ namespace silnith
                     || _next != other._next;
             }
 
-            [[nodiscard]]
-            T const& operator*(void) const
-            {
-                return _value;
-            }
-
+            /// <summary>
+            /// Returns an iterator to the first element.
+            /// </summary>
+            /// <returns>Iterator to the first element.</returns>
             [[nodiscard]]
             const_iterator cbegin(void) const
             {
                 return const_iterator{ this };
             }
 
+            /// <summary>
+            /// Returns an iterator to the element following the last element.
+            /// </summary>
+            /// <returns>Iterator to the element following the last element.</returns>
             [[nodiscard]]
             const_iterator cend(void) const
             {
                 return const_iterator{ nullptr };
             }
 
+            /// <summary>
+            /// Returns an iterator to the first element.
+            /// </summary>
+            /// <returns>Iterator to the first element.</returns>
+            [[nodiscard]]
+            const_iterator begin(void) const
+            {
+                return const_iterator{ this };
+            }
+
+            /// <summary>
+            /// Returns an iterator to the element following the last element.
+            /// </summary>
+            /// <returns>Iterator to the element following the last element.</returns>
+            [[nodiscard]]
+            const_iterator end(void) const
+            {
+                return const_iterator{ nullptr };
+            }
+
+            /// <summary>
+            /// Returns the number of elements in the container.
+            /// </summary>
+            /// <returns>The number of elements in the container.</returns>
+            [[nodiscard]]
+            std::size_t size(void) const
+            {
+                return _size;
+            }
+
+            [[nodiscard]]
+            /// <summary>
+            /// Checks if the container has no elements.
+            /// </summary>
+            /// <returns><see langword="true"/> if the container is empty, <see langword="false"/> otherwise.</returns>
+            bool empty(void) const
+            {
+                return false;
+            }
+
         private:
             T const _value;
-            std::shared_ptr<linked_node<T>> const _next;
+            std::shared_ptr<linked_node<T> const> const _next;
+            std::size_t const _size;
         };
     }
 }

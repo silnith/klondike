@@ -267,7 +267,7 @@ namespace SolitaireMoveTests
 
 			FoundationToColumnMove move{ 3, suit::club, board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<column> expected_columns{
 				column{ empty_list_of_cards, empty_list_of_cards },
@@ -317,7 +317,7 @@ namespace SolitaireMoveTests
 
 			Assert::ExpectException<out_of_range>([board_ptr, move]()
 				{
-					shared_ptr<board> actual{ move.apply(board_ptr) };
+					shared_ptr<board const> actual{ move.apply(board_ptr) };
 				});
 		}
 
@@ -358,7 +358,7 @@ namespace SolitaireMoveTests
 
 			FoundationToColumnMove move{ 3, suit::club, board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<column> expected_columns{
 				column{ empty_list_of_cards, empty_list_of_cards },
@@ -437,7 +437,7 @@ namespace SolitaireMoveTests
 
 			FoundationToColumnMove move{ 3, suit::club, board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<column> expected_columns{
 				column{ empty_list_of_cards, empty_list_of_cards },
@@ -516,7 +516,7 @@ namespace SolitaireMoveTests
 
 			FoundationToColumnMove move{ 3, suit::club, board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<column> expected_columns{
 				column{ empty_list_of_cards, empty_list_of_cards },

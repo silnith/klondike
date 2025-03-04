@@ -15,16 +15,8 @@ namespace silnith::game::solitaire::move::filter
         return key;
     }
 
-    bool MoveCapFilter::should_filter(std::shared_ptr<linked_node<game_state<solitaire_move, board>>> const& game_state_history) const
+    bool MoveCapFilter::should_filter(shared_ptr<linked_node<game_state<solitaire_move, board>> const> const& game_state_history) const
     {
-        linked_node<game_state<solitaire_move, board>>::const_iterator iterator{ game_state_history->cbegin() };
-        linked_node<game_state<solitaire_move, board>>::const_iterator end{ game_state_history->cend() };
-        size_t size{ 0 };
-        while (iterator != end)
-        {
-            iterator++;
-            size++;
-        }
-        return size > move_cap;
+        return game_state_history->size() > move_cap;
     }
 }

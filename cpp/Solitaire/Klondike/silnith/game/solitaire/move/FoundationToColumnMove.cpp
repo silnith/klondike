@@ -122,7 +122,7 @@ namespace silnith::game::solitaire::move
         return destination_column_index;
     }
 
-    shared_ptr<board> FoundationToColumnMove::apply(shared_ptr<board> const& b) const
+    shared_ptr<board const> FoundationToColumnMove::apply(shared_ptr<board const> const& b) const
     {
         pair<card, map<suit, vector<card>>> pair{ b->extract_card_from_foundation(_card.get_suit()) };
         card drawn_card{ pair.first };

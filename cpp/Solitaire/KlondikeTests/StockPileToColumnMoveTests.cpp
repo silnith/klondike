@@ -302,7 +302,7 @@ namespace SolitaireMoveTests
 
 			StockPileToColumnMove move{ 4, *board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<column> expected_columns{
 				column{ empty_list_of_cards, empty_list_of_cards },
@@ -330,7 +330,7 @@ namespace SolitaireMoveTests
 
 			Assert::ExpectException<out_of_range>([move, board_ptr]()
 				{
-					shared_ptr<board> actual{ move.apply(board_ptr) };
+					shared_ptr<board const> actual{ move.apply(board_ptr) };
 				});
 		}
 
@@ -345,7 +345,7 @@ namespace SolitaireMoveTests
 
 			Assert::ExpectException<out_of_range>([move, board_ptr]()
 				{
-					shared_ptr<board> actual{ move.apply(board_ptr) };
+					shared_ptr<board const> actual{ move.apply(board_ptr) };
 				});
 		}
 
@@ -375,7 +375,7 @@ namespace SolitaireMoveTests
 
 			StockPileToColumnMove move{ 4, board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<column> expected_columns{
 				column{ empty_list_of_cards, empty_list_of_cards },
@@ -428,7 +428,7 @@ namespace SolitaireMoveTests
 
 			StockPileToColumnMove move{ 4, board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<column> expected_columns{
 				column{ empty_list_of_cards, empty_list_of_cards },
@@ -486,7 +486,7 @@ namespace SolitaireMoveTests
 
 			StockPileToColumnMove move{ 4, board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<column> expected_columns{
 				column{ empty_list_of_cards, empty_list_of_cards },
@@ -544,7 +544,7 @@ namespace SolitaireMoveTests
 
 			StockPileToColumnMove move{ 4, board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<column> expected_columns{
 				column{ empty_list_of_cards, empty_list_of_cards },
@@ -595,7 +595,7 @@ namespace SolitaireMoveTests
 
 			StockPileToColumnMove move{ 4, *board_ptr };
 
-			shared_ptr<board> actual{ move.apply(board_ptr) };
+			shared_ptr<board const> actual{ move.apply(board_ptr) };
 
 			vector<column> expected_columns{
 				column{ empty_list_of_cards, empty_list_of_cards },

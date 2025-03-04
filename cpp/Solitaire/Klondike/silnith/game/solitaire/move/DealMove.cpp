@@ -93,7 +93,7 @@ namespace silnith::game::solitaire::move
         throw invalid_argument("Not a move to a column.");
     }
 
-    shared_ptr<board> DealMove::apply(shared_ptr<board> const& b) const
+    shared_ptr<board const> DealMove::apply(shared_ptr<board const> const& b) const
     {
         vector<vector<card>> stacks{};
         for (size_t index{ 0 }; index < board::num_columns; index++)

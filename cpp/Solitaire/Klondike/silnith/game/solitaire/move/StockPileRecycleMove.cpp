@@ -105,7 +105,7 @@ namespace silnith::game::solitaire::move
         throw invalid_argument("Not a move to a column.");
     }
 
-    shared_ptr<board> StockPileRecycleMove::apply(shared_ptr<board> const& b) const
+    shared_ptr<board const> StockPileRecycleMove::apply(shared_ptr<board const> const& b) const
     {
         return make_shared<board>(
             b->get_columns(),

@@ -52,7 +52,7 @@ namespace silnith
             /// beginning with the most recent move and resulting board.</param>
             /// <returns><c>true</c> if the node should be pruned from the search tree.</returns>
             [[nodiscard]]
-            virtual bool should_filter(std::shared_ptr<linked_node<game_state<M, B>>> const& game_state_history) const = 0;
+            virtual bool should_filter(std::shared_ptr<linked_node<game_state<M, B>> const> const& game_state_history) const = 0;
         };
     }
 }

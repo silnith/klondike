@@ -2,7 +2,7 @@
 //
 
 #include <silnith/game/game_state.h>
-#include <silnith/game/sequential_depth_first_search.h>
+#include <silnith/game/search/sequential_depth_first_search.h>
 
 #include "TicTacToe.h"
 #include "TicTacToeBoard.h"
@@ -16,6 +16,7 @@
 #include <cstdlib>
 
 using namespace silnith::game;
+using namespace silnith::game::search;
 using namespace std;
 
 int main()
@@ -30,10 +31,10 @@ int main()
     printTo(cout, *initial_board);
     sequential_depth_first_search<TicTacToeMove, TicTacToeBoard> searcher{ engine, initial_game_state };
     cout << "Hello World!" << endl;
-    list<shared_ptr<linked_node<game_state<TicTacToeMove, TicTacToeBoard>>>> results{ searcher.search() };
+    list<shared_ptr<linked_node<game_state<TicTacToeMove, TicTacToeBoard>> const>> results{ searcher.search() };
     cout << results.size() << endl;
     searcher.print_statistics(std::cout);
-    for (shared_ptr<linked_node<game_state<TicTacToeMove, TicTacToeBoard>>> result : results)
+    for (shared_ptr<linked_node<game_state<TicTacToeMove, TicTacToeBoard>> const> result : results)
     {
         game_state<TicTacToeMove, TicTacToeBoard> game_state{ result->get_value() };
         //printTo(cout, *(game_state.get_board()));

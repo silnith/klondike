@@ -29,7 +29,7 @@ namespace silnith
         /// <typeparam name="B">The board type for the game.</typeparam>
         template<class M, class B>
             requires (std::is_base_of_v<move<B>, M>)
-        class game_state : private std::pair<std::shared_ptr<M>, std::shared_ptr<B>>
+        class game_state : private std::pair<std::shared_ptr<M const> const, std::shared_ptr<B const> const>
         {
         public:
             game_state(void) = delete;
@@ -44,8 +44,8 @@ namespace silnith
             /// </summary>
             /// <param name="move">The move.</param>
             /// <param name="board">The board.</param>
-            explicit game_state(std::shared_ptr<M> const& move, std::shared_ptr<B> const& board)
-                : std::pair<std::shared_ptr<M>, std::shared_ptr<B>>{ move, board }
+            explicit game_state(std::shared_ptr<M const> const& move, std::shared_ptr<B const> const& board)
+                : std::pair<std::shared_ptr<M const> const, std::shared_ptr<B const> const>{ move, board }
             {}
 
             /// <summary>
@@ -53,7 +53,7 @@ namespace silnith
             /// </summary>
             /// <returns>The move.</returns>
             [[nodiscard]]
-            std::shared_ptr<M> const& get_move(void) const
+            std::shared_ptr<M const> const& get_move(void) const
             {
                 //return std::pair<M, B>::first;
                 return this->first;
@@ -64,7 +64,7 @@ namespace silnith
             /// </summary>
             /// <returns>The board.</returns>
             [[nodiscard]]
-            std::shared_ptr<B> const& get_board(void) const
+            std::shared_ptr<B const> const& get_board(void) const
             {
                 //return std::pair<M, B>::second;
                 return this->second;
@@ -82,10 +82,11 @@ namespace silnith
         /// <param name="state">The game state.</param>
         /// <returns>The same output stream.</returns>
         template<class M, class B>
+            requires (std::is_base_of_v<move<B>, M>)
         std::ostream& operator<<(std::ostream& out, game_state<M, B> const& state)
         {
-            std::shared_ptr<M> move_ptr{ state.get_move() };
-            std::shared_ptr<B> board_ptr{ state.get_board() };
+            std::shared_ptr<M const> const& move_ptr{ state.get_move() };
+            std::shared_ptr<B const> const& board_ptr{ state.get_board() };
 
             using namespace std::literals::string_literals;
             out << "game_state{"s;
@@ -105,10 +106,11 @@ namespace silnith
         /// <param name="state">The game state.</param>
         /// <returns>The same output stream.</returns>
         template<class M, class B>
+            requires (std::is_base_of_v<move<B>, M>)
         std::wostream& operator<<(std::wostream& out, game_state<M, B> const& state)
         {
-            std::shared_ptr<M> move_ptr{ state.get_move() };
-            std::shared_ptr<B> board_ptr{ state.get_board() };
+            std::shared_ptr<M const> const& move_ptr{ state.get_move() };
+            std::shared_ptr<B const> const& board_ptr{ state.get_board() };
 
             using namespace std::literals::string_literals;
             out << L"game_state{"s;

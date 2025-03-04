@@ -42,27 +42,31 @@ namespace silnith
                 klondike& operator=(klondike&&) noexcept = default;
                 virtual ~klondike(void) = default;
 
-                /// <inheritdoc/>
+                /// <summary>
+                /// Returns whether the given board is a winning game state for this game.
+                /// </summary>
+                /// <param name="board">The board to check.</param>
+                /// <returns><c>true</c> if the board represents a win.</returns>
                 [[nodiscard]]
-                virtual bool is_win(board const& board) const override;
+                virtual bool is_win(board const& board) const;
 
                 /// <inheritdoc/>
                 [[nodiscard]]
-                virtual bool is_win(game_state<move::solitaire_move, board> const& game_state) const override;
+                virtual bool is_win(std::shared_ptr<linked_node<game_state<move::solitaire_move, board>> const> const& node_ptr) const;
 
                 /// <inheritdoc/>
                 [[nodiscard]]
-                virtual std::vector<std::shared_ptr<move::solitaire_move>> find_all_moves(
-                    std::shared_ptr<linked_node<game_state<move::solitaire_move, board>>> const& game_state_history) const override;
+                virtual std::vector<std::shared_ptr<move::solitaire_move const>> find_all_moves(
+                    std::shared_ptr<linked_node<game_state<move::solitaire_move, board>> const> const& game_state_history) const override;
 
                 /// <inheritdoc/>
                 [[nodiscard]]
-                virtual std::span<std::shared_ptr<move_filter<move::solitaire_move, board>> const> get_filters(void) const override;
+                virtual std::span<std::shared_ptr<move_filter<move::solitaire_move, board> const> const> get_filters(void) const override;
 
             private:
                 std::size_t const number_of_columns{ board::num_columns };
                 std::size_t const draw_advance{ 3 };
-                std::vector<std::shared_ptr<move_filter<move::solitaire_move, board>>> const filters;
+                std::vector<std::shared_ptr<move_filter<move::solitaire_move, board> const>> const filters;
             };
         }
     }
