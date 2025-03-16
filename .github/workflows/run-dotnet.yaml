@@ -85,9 +85,8 @@ jobs:
           name: ${{ inputs.name }}-${{ matrix.configuration }}
           # This action does not respect the working directory.
           path: |
-            ${{ inputs.directory }}/x64/
-            ${{ inputs.directory }}/Debug/
-            ${{ inputs.directory }}/Release/
+            ${{ inputs.directory }}/**/bin/
+            ${{ inputs.directory }}/**/obj/
           if-no-files-found: error
   test:
     name: Test
