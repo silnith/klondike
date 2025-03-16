@@ -69,7 +69,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.name }}-packages
-          path: packages/
+          # This action does not respect the working directory.
+          path: ${{ inputs.directory }}/packages/
       - name: Build
         run: msbuild ${{ inputs.solution_file }} -p:Configuration=${{ matrix.configuration }} -p:Platform=${{ matrix.platform }}
       - name: Upload Build Artifacts
