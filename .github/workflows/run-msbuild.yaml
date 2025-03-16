@@ -36,7 +36,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.name }}-packages
-          path: ${{ github.workspace }}/.nuget/packages/
+          path: packages/
   build:
     name: Build
     runs-on: windows-2022
@@ -65,10 +65,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.name }}-packages
-          path: ${{ github.workspace }}/.nuget/packages/
+          path: packages/
       - name: Build
         run: msbuild ${{ inputs.solution_file }} -p:Configuration=${{ matrix.configuration }} -p:Platform=${{ matrix.platform }}
-      - name: Upload Artifacts
+      - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.name }}-${{ matrix.configuration }}-${{ matrix.platform }}
@@ -95,7 +95,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Download Artifacts
+      - name: Download Packages Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.name }}-packages
+          path: packages/
+      - name: Download Build Artifacts
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.name }}-${{ matrix.configuration }}-${{ matrix.platform }}
