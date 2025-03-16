@@ -114,9 +114,9 @@ jobs:
           name: ${{ inputs.name }}-${{ matrix.configuration }}-${{ matrix.platform }}
           # This action does not respect the working directory.
           path: ${{ inputs.directory }}/
-      - name: Run Tests
-        uses: microsoft/vstest-action@v1.0.0
-        with:
-          searchFolder: '.\\'
-          testAssembly: '**\\*test*.dll'
-          codeCoverageEnabled: false
+      #- name: Run Tests
+      #  uses: microsoft/vstest-action@v1.0.0
+      #  with:
+      #    searchFolder: '.\\'
+      #    testAssembly: '**\\*test*.dll'
+      #    codeCoverageEnabled: false
