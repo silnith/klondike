@@ -149,7 +149,7 @@ public class Column {
     	
     	final int start = end - numberOfCards;
     	assert start >= 0;
-    	return new ArrayList<>(faceUp.subList(start, end));
+    	return faceUp.subList(start, end);
     }
     
     /**
@@ -192,7 +192,7 @@ public class Column {
     	
     	final int start = end - numberOfCards;
     	assert start >= 0;
-    	final List<Card> run = new ArrayList<>(faceUp.subList(start, end));
+    	final List<Card> run = faceUp.subList(start, end);
     	final Column newColumn = new Column(faceDown, faceUp.subList(0, start));
     	return new Pair<>(run, newColumn);
     }
@@ -208,8 +208,7 @@ public class Column {
         if (newCards == null || newCards.isEmpty()) {
             throw new IllegalArgumentException();
         }
-        final List<Card> newFaceUp = new ArrayList<>(faceUp.size() + newCards.size());
-        newFaceUp.addAll(faceUp);
+        final List<Card> newFaceUp = new ArrayList<>(faceUp);
         newFaceUp.addAll(newCards);
         return new Column(faceDown, newFaceUp);
     }
@@ -225,8 +224,7 @@ public class Column {
         if (newCard == null) {
             throw new IllegalArgumentException();
         }
-        final List<Card> newFaceUp = new ArrayList<>(faceUp.size() + 1);
-        newFaceUp.addAll(faceUp);
+        final List<Card> newFaceUp = new ArrayList<>(faceUp);
         newFaceUp.add(newCard);
         return new Column(faceDown, newFaceUp);
     }
