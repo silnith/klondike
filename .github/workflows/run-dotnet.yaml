@@ -58,9 +58,6 @@ jobs:
       - setup
     strategy:
       matrix:
-        platform:
-          - x86
-          - x64
         configuration:
           - Debug
           - Release
@@ -81,11 +78,11 @@ jobs:
           name: ${{ inputs.name }}-packages
           path: ~/.nuget/packages/
       - name: Build
-        run: dotnet build ${{ inputs.solution_file }} --configuration ${{ matrix.configuration }} --arch ${{ matrix.platform }}
+        run: dotnet build ${{ inputs.solution_file }} --configuration ${{ matrix.configuration }}
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.name }}-${{ matrix.configuration }}-${{ matrix.platform }}
+          name: ${{ inputs.name }}-${{ matrix.configuration }}
           # This action does not respect the working directory.
           path: |
             ${{ inputs.directory }}/x64/
@@ -102,9 +99,6 @@ jobs:
       - build
     strategy:
       matrix:
-        platform:
-          - x86
-          - x64
         configuration:
           - Debug
           - Release
@@ -127,8 +121,8 @@ jobs:
       - name: Download Build Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: ${{ inputs.name }}-${{ matrix.configuration }}-${{ matrix.platform }}
+          name: ${{ inputs.name }}-${{ matrix.configuration }}
           # This action does not respect the working directory.
           path: ${{ inputs.directory }}/
       - name: Test
-        run: dotnet test ${{ inputs.solution_file }} --configuration ${{ matrix.configuration }} --arch ${{ matrix.platform }} --collect "XPlat Code Coverage"
+        run: dotnet test ${{ inputs.solution_file }} --configuration ${{ matrix.configuration }} --collect "XPlat Code Coverage"
