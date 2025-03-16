@@ -28,6 +28,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KlondikeTests", "KlondikeTe
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Runner", "Runner\Runner.vcxproj", "{7B0AAADF-C6F7-47E9-BE8D-46FD87B0C430}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{0ACDF298-8FFF-4966-8C4A-E89A68D908F7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{56A1F796-A5ED-4AD4-A1C5-6739F2B9F8D1}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\.github\workflows\push-branch.yaml = ..\..\.github\workflows\push-branch.yaml
+		..\..\.github\workflows\run-dotnet.yaml = ..\..\.github\workflows\run-dotnet.yaml
+		..\..\.github\workflows\run-maven.yaml = ..\..\.github\workflows\run-maven.yaml
+		..\..\.github\workflows\run-msbuild.yaml = ..\..\.github\workflows\run-msbuild.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -103,6 +113,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0ACDF298-8FFF-4966-8C4A-E89A68D908F7} = {7765DA60-ABFA-4F3A-9CF7-E6DFFFFA4334}
+		{56A1F796-A5ED-4AD4-A1C5-6739F2B9F8D1} = {0ACDF298-8FFF-4966-8C4A-E89A68D908F7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8911710A-BF8D-4911-BDEA-F713F0B0A265}

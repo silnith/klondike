@@ -150,4 +150,7 @@
       <Filter>Source Files\move\filter</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>
