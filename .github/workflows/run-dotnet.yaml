@@ -39,7 +39,7 @@ jobs:
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: NuGet Tool Restore
-        run: dotnet tool restore ${{ inputs.solution_file }}
+        run: dotnet tool restore
       - name: NuGet Restore
         run: dotnet restore ${{ inputs.solution_file }}
       - name: Upload Packages Artifacts
