@@ -7,9 +7,6 @@ on:
 
 env: {}
 
-permissions:
-  contents: read
-
 jobs:
   build-cpp:
     name: Build C++
@@ -19,6 +16,8 @@ jobs:
       directory: cpp/Solitaire
       solution_file: Solitaire.sln
     secrets: inherit
+    permissions:
+      contents: read
   build-csharp:
     name: Build C#
     uses: ./.github/workflows/run-dotnet.yaml
@@ -27,6 +26,8 @@ jobs:
       directory: csharp/Solitaire
       solution_file: Solitaire.sln
     secrets: inherit
+    permissions:
+      contents: read
   build-java:
     name: Build Java
     uses: ./.github/workflows/run-maven.yaml
@@ -34,4 +35,5 @@ jobs:
       directory: java/solitaire
     secrets: inherit
     permissions:
+      contents: read
       packages: write
