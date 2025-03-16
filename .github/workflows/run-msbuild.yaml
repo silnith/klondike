@@ -33,7 +33,7 @@ jobs:
       - name: NuGet Restore
         run: nuget restore ${{ inputs.solution_file }} -NonInteractive
       - name: Show some shit
-        run: dir
+        run: dir packages
       - name: Upload Packages Artifacts
         uses: actions/upload-artifact@v4
         with:
