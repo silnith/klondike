@@ -57,7 +57,7 @@ jobs:
         if: always()
         with:
           files: |
-            **/target/surefire-reports/**/*.xml
-            **/target/failsafe-reports/**/*.xml
+            **/target/surefire-reports/TEST-*.xml
+            **/target/failsafe-reports/TEST-*.xml
       #- name: Publish Package
       #  run: mvn deploy
