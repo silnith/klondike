@@ -20,7 +20,7 @@ env: {}
 
 defaults:
   run:
-    working-directory: ${{ inputs.directory }}
+    working-directory: '${{ inputs.directory }}'
 
 jobs:
   setup:
@@ -58,6 +58,7 @@ jobs:
         uses: microsoft/setup-msbuild@v2
         with:
           msbuild-architecture: x64
+          #vs-version: '[16.0,17.0)'
       - name: Download Packages Artifact
         uses: actions/download-artifact@v4
         with:
