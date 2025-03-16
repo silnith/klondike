@@ -1,0 +1,57 @@
+name: Run Maven
+
+on:
+  workflow_call:
+    inputs:
+      directory:
+        description: The directory that contains the POM file.
+        type: string
+        required: true
+
+env: {}
+
+defaults:
+  run:
+    working-directory: ${{ inputs.directory }}
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - id: setup-java
+        name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: |
+            8
+            17
+          cache: maven
+      - name: Resolve Dependencies
+        continue-on-error: true
+        run: mvn dependency:go-offline
+      - name: Clean
+        run: mvn clean
+      - name: Verify
+        run: mvn verify
+      - name: Site
+        run: mvn site
+        continue-on-error: true
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: target
+          path: target/ # **/target/
+          if-no-files-found: warn # or error or ignore
+          overwrite: false
+          include-hidden-files: false
+      - name: Publish Package
+        run: mvn deploy

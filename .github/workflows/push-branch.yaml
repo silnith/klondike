@@ -1,0 +1,35 @@
+name: Push Branch
+
+on:
+  push:
+    branches:
+      - '*'
+
+env: {}
+
+permissions:
+  contents: read # for setup-java
+
+jobs:
+  build-cpp:
+    name: Build C++
+    uses: ./.github/workflows/run-msbuild.yaml
+    with:
+      name: cpp
+      directory: cpp/Solitaire
+      solution_file: Solitaire.sln
+    secrets: inherit
+  build-csharp:
+    name: Build C#
+    uses: ./.github/workflows/run-msbuild.yaml
+    with:
+      name: csharp
+      directory: csharp/Solitaire
+      solution_file: Solitaire.sln
+    secrets: inherit
+  build-java:
+    name: Build Java
+    uses: ./.github/workflows/run-maven.yaml
+    with:
+      directory: java/solitaire
+    secrets: inherit

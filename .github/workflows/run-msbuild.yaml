@@ -1,0 +1,101 @@
+name: Run MSBuild
+
+on:
+  workflow_call:
+    inputs:
+      name:
+        description: A prefix for artifact names.
+        type: string
+        required: true
+      directory:
+        description: The directory that contains the solution file.
+        type: string
+        required: true
+      solution_file:
+        description: The name of the solution file.
+        type: string
+        required: true
+
+env: {}
+
+defaults:
+  run:
+    working-directory: ${{ inputs.directory }}
+
+jobs:
+  setup:
+    name: Setup
+    runs-on: windows-2022
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configure GitHub Packages
+        run: nuget sources add -Name GitHub -UserName ${{ github.actor }} -Password ${{ secrets.GITHUB_TOKEN }} -Source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json -NonInteractive
+      - name: NuGet Restore
+        run: nuget restore ${{ inputs.solution_file }} -NonInteractive
+      - name: Upload Packages Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.name }}-packages
+          path: packages/
+  build:
+    name: Build
+    runs-on: windows-2022
+    needs:
+      - setup
+    strategy:
+      matrix:
+        platform:
+          - x86
+          - x64
+        configuration:
+          - Debug
+          - Release
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+        with:
+          msbuild-architecture: x64
+      - name: Download Packages Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.name }}-packages
+          path: packages/
+      - name: Build
+        run: msbuild ${{ inputs.solution_file }} -p:Configuration=${{ matrix.configuration }} -p:Platform=${{ matrix.platform }}
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.name }}-${{ matrix.configuration }}-${{ matrix.platform }}
+          path: |
+            x64/
+            Debug/
+            Release/
+  test:
+    name: Test
+    runs-on: windows-2022
+    needs:
+      - build
+    strategy:
+      matrix:
+        platform:
+          - x86
+          - x64
+        configuration:
+          - Debug
+          - Release
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.name }}-${{ matrix.configuration }}-${{ matrix.platform }}
+      - name: Run Tests
+        uses: microsoft/vstest-action@v1.0.0
+        with:
+          searchFolder: '.\\'
+          testAssembly: '**\\*test*.dll'
+          codeCoverageEnabled: false
