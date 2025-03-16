@@ -32,6 +32,8 @@ jobs:
         run: nuget sources add -Name GitHub -UserName ${{ github.actor }} -Password ${{ secrets.GITHUB_TOKEN }} -Source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json -NonInteractive
       - name: NuGet Restore
         run: nuget restore ${{ inputs.solution_file }} -NonInteractive
+      - name: Show some shit
+        run: dir
       - name: Upload Packages Artifacts
         uses: actions/upload-artifact@v4
         with:
