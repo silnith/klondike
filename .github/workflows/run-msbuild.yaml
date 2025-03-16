@@ -38,7 +38,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.name }}-packages
-          path: '**/packages'
+          # This action does not respect the working directory.
+          path: ${{ inputs.directory }}/packages/
           if-no-files-found: error
   build:
     name: Build
