@@ -7,6 +7,9 @@ on:
 
 env: {}
 
+permissions:
+  contents: read
+
 jobs:
   build-cpp:
     name: Build C++
@@ -31,5 +34,4 @@ jobs:
       directory: java/solitaire
     secrets: inherit
     permissions:
-      contents: read
       packages: write
