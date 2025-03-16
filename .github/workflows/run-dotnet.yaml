@@ -46,7 +46,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.name }}-packages
-          path: ${{ env.NUGET_PACKAGES }}
+          path: ${{ github.workspace }}/.nuget/packages/
+          if-no-files-found: error
   build:
     name: Build
     runs-on: windows-2022
@@ -78,17 +79,19 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.name }}-packages
-          path: ${{ env.NUGET_PACKAGES }}
+          path: ${{ github.workspace }}/.nuget/packages/
       - name: Build
         run: dotnet build ${{ inputs.solution_file }} --configuration ${{ matrix.configuration }} --arch ${{ matrix.platform }}
-      - name: Upload Artifacts
+      - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.name }}-${{ matrix.configuration }}-${{ matrix.platform }}
+          # This action does not respect the working directory.
           path: |
-            x64/
-            Debug/
-            Release/
+            ${{ inputs.directory }}/x64/
+            ${{ inputs.directory }}/Debug/
+            ${{ inputs.directory }}/Release/
+          if-no-files-found: error
   test:
     name: Test
     runs-on: windows-2022
@@ -120,10 +123,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.name }}-packages
-          path: ${{ env.NUGET_PACKAGES }}
-      - name: Download Artifacts
+          path: ${{ github.workspace }}/.nuget/packages/
+      - name: Download Build Artifacts
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.name }}-${{ matrix.configuration }}-${{ matrix.platform }}
+          # This action does not respect the working directory.
+          path: ${{ inputs.directory }}/
       - name: Test
         run: dotnet test ${{ inputs.solution_file }} --configuration ${{ matrix.configuration }} --arch ${{ matrix.platform }} --collect "XPlat Code Coverage"
