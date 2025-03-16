@@ -10,14 +10,13 @@ on:
 
 env: {}
 
-defaults:
-  run:
-    working-directory: ${{ inputs.directory }}
-
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.directory }}
     permissions:
       contents: read
       packages: read
