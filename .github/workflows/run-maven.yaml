@@ -52,5 +52,11 @@ jobs:
           if-no-files-found: warn # or error or ignore
           overwrite: false
           include-hidden-files: false
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: |
+            **/target/**/*.xml
       #- name: Publish Package
       #  run: mvn deploy
