@@ -21,7 +21,7 @@ jobs:
     secrets: inherit
   build-csharp:
     name: Build C#
-    uses: ./.github/workflows/run-msbuild.yaml
+    uses: ./.github/workflows/run-dotnet.yaml
     with:
       name: csharp
       directory: csharp/Solitaire
