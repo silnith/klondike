@@ -46,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.name }}-packages
-          path: ${{ github.workspace }}/.nuget/packages/
+          path: ~/.nuget/packages/
           if-no-files-found: error
   build:
     name: Build
@@ -79,7 +79,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.name }}-packages
-          path: ${{ github.workspace }}/.nuget/packages/
+          path: ~/.nuget/packages/
       - name: Build
         run: dotnet build ${{ inputs.solution_file }} --configuration ${{ matrix.configuration }} --arch ${{ matrix.platform }}
       - name: Upload Build Artifacts
@@ -123,7 +123,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.name }}-packages
-          path: ${{ github.workspace }}/.nuget/packages/
+          path: ~/.nuget/packages/
       - name: Download Build Artifacts
         uses: actions/download-artifact@v4
         with:
