@@ -36,7 +36,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.name }}-packages
-          path: packages/
+          path: ${{ env.NUGET_PACKAGES }}
+          if-no-files-found: error
   build:
     name: Build
     runs-on: windows-2022
