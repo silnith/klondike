@@ -110,7 +110,7 @@ public class Klondike implements Game<SolitaireMove, Board> {
 	}
 	
     /**
-     * Returns whether the given board is a winning game state for this game.
+     * Returns whether the given board is a winning board for this game.
      * 
      * @param board the board to check
      * @return {@code true} if the board represents a win
@@ -124,6 +124,12 @@ public class Klondike implements Game<SolitaireMove, Board> {
 		return true;
 	}
 
+	/**
+	 * Returns whether the given game state is a winning game state for this game.
+	 * 
+	 * @param state the game state to check
+	 * @return {@code true} if the game state represents a win
+	 */
 	public boolean isWin(final GameState<SolitaireMove, Board> state) {
 		return isWin(state.getBoard());
 	}
