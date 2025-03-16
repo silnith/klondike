@@ -36,7 +36,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.name }}-packages
-          path: packages/
+          path: ${{ github.workspace }}/.nuget/packages/
   build:
     name: Build
     runs-on: windows-2022
@@ -65,7 +65,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.name }}-packages
-          path: packages/
+          path: ${{ github.workspace }}/.nuget/packages/
       - name: Build
         run: msbuild ${{ inputs.solution_file }} -p:Configuration=${{ matrix.configuration }} -p:Platform=${{ matrix.platform }}
       - name: Upload Artifacts
