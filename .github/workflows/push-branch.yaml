@@ -9,6 +9,7 @@ env: {}
 
 #permissions:
 #  contents: read # for setup-java
+#  packages: write # to publish Maven snapshot
 
 jobs:
   build-cpp:
@@ -33,3 +34,6 @@ jobs:
     with:
       directory: java/solitaire
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
