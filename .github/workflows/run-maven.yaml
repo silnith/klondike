@@ -52,5 +52,5 @@ jobs:
           if-no-files-found: warn # or error or ignore
           overwrite: false
           include-hidden-files: false
-      - name: Publish Package
-        run: mvn deploy
+      #- name: Publish Package
+      #  run: mvn deploy
