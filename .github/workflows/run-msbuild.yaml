@@ -83,12 +83,6 @@ jobs:
             ${{ inputs.directory }}/Debug/
             ${{ inputs.directory }}/Release/
           if-no-files-found: error
-      - name: Run Tests
-        uses: microsoft/vstest-action@v1.0.0
-        with:
-          searchFolder: '.\\'
-          testAssembly: '**\\*test*.dll'
-          codeCoverageEnabled: false
   test:
     name: Test
     runs-on: windows-2022
