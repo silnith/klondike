@@ -7,10 +7,6 @@ on:
 
 env: {}
 
-#permissions:
-#  contents: read # for setup-java
-#  packages: write # to publish Maven snapshot
-
 jobs:
   build-cpp:
     name: Build C++
