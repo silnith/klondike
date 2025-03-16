@@ -48,7 +48,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: target
-          path: **/target/
+          path: '**/target/'
           if-no-files-found: warn # or error or ignore
           overwrite: false
           include-hidden-files: false
