@@ -60,6 +60,7 @@ jobs:
           files: |
             **/target/surefire-reports/TEST-*.xml
             **/target/failsafe-reports/TEST-*.xml
+          comment_mode: off
       - name: Publish Package
         continue-on-error: true
         run: mvn deploy

@@ -125,3 +125,12 @@ jobs:
           path: ${{ inputs.directory }}/
       - name: Test
         run: dotnet test ${{ inputs.solution_file }} --configuration ${{ matrix.configuration }} --collect "XPlat Code Coverage"
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        continue-on-error: true
+        with:
+          files: |
+            **/TestResults/**/*.xml
+            **/TestResults/**/*.trx
+          comment_mode: off
