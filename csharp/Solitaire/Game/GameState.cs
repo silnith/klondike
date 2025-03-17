@@ -12,7 +12,7 @@ namespace Silnith.Game
         where M : IMove<B>
     {
         /// <summary>
-        /// The list of moves.
+        /// The move.
         /// </summary>
         public virtual M Move
         {
@@ -23,7 +23,7 @@ namespace Silnith.Game
         }
 
         /// <summary>
-        /// The list of board states.
+        /// The board.
         /// </summary>
         public virtual B Board
         {
@@ -34,10 +34,10 @@ namespace Silnith.Game
         }
 
         /// <summary>
-        /// Constructs an initial game state with the given initial move and board.
+        /// Constructs a game state with the given move and board.
         /// </summary>
-        /// <param name="initialMove">The initial move.  This is often a form of "deal deck".</param>
-        /// <param name="initialBoard">The initial board.</param>
+        /// <param name="initialMove">The move.</param>
+        /// <param name="initialBoard">The board.</param>
         public GameState(M initialMove, B initialBoard) : base(initialMove, initialBoard)
         {
         }
