@@ -130,6 +130,7 @@ jobs:
         if: always()
         continue-on-error: true
         with:
+          check_name: "C# ${{ matrix.configuration }} Test Results"
           files: |
             **/TestResults/**/*.xml
             **/TestResults/**/*.trx

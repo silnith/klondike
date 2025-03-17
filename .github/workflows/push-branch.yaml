@@ -28,9 +28,7 @@ jobs:
     secrets: inherit
     permissions:
       contents: read
-      #issues: read
       checks: write
-      #pull-requests: write
   build-java:
     name: Build Java
     uses: ./.github/workflows/run-maven.yaml
@@ -39,7 +37,5 @@ jobs:
     secrets: inherit
     permissions:
       contents: read
-      #issues: read
       packages: write
       checks: write
-      #pull-requests: write
