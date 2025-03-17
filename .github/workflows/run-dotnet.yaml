@@ -124,7 +124,13 @@ jobs:
           # This action does not respect the working directory.
           path: ${{ inputs.directory }}/
       - name: Test
-        run: dotnet test ${{ inputs.solution_file }} --configuration ${{ matrix.configuration }} --collect "XPlat Code Coverage"
+        run: >
+          dotnet test ${{ inputs.solution_file }}
+          --configuration ${{ matrix.configuration }}
+          --logger "trx"
+          --collect "XPlat Code Coverage"
+          --verbosity normal
+        # TODO: https://github.com/Tyrrrz/GitHubActionsTestLogger
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action/windows@v2
         if: always()
