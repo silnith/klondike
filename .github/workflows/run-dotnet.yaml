@@ -126,7 +126,7 @@ jobs:
       - name: Test
         run: dotnet test ${{ inputs.solution_file }} --configuration ${{ matrix.configuration }} --collect "XPlat Code Coverage"
       - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
+        uses: EnricoMi/publish-unit-test-result-action/windows@v2
         if: always()
         continue-on-error: true
         with:
