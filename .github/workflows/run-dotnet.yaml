@@ -138,6 +138,5 @@ jobs:
         with:
           check_name: "C# ${{ matrix.configuration }} Test Results"
           files: |
-            **/TestResults/**/*.xml
             **/TestResults/**/*.trx
           comment_mode: off
