@@ -7,7 +7,6 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Product>Deck</Product>
         <Description>A deck of cards.</Description>
-        <Nullable>enable</Nullable>
     </PropertyGroup>
 
 </Project>

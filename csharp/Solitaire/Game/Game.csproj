@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-      <TargetFramework>netstandard2.1</TargetFramework>
-      <PackageId>Silnith.Game</PackageId>
-      <RootNamespace>Silnith.Game</RootNamespace>
-      <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-      <Product>Game</Product>
-      <Description>Interfaces for games with searchable state trees.</Description>
-      <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <PackageId>Silnith.Game</PackageId>
+        <RootNamespace>Silnith.Game</RootNamespace>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Product>Game</Product>
+        <Description>Interfaces for games with searchable state trees.</Description>
+    </PropertyGroup>
 
 </Project>

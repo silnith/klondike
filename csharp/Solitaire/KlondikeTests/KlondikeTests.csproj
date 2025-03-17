@@ -7,7 +7,6 @@
         <IsPackable>false</IsPackable>
 
         <RootNamespace>Silnith.Game.Klondike.Tests</RootNamespace>
-        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
@@ -16,13 +15,13 @@
         <PackageReference Include="MSTest.TestAdapter" Version="3.7.0" />
         <PackageReference Include="MSTest.TestFramework" Version="3.7.0" />
         <PackageReference Include="coverlet.collector" Version="3.2.0">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Klondike\Klondike.csproj" />
+        <ProjectReference Include="..\Klondike\Klondike.csproj" />
     </ItemGroup>
 
 </Project>

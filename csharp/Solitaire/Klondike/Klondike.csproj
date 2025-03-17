@@ -7,7 +7,6 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Product>Klondike</Product>
         <Description>An implementation of Klondike solitaire.</Description>
-        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
