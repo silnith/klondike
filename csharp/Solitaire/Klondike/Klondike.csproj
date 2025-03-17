@@ -7,8 +7,6 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Product>Klondike</Product>
         <Description>An implementation of Klondike solitaire.</Description>
-        <Copyright>Kent Rosenkoetter</Copyright>
-        <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 

@@ -7,8 +7,6 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Product>Deck</Product>
         <Description>A deck of cards.</Description>
-        <Copyright>Kent Rosenkoetter</Copyright>
-        <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 

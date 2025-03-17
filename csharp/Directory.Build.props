@@ -5,7 +5,8 @@
     <!-- See https://aka.ms/dotnet/msbuild/customize for more details on customizing your build -->
     <PropertyGroup>
         <Company>silnith.org</Company>
-        <Copyright>AGPL-3.0</Copyright>
+        <Copyright>Kent Rosenkoetter</Copyright>
+        <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
         <Authors>silnith</Authors>
         <EnablePackageValidation>true</EnablePackageValidation>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
