@@ -171,7 +171,7 @@ namespace Silnith.Game.Search
                     continue;
                 }
 
-                if (game.IsWin(newGameState))
+                if (game.IsWin(newNode))
                 {
                     AddWin(newNode);
                 }

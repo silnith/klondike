@@ -141,7 +141,7 @@ namespace Runner
                         continue;
                     }
 
-                    if (klondike.IsWin(newGameState))
+                    if (klondike.IsWin(newHistory))
                     {
                         wins.Push(newHistory);
                     }

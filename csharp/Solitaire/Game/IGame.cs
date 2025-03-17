@@ -11,11 +11,20 @@ namespace Silnith.Game
     public interface IGame<M, B> where M : IMove<B>
     {
         /// <summary>
-        /// Returns whether the given game state is a winning game state for this game.
+        /// Returns whether the given reverse list of game states culminates in a win for this game.
+        /// The list begins with the most recent move and resulting board, and ends with the initial
+        /// move and board of the game.
         /// </summary>
-        /// <param name="state">The game state to check.</param>
-        /// <returns><see langword="true"/> if the game state represents a win.</returns>
-        bool IsWin(GameState<M, B> state);
+        /// <remarks>
+        /// <para>
+        /// The most recent game state is <c>gameStates[0]</c>.
+        /// The current board is <c>gameStates[0].Board</c>.
+        /// </para>
+        /// </remarks>
+        /// <param name="gameStates">The reverse list of game states to check.
+        /// The list is guaranteed to have at least one game state in it.</param>
+        /// <returns><see langword="true"/> if the reverse sequence of game states culminates in a win.</returns>
+        bool IsWin(IReadOnlyList<GameState<M, B>> gameStates);
 
         /// <summary>
         /// Returns all the legal moves for the provided game state.  The current game

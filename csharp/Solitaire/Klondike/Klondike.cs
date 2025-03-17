@@ -83,7 +83,7 @@ namespace Silnith.Game.Klondike
         }
 
         /// <summary>
-        /// Returns whether the given board is a winning game state for this game.
+        /// Returns whether the given board is a winning board for this game.
         /// </summary>
         /// <param name="board">The board to check.</param>
         /// <returns><see langword="true"/> if the board represents a win.</returns>
@@ -96,10 +96,20 @@ namespace Silnith.Game.Klondike
                 && foundation[Suit.Spade].Count == 13;
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Returns whether the given game state is a winning game state for this game.
+        /// </summary>
+        /// <param name="state">The game state to check.</param>
+        /// <returns><see langword="true"/> if the game state represents a win.</returns>
         public bool IsWin(GameState<ISolitaireMove, Board> state)
         {
             return IsWin(state.Board);
+        }
+
+        /// <inheritdoc/>
+        public bool IsWin(IReadOnlyList<GameState<ISolitaireMove, Board>> gameStates)
+        {
+            return IsWin(gameStates[0]);
         }
 
         /// <inheritdoc/>
