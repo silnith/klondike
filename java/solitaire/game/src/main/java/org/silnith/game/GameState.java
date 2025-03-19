@@ -1,7 +1,7 @@
 package org.silnith.game;
 
 import org.silnith.game.move.Move;
-import org.silnith.util.Pair;
+import org.silnith.game.util.Pair;
 
 /**
  * A single node in a game tree.

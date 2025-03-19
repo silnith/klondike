@@ -28,7 +28,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.silnith.deck.Card;
-import org.silnith.util.Pair;
+import org.silnith.game.util.Pair;
 
 
 public class ColumnTest {

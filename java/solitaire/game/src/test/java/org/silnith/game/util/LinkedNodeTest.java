@@ -1,4 +1,4 @@
-package org.silnith.util;
+package org.silnith.game.util;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;

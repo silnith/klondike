@@ -8,7 +8,7 @@ import java.util.Map;
 import org.silnith.deck.Card;
 import org.silnith.deck.Suit;
 import org.silnith.game.solitaire.Board;
-import org.silnith.util.Pair;
+import org.silnith.game.util.Pair;
 
 
 /**

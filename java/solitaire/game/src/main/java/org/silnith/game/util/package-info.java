@@ -3,4 +3,4 @@
  * 
  * @author <a href="mailto:silnith@gmail.com">Kent Rosenkoetter</a>
  */
-package org.silnith.util;
+package org.silnith.game.util;

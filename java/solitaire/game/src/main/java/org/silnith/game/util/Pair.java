@@ -1,4 +1,4 @@
-package org.silnith.util;
+package org.silnith.game.util;
 
 import java.beans.ConstructorProperties;
 import java.util.Objects;

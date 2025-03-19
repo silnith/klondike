@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.silnith.deck.Card;
 import org.silnith.deck.Value;
-import org.silnith.util.Pair;
+import org.silnith.game.util.Pair;
 
 
 /**

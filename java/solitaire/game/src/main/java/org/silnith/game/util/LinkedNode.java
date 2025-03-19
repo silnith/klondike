@@ -1,4 +1,4 @@
-package org.silnith.util;
+package org.silnith.game.util;
 
 import java.util.AbstractSequentialList;
 import java.util.ArrayList;

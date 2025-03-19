@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import org.silnith.game.Game;
 import org.silnith.game.GameState;
 import org.silnith.game.move.Move;
-import org.silnith.util.LinkedNode;
+import org.silnith.game.util.LinkedNode;
 
 /**
  * A game tree search algorithm implementation that performs a depth-first

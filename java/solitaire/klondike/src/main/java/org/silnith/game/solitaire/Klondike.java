@@ -42,7 +42,7 @@ import org.silnith.game.solitaire.move.filter.RunMoveMustBeFollowedBySomethingUs
 import org.silnith.game.solitaire.move.filter.SolitaireMoveFilter;
 import org.silnith.game.solitaire.move.filter.StockPileAdvanceMustBeFollowedBySomethingUsefulFilter;
 import org.silnith.game.solitaire.move.filter.StockPileRecycleMustBeFollowedByAdvanceFilter;
-import org.silnith.util.LinkedNode;
+import org.silnith.game.util.LinkedNode;
 
 /**
  * An implementation of Klondike solitaire.

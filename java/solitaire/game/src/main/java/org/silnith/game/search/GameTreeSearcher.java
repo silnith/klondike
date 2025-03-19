@@ -14,7 +14,7 @@ import org.silnith.game.Game;
 import org.silnith.game.GameState;
 import org.silnith.game.move.Move;
 import org.silnith.game.move.MoveFilter;
-import org.silnith.util.LinkedNode;
+import org.silnith.game.util.LinkedNode;
 
 /**
  * Abstract base class for game tree search algorithms.
