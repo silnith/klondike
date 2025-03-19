@@ -9,11 +9,11 @@
 	</parent>
 	<artifactId>deck</artifactId>
 	<name>Deck</name>
-	<description>A deck of cards.</description>
+	<description>Classes representing a standard deck of playing cards.</description>
     <dependencies>
     	<dependency>
     		<groupId>org.junit.jupiter</groupId>
-    		<artifactId>junit-jupiter</artifactId>
+    		<artifactId>junit-jupiter-api</artifactId>
     		<scope>test</scope>
     	</dependency>
     </dependencies>
