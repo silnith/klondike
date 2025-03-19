@@ -7,6 +7,15 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Product>Deck</Product>
         <Description>A deck of cards.</Description>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Update="README.md">
+            <Pack>true</Pack>
+            <PackagePath>/</PackagePath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
 </Project>
