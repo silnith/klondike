@@ -29,6 +29,13 @@ public class WorkerThreadDepthFirstSearch<M extends Move<B>, B>
 	private final Collection<List<GameState<M, B>>> wins;
 	private volatile boolean cancelled;
 
+	/**
+	 * Initializes a depth-first search across the specified number of threads.
+	 * 
+	 * @param game the game
+	 * @param initialState the initial game state from which to begin the search
+	 * @param numThreads the number of threads to use for searching the game tree
+	 */
 	public WorkerThreadDepthFirstSearch(final Game<M, B> game, final GameState<M, B> initialState,
 			final int numThreads) {
 		super(game);

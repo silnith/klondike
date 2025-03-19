@@ -7,12 +7,24 @@ using System.Threading.Tasks;
 
 namespace Silnith.Game.Search
 {
+    /// <summary>
+    /// A game tree search algorithm implementation that performs a depth-first
+    /// search running in parallel across multiple threads.
+    /// </summary>
+    /// <typeparam name="M">The move type for the game.</typeparam>
+    /// <typeparam name="B">The board type for the game.</typeparam>
     public class WorkerThreadDepthFirstSearch<M, B> : GameTreeSearcher<M, B> where M : IMove<B>
     {
         private readonly int numWorkers;
         private readonly BlockingCollection<LinkedNode<GameState<M, B>>> stack;
         private readonly ConcurrentQueue<IReadOnlyList<GameState<M, B>>> wins;
 
+        /// <summary>
+        /// Constructs a depth-first search across the specified number of threads.
+        /// </summary>
+        /// <param name="game">The game.</param>
+        /// <param name="initialGameState">The initial game state from which to begin the search.</param>
+        /// <param name="numThreads">The number of threads to use for searching the game tree.</param>
         public WorkerThreadDepthFirstSearch(IGame<M, B> game, GameState<M, B> initialGameState, int numThreads)
             : base(game)
         {
