@@ -38,6 +38,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		..\..\.github\workflows\run-msbuild.yaml = ..\..\.github\workflows\run-msbuild.yaml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{47E5B9B2-DC7B-4813-9162-33B6CEEA1B96}"
+	ProjectSection(SolutionItems) = preProject
+		.config\dotnet-tools.json = .config\dotnet-tools.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +84,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{5B9E2160-414D-4E16-AC1C-D201A9F52633} = {F5BABD99-F2FF-4F49-B282-E3593FE953FC}
 		{3093DC82-990C-433F-9A66-40C27A430687} = {5B9E2160-414D-4E16-AC1C-D201A9F52633}
+		{47E5B9B2-DC7B-4813-9162-33B6CEEA1B96} = {F5BABD99-F2FF-4F49-B282-E3593FE953FC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {54EF8319-F76E-4B92-845F-F6819B09855A}
