@@ -27,7 +27,7 @@ public interface MoveFilter<M extends Move<B>, B> {
      * 
      * @return a map key for storing statistical information about use of the filter
      */
-    public Object getStatisticsKey();
+    Object getStatisticsKey();
 
     /**
      * Returns {@code true} if the game state should be pruned from the
@@ -47,6 +47,6 @@ public interface MoveFilter<M extends Move<B>, B> {
      *         the most recent move and resulting board
      * @return {@code true} if the node should be pruned from the search tree
      */
-    public boolean shouldFilter(List<GameState<M, B>> gameStateHistory);
+    boolean shouldFilter(List<GameState<M, B>> gameStateHistory);
 
 }

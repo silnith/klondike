@@ -14,6 +14,6 @@ public interface Move<T> {
      * @param board the board to which to apply the move
      * @return the new board after the move has been completed
      */
-    public T apply(T board);
+    T apply(T board);
     
 }
