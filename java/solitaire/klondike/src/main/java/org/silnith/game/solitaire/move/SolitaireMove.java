@@ -19,7 +19,7 @@ public interface SolitaireMove extends Move<Board> {
      * 
      * @return {@code true} if the move involves cards
      */
-    public boolean hasCards();
+    boolean hasCards();
     
     /**
      * Returns the cards that have been moved.
@@ -27,7 +27,7 @@ public interface SolitaireMove extends Move<Board> {
      * 
      * @return the cards moved
      */
-    public List<Card> getCards();
+    List<Card> getCards();
     
     /**
      * Returns {@code true} if this move changes the stock pile index.
@@ -37,42 +37,42 @@ public interface SolitaireMove extends Move<Board> {
      * 
      * @return {@code true} if this move adjusts the stock pile index
      */
-    public boolean isStockPileModification();
+    boolean isStockPileModification();
     
     /**
      * Returns {@code true} if this move advances the stock pile.
      * 
      * @return {@code true} if this move advances the stock pile
      */
-    public boolean isStockPileAdvance();
+    boolean isStockPileAdvance();
     
     /**
      * Returns {@code true} if this move recycles the stock pile.
      * 
      * @return {@code true} if this move recycles the stock pile
      */
-    public boolean isStockPileRecycle();
+    boolean isStockPileRecycle();
     
     /**
      * Returns {@code true} if this move draws a card from the stock pile.
      * 
      * @return {@code true} if this move draws a card from the stock pile
      */
-    public boolean isFromStockPile();
+    boolean isFromStockPile();
     
     /**
      * Returns {@code true} if this move takes a card from the foundation.
      * 
      * @return {@code true} if this move takes a card from the foundation
      */
-    public boolean isFromFoundation();
+    boolean isFromFoundation();
     
     /**
      * Returns {@code true} if this move takes cards from a column.
      * 
      * @return {@code true} if this move takes cards from a column
      */
-    public boolean isFromColumn();
+    boolean isFromColumn();
     
     /**
      * Returns {@code true} if this move takes cards from the specific column.
@@ -80,7 +80,7 @@ public interface SolitaireMove extends Move<Board> {
      * @param columnIndex the column to check whether the move takes cards from
      * @return {@code true} if this move takes cards from the specific column
      */
-    public boolean isFromColumn(int columnIndex);
+    boolean isFromColumn(int columnIndex);
     
     /**
      * Returns the index of the column from which this move takes cards.
@@ -89,21 +89,21 @@ public interface SolitaireMove extends Move<Board> {
      * 
      * @return the index of the column from which this move takes cards
      */
-    public int getSourceColumnIndex();
+    int getSourceColumnIndex();
     
     /**
      * Returns {@code true} if this move puts a card into the foundation.
      * 
      * @return {@code true} if this move puts a card into the foundation
      */
-    public boolean isToFoundation();
+    boolean isToFoundation();
     
     /**
      * Returns {@code true} if this move puts cards onto a column run.
      * 
      * @return {@code true} if this move puts cards onto a column run
      */
-    public boolean isToColumn();
+    boolean isToColumn();
     
     /**
      * Returns {@code true} if this move puts cards onto the specific column.
@@ -111,7 +111,7 @@ public interface SolitaireMove extends Move<Board> {
      * @param columnIndex the column to check whether receives cards
      * @return {@code true} if this move puts cards onto the specific column
      */
-    public boolean isToColumn(int columnIndex);
+    boolean isToColumn(int columnIndex);
 
     /**
      * Returns the index of the column to which this move adds cards.
@@ -120,6 +120,6 @@ public interface SolitaireMove extends Move<Board> {
      * 
      * @return the index of the column to which this move adds cards
      */
-    public int getDestinationColumnIndex();
+    int getDestinationColumnIndex();
     
 }
