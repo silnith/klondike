@@ -7,11 +7,20 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Product>Klondike</Product>
         <Description>An implementation of Klondike solitaire.</Description>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Deck\Deck.csproj" />
         <ProjectReference Include="..\Game\Game.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="README.md">
+            <PackagePath>/</PackagePath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Pack>true</Pack>
+        </None>
     </ItemGroup>
 
 </Project>

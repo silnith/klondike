@@ -12,9 +12,9 @@
 
     <ItemGroup>
         <None Update="README.md">
-            <Pack>true</Pack>
             <PackagePath>/</PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Pack>true</Pack>
         </None>
     </ItemGroup>
 

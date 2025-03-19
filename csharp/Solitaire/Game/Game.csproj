@@ -7,6 +7,15 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Product>Game</Product>
         <Description>Interfaces for games with searchable state trees.</Description>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Update="README.md">
+            <PackagePath>/</PackagePath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Pack>true</Pack>
+        </None>
+    </ItemGroup>
 
 </Project>
