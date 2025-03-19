@@ -217,6 +217,9 @@ namespace Silnith.Game.Klondike
             Console.Write("{0,2}{1}", card.Value.ToSymbol(), card.Suit.ToSymbol());
         }
 
+        /// <summary>
+        /// Prints an ASCII art representation of the board to the <see cref="Console"/>.
+        /// </summary>
         public void PrintTo()
         {
             foreach (KeyValuePair<Suit, IReadOnlyList<Card>> keyValuePair in Foundation)

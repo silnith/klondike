@@ -237,6 +237,11 @@ public class Board {
     	out.format(Locale.US, "%2s%s", card.getValue().toSymbol(), card.getSuit().toSymbol());
     }
     
+    /**
+     * Prints an ASCII art representation of the board to the given output stream.
+     * 
+     * @param out the output stream
+     */
     public void printTo(final PrintStream out) {
     	for (final Map.Entry<Suit, List<Card>> entry : foundation.entrySet()) {
     		out.format(Locale.US, "%2s", "");
