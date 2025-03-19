@@ -1,5 +1,5 @@
 /**
- * Utilities to search a game state tree.
+ * Standard algorithms to search a game state tree.
  * 
  * @author <a href="mailto:silnith@gmail.com">Kent Rosenkoetter</a>
  */
