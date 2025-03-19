@@ -12,12 +12,24 @@ public class Board {
 	
 	private final Player[][] board;
 	
+	/**
+	 * Creates a new board where the specified player is next to move.
+	 * 
+	 * @param whoseMove the next player to move
+	 */
 	public Board(final Player whoseMove) {
 		super();
 		this.whoseMove = whoseMove;
 		this.board = new Player[3][3];
 	}
 	
+	/**
+	 * Creates a new board where the specified player is next to move using
+	 * the provided board.
+	 * 
+	 * @param whoseMove the next player to move
+	 * @param board the board to move on
+	 */
 	public Board(final Player whoseMove, final Player[][] board) {
 		super();
 		this.whoseMove = whoseMove;
@@ -46,6 +58,11 @@ public class Board {
 		}
 	}
 
+    /**
+     * Prints an ASCII art representation of the board to the given output stream.
+     * 
+     * @param out the output stream
+     */
 	public void printTo(final PrintStream out) {
 		out.format(Locale.US, " %s \u2551 %s \u2551 %s ", to(board[0][0]), to(board[0][1]), to(board[0][2]));
 		out.println();

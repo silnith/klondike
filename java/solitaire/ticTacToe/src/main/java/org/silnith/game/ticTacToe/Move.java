@@ -1,11 +1,21 @@
 package org.silnith.game.ticTacToe;
 
+/**
+ * A tic-tac-toe move.
+ */
 public class Move implements org.silnith.game.move.Move<Board> {
 
 	private final int row;
 	private final int column;
 	private final Player player;
 
+	/**
+	 * Creates a new move.
+	 * 
+	 * @param row the row
+	 * @param column the column
+	 * @param player the player that moved
+	 */
 	public Move(final int row, final int column, final Player player) {
 		this.row = row;
 		this.column = column;

@@ -13,6 +13,9 @@ import org.silnith.game.search.GameTreeSearcher;
 import org.silnith.game.search.SequentialDepthFirstSearch;
 import org.silnith.game.search.WorkerThreadDepthFirstSearch;
 
+/**
+ * A game engine that implements tic-tac-toe.
+ */
 public class TicTacToe implements Game<Move, Board> {
 
 	private boolean isWinForPlayer(final Player player, final Board board) {
@@ -42,14 +45,14 @@ public class TicTacToe implements Game<Move, Board> {
 		return false;
 	}
 
-	public boolean isWin(final Board board) {
+	private boolean isWin(final Board board) {
 		/*
 		 * A win is defined as player X winning.
 		 */
 		return isWinForPlayer(Player.X, board);
 	}
 
-	public boolean isWin(final GameState<Move, Board> state) {
+	private boolean isWin(final GameState<Move, Board> state) {
 		return isWin(state.getBoard());
 	}
 
@@ -95,6 +98,12 @@ public class TicTacToe implements Game<Move, Board> {
         return Collections.singleton(new GameLostFilter());
     }
 
+    /**
+     * A static entry point to run the game search on tic-tac-toe.
+     * 
+     * @param args the command-line arguments.  None are expected.
+     * @throws Exception for any reason
+     */
     public static void main(String[] args) throws Exception {
         final int availableProcessors = Runtime.getRuntime().availableProcessors();
         System.out.format(Locale.US, "Runtime processors: %d\n", availableProcessors);
