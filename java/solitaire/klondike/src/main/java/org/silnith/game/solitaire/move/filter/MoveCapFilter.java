@@ -18,6 +18,11 @@ public class MoveCapFilter implements SolitaireMoveFilter {
 	private final int moveCap;
 	private final String key;
 
+	/**
+	 * Creates a new move cap filter with the given cap.
+	 * 
+	 * @param moveCap the maximum number of moves to allow in a game
+	 */
 	public MoveCapFilter(final int moveCap) {
 		super();
 		this.moveCap = moveCap;

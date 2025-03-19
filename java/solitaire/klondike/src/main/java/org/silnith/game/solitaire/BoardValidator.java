@@ -25,6 +25,14 @@ public class BoardValidator implements Validator<Board> {
     
     private final FoundationValidator foundationValidator;
     
+    /**
+     * Creates a new board validator.
+     * 
+     * @param numberOfColumns the number of columns on the board.  In a normal game, this is {@code 7}.
+     * @param deckSize the size of the deck.  In a normal game, this is {@code 52}.
+     * @param columnValidator a column validator
+     * @param foundationValidator a foundation validator
+     */
     public BoardValidator(final int numberOfColumns, final int deckSize, final ColumnValidator columnValidator,
             final FoundationValidator foundationValidator) {
         super();

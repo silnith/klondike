@@ -167,6 +167,14 @@ public class Klondike implements Game<SolitaireMove, Board> {
 		return filters;
 	}
 
+	/**
+	 * A main program entry point that generates a random deck of cards,
+	 * then deals a game of Klondike solitaire from it and runs the search
+	 * algorithm on it.
+	 * 
+	 * @param args any command-line parameters to the program.  None are expected.
+	 * @throws Exception for any reason
+	 */
 	public static void main(final String[] args) throws Exception {
 		final List<Card> deck = new ArrayList<>(52);
 		for (final Suit suit : Suit.values()) {

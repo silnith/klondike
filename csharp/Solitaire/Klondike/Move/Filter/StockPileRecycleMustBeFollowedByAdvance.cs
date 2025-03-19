@@ -2,6 +2,9 @@
 
 namespace Silnith.Game.Klondike.Move.Filter
 {
+    /// <summary>
+    /// Once a game tree recycles the stock pile, it must then advance it.
+    /// </summary>
     public class StockPileRecycleMustBeFollowedByAdvance : ISolitaireMoveFilter
     {
         /// <inheritdoc/>

@@ -7,6 +7,10 @@ import org.silnith.game.GameState;
 import org.silnith.game.solitaire.Board;
 import org.silnith.game.solitaire.move.SolitaireMove;
 
+
+/**
+ * Once a game tree recycles the stock pile, it must then advance it.
+ */
 public class StockPileRecycleMustBeFollowedByAdvanceFilter implements SolitaireMoveFilter {
 
     @Override
