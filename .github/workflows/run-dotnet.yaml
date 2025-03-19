@@ -35,7 +35,6 @@ jobs:
         with:
           dotnet-version: |
             5.x
-            6.x
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: NuGet Tool Restore
@@ -69,7 +68,6 @@ jobs:
         with:
           dotnet-version: |
             5.x
-            6.x
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Download Packages Artifact
@@ -109,7 +107,6 @@ jobs:
         with:
           dotnet-version: |
             5.x
-            6.x
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Download Packages Artifact
