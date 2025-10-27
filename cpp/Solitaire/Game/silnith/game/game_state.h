@@ -19,11 +19,6 @@ namespace silnith
         /// the sequence of moves made from the beginning and the state of the board
         /// after every move.
         /// </summary>
-        /// <remarks>
-        /// <para>
-        /// It is assumed that <c>game_state.get_moves().size() == game_state.get_boards().size()</c>.
-        /// </para>
-        /// </remarks>
         /// <typeparam name="M">The move type for the game.  This can simply be <c>move&lt;B&gt;</c>,
         /// but the interface allows specifying a subtype in the case that a game-specific interface is needed.</typeparam>
         /// <typeparam name="B">The board type for the game.</typeparam>
