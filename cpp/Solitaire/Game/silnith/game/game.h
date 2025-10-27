@@ -64,7 +64,7 @@ namespace silnith
             /// </para>
             /// <para>
             /// The search engine will run all the provided filters on every game state
-            /// in the search tree.If any filter returns <see langword="true"/>, that game state
+            /// in the search tree.  If any filter returns <see langword="true"/>, that game state
             /// will be pruned and no further search of it will happen.
             /// </para>
             /// <para>
