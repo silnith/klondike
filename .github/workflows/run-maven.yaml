@@ -3,6 +3,10 @@ name: Run Maven
 on:
   workflow_call:
     inputs:
+      name:
+        description: A prefix for artifact names.
+        type: string
+        required: true
       directory:
         description: The directory that contains the POM file.
         type: string
@@ -21,10 +25,10 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - id: setup-java
         name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: |
@@ -42,9 +46,9 @@ jobs:
         run: mvn site
         continue-on-error: true
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: target
+          name: ${{ inputs.name }}-target
           path: '**/target/'
           if-no-files-found: warn # or error or ignore
           overwrite: false

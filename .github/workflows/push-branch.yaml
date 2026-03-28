@@ -33,6 +33,7 @@ jobs:
     name: Build Java
     uses: ./.github/workflows/run-maven.yaml
     with:
+      name: java
       directory: java/solitaire
     secrets: inherit
     permissions:

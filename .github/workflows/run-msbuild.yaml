@@ -27,15 +27,13 @@ jobs:
         working-directory: ${{ inputs.directory }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Configure GitHub Packages
         run: nuget sources add -Name GitHub -UserName ${{ github.actor }} -Password ${{ secrets.GITHUB_TOKEN }} -Source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json -NonInteractive
       - name: NuGet Restore
         run: nuget restore ${{ inputs.solution_file }} -NonInteractive
-      - name: Show some shit
-        run: dir packages
       - name: Upload Packages Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ inputs.name }}-packages
           # This action does not respect the working directory.
@@ -59,14 +57,14 @@ jobs:
           - Release
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
+        uses: microsoft/setup-msbuild@v3
         with:
           msbuild-architecture: x64
           #vs-version: '[16.0,17.0)'
       - name: Download Packages Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: ${{ inputs.name }}-packages
           # This action does not respect the working directory.
@@ -74,7 +72,7 @@ jobs:
       - name: Build
         run: msbuild ${{ inputs.solution_file }} -p:Configuration=${{ matrix.configuration }} -p:Platform=${{ matrix.platform }}
       - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ inputs.name }}-${{ matrix.configuration }}-${{ matrix.platform }}
           # This action does not respect the working directory.
@@ -101,22 +99,18 @@ jobs:
           - Release
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Download Packages Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: ${{ inputs.name }}-packages
           # This action does not respect the working directory.
           path: ${{ inputs.directory }}/packages/
       - name: Download Build Artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: ${{ inputs.name }}-${{ matrix.configuration }}-${{ matrix.platform }}
           # This action does not respect the working directory.
           path: ${{ inputs.directory }}/
-      #- name: Run Tests
-      #  uses: microsoft/vstest-action@v1.0.0
-      #  with:
-      #    searchFolder: '.\\'
-      #    testAssembly: '**\\*test*.dll'
-      #    codeCoverageEnabled: false
+      - name: Run Tests
+        run: '& "$(vswhere -property installationPath)\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" ".\**\*test*.dll"'
