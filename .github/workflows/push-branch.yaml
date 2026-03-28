@@ -32,9 +32,9 @@ jobs:
       checks: write
   build-java:
     name: Java
-    uses: ./.github/workflows/run-maven.yaml
+    uses: silnith/github-workflows/.github/workflows/maven-verify.yaml@main
     with:
-      name: java
+      artifact-prefix: java
       directory: java/solitaire
     secrets: inherit
     permissions:
