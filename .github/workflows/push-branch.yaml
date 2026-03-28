@@ -9,7 +9,7 @@ env: {}
 
 jobs:
   build-cpp:
-    name: Build C++
+    name: C++
     uses: ./.github/workflows/run-msbuild.yaml
     with:
       name: cpp
@@ -20,7 +20,7 @@ jobs:
       contents: read
       checks: write
   build-csharp:
-    name: Build C#
+    name: C#
     uses: ./.github/workflows/run-dotnet.yaml
     with:
       name: csharp
@@ -31,7 +31,7 @@ jobs:
       contents: read
       checks: write
   build-java:
-    name: Build Java
+    name: Java
     uses: ./.github/workflows/run-maven.yaml
     with:
       name: java
