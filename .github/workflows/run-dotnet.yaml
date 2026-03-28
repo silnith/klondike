@@ -128,12 +128,36 @@ jobs:
           --collect "XPlat Code Coverage"
           --verbosity normal
         # TODO: https://github.com/Tyrrrz/GitHubActionsTestLogger
+      - name: Upload Test Artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ inputs.name }}-tests-${{ matrix.configuration }}
+          # This action does not respect the working directory.
+          path: |
+            ${{ inputs.directory }}/**/TestResults/**/*.trx
+          if-no-files-found: error
+  publish-test-results:
+    runs-on: windows-2022
+    defaults:
+      run:
+        working-directory: ${{ inputs.directory }}
+    needs:
+      - test
+    steps:
+      - name: Download Test Artifacts
+        uses: actions/download-artifact@v8
+        with:
+          pattern: ${{ inputs.name }}-tests-*
+          # This action does not respect the working directory.
+          path: ${{ inputs.directory }}/
+          merge-multiple: true
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action/windows@v2
-        if: always()
+        if: (!cancelled())
         continue-on-error: true
         with:
-          check_name: "C# ${{ matrix.configuration }} Test Results"
+          check_name: "C# Test Results"
           files: |
             **/TestResults/**/*.trx
           comment_mode: off
+          report_individual_runs: true

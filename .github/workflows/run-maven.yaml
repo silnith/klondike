@@ -55,7 +55,7 @@ jobs:
           include-hidden-files: false
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action/linux@v2
-        if: always()
+        if: (!cancelled())
         continue-on-error: true
         with:
           check_name: "Java Test Results"
