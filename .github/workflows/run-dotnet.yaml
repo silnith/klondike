@@ -137,6 +137,7 @@ jobs:
             ${{ inputs.directory }}/**/TestResults/**/*.trx
           if-no-files-found: error
   publish-test-results:
+    name: Publish Test Results
     runs-on: windows-2022
     defaults:
       run:
