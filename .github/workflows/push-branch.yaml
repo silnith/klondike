@@ -8,6 +8,9 @@ on:
 env: {}
 
 jobs:
+  get-date:
+    name: Date
+    uses: silnith/github-workflows/.github/workflows/bash-get-date.yaml@main
   build-cpp:
     name: C++
     uses: ./.github/workflows/run-msbuild.yaml
@@ -30,14 +33,33 @@ jobs:
     permissions:
       contents: read
       checks: write
-  build-java:
-    name: Java
+  maven-cache:
+    name: Maven Cache
+    needs:
+      - get-date
+    uses: silnith/github-workflows/.github/workflows/maven-cache-dependencies.yaml@main
+    with:
+      artifact-prefix: java
+      directory: java/solitaire
+      year: ${{ needs.get-date.outputs.year }}
+      month: ${{ needs.get-date.outputs.month }}
+      day: ${{ needs.get-date.outputs.day }}
+    secrets: inherit
+    permissions:
+      contents: read
+  maven-build:
+    name: Maven
+    needs:
+      - get-date
+      - maven-cache
     uses: silnith/github-workflows/.github/workflows/maven-verify.yaml@main
     with:
       artifact-prefix: java
       directory: java/solitaire
+      year: ${{ needs.get-date.outputs.year }}
+      month: ${{ needs.get-date.outputs.month }}
+      day: ${{ needs.get-date.outputs.day }}
     secrets: inherit
     permissions:
       contents: read
-      packages: write
       checks: write
