@@ -23,7 +23,7 @@
     <ProjectGuid>{15B135C2-A0A1-42F5-8B5A-007B39199335}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>KlondikeTests</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
     <ProjectSubType>NativeUnitTestProject</ProjectSubType>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
