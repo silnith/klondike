@@ -117,7 +117,15 @@ jobs:
           # This action does not respect the working directory.
           path: ${{ inputs.directory }}/
       - name: Run Tests
-        run: '& "$(vswhere -property installationPath)\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" ".\**\*test*.dll"'
+        run: '& "$(vswhere -property installationPath)\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" ".\**\*test*.dll" "/logger:trx"'
+      - name: Upload Test Artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ inputs.name }}-test-results-${{ matrix.configuration }}
+          # This action does not respect the working directory.
+          path: |
+            ${{ inputs.directory }}/**/TestResults/**/*.trx
+          if-no-files-found: error
   test-arm:
     name: Test ARM
     runs-on: windows-11-arm
@@ -151,4 +159,12 @@ jobs:
           # This action does not respect the working directory.
           path: ${{ inputs.directory }}/
       - name: Run Tests
-        run: '& "$(vswhere -property installationPath)\Common7\IDE\Extensions\TestPlatform\vstest.console.arm64.exe" ".\**\*test*.dll"'
+        run: '& "$(vswhere -property installationPath)\Common7\IDE\Extensions\TestPlatform\vstest.console.arm64.exe" ".\**\*test*.dll" "/logger:trx"'
+      - name: Upload Test Artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ inputs.name }}-test-results-${{ matrix.configuration }}
+          # This action does not respect the working directory.
+          path: |
+            ${{ inputs.directory }}/**/TestResults/**/*.trx
+          if-no-files-found: error
