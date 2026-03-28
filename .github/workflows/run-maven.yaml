@@ -49,10 +49,26 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: ${{ inputs.name }}-target
-          path: '**/target/'
+          path: ${{ inputs.directory }}/**/target/
           if-no-files-found: warn # or error or ignore
           overwrite: false
           include-hidden-files: false
+  publish-test-results:
+    name: Publish Test Results
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.directory }}
+    needs:
+      - build
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ inputs.name }}-target
+          path: ${{ inputs.directory }}/
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action/linux@v2
         if: (!cancelled())
