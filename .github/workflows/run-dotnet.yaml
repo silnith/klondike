@@ -80,7 +80,7 @@ jobs:
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ inputs.name }}-${{ matrix.configuration }}
+          name: ${{ inputs.name }}-build-${{ matrix.configuration }}
           # This action does not respect the working directory.
           path: |
             ${{ inputs.directory }}/**/bin/
@@ -117,7 +117,7 @@ jobs:
       - name: Download Build Artifacts
         uses: actions/download-artifact@v8
         with:
-          name: ${{ inputs.name }}-${{ matrix.configuration }}
+          name: ${{ inputs.name }}-build-${{ matrix.configuration }}
           # This action does not respect the working directory.
           path: ${{ inputs.directory }}/
       - name: Test
@@ -131,7 +131,7 @@ jobs:
       - name: Upload Test Artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ inputs.name }}-tests-${{ matrix.configuration }}
+          name: ${{ inputs.name }}-test-results-${{ matrix.configuration }}
           # This action does not respect the working directory.
           path: |
             ${{ inputs.directory }}/**/TestResults/**/*.trx
@@ -148,7 +148,7 @@ jobs:
       - name: Download Test Artifacts
         uses: actions/download-artifact@v8
         with:
-          pattern: ${{ inputs.name }}-tests-*
+          pattern: ${{ inputs.name }}-test-results-*
           # This action does not respect the working directory.
           path: ${{ inputs.directory }}/
           merge-multiple: true

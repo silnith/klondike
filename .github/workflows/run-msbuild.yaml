@@ -74,12 +74,12 @@ jobs:
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ inputs.name }}-${{ matrix.configuration }}-${{ matrix.platform }}
+          name: ${{ inputs.name }}-build-${{ matrix.platform }}-${{ matrix.configuration }}
           # This action does not respect the working directory.
           path: |
-            ${{ inputs.directory }}/x64/
             ${{ inputs.directory }}/Debug/
             ${{ inputs.directory }}/Release/
+            ${{ inputs.directory }}/x64/
           if-no-files-found: error
   test:
     name: Test
@@ -109,7 +109,7 @@ jobs:
       - name: Download Build Artifacts
         uses: actions/download-artifact@v8
         with:
-          name: ${{ inputs.name }}-${{ matrix.configuration }}-${{ matrix.platform }}
+          name: ${{ inputs.name }}-build-${{ matrix.platform }}-${{ matrix.configuration }}
           # This action does not respect the working directory.
           path: ${{ inputs.directory }}/
       - name: Run Tests
