@@ -39,7 +39,6 @@ jobs:
       - get-date
     uses: silnith/github-workflows/.github/workflows/maven-cache-dependencies.yaml@main
     with:
-      artifact-prefix: java
       directory: java/solitaire
       year: ${{ needs.get-date.outputs.year }}
       month: ${{ needs.get-date.outputs.month }}
