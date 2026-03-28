@@ -11,28 +11,6 @@ jobs:
   get-date:
     name: Date
     uses: silnith/github-workflows/.github/workflows/bash-get-date.yaml@main
-  build-cpp:
-    name: C++
-    uses: ./.github/workflows/run-msbuild.yaml
-    with:
-      name: cpp
-      directory: cpp/Solitaire
-      solution_file: Solitaire.sln
-    secrets: inherit
-    permissions:
-      contents: read
-      checks: write
-  build-csharp:
-    name: C#
-    uses: ./.github/workflows/run-dotnet.yaml
-    with:
-      name: csharp
-      directory: csharp/Solitaire
-      solution_file: Solitaire.sln
-    secrets: inherit
-    permissions:
-      contents: read
-      checks: write
   maven-cache:
     name: Maven Cache
     needs:
@@ -58,6 +36,28 @@ jobs:
       year: ${{ needs.get-date.outputs.year }}
       month: ${{ needs.get-date.outputs.month }}
       day: ${{ needs.get-date.outputs.day }}
+    secrets: inherit
+    permissions:
+      contents: read
+      checks: write
+  build-cpp:
+    name: C++
+    uses: ./.github/workflows/run-msbuild.yaml
+    with:
+      name: cpp
+      directory: cpp/Solitaire
+      solution_file: Solitaire.sln
+    secrets: inherit
+    permissions:
+      contents: read
+      checks: write
+  build-csharp:
+    name: C#
+    uses: ./.github/workflows/run-dotnet.yaml
+    with:
+      name: csharp
+      directory: csharp/Solitaire
+      solution_file: Solitaire.sln
     secrets: inherit
     permissions:
       contents: read
