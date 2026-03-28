@@ -34,7 +34,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 	ProjectSection(SolutionItems) = preProject
 		..\..\.github\workflows\push-branch.yaml = ..\..\.github\workflows\push-branch.yaml
 		..\..\.github\workflows\run-dotnet.yaml = ..\..\.github\workflows\run-dotnet.yaml
-		..\..\.github\workflows\run-maven.yaml = ..\..\.github\workflows\run-maven.yaml
 		..\..\.github\workflows\run-msbuild.yaml = ..\..\.github\workflows\run-msbuild.yaml
 	EndProjectSection
 EndProject
