@@ -52,6 +52,8 @@ jobs:
         platform:
           - x86
           - x64
+          - ARM
+          - ARM64
         configuration:
           - Debug
           - Release
@@ -80,9 +82,11 @@ jobs:
             ${{ inputs.directory }}/Debug/
             ${{ inputs.directory }}/Release/
             ${{ inputs.directory }}/x64/
+            ${{ inputs.directory }}/ARM/
+            ${{ inputs.directory }}/ARM64/
           if-no-files-found: error
-  test:
-    name: Test
+  test-intel:
+    name: Test Intel
     runs-on: windows-2022
     defaults:
       run:
@@ -114,3 +118,37 @@ jobs:
           path: ${{ inputs.directory }}/
       - name: Run Tests
         run: '& "$(vswhere -property installationPath)\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" ".\**\*test*.dll"'
+  test-arm:
+    name: Test ARM
+    runs-on: windows-11-arm
+    defaults:
+      run:
+        working-directory: ${{ inputs.directory }}
+    needs:
+      - build
+    strategy:
+      matrix:
+        platform:
+          # ARM is disabled because Common7\IDE\Extensions\TestPlatform\Extensions\..\testhost.arm.exe is
+#          - ARM
+          - ARM64
+        configuration:
+          - Debug
+          - Release
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Download Packages Artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ inputs.name }}-packages
+          # This action does not respect the working directory.
+          path: ${{ inputs.directory }}/packages/
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ inputs.name }}-build-${{ matrix.platform }}-${{ matrix.configuration }}
+          # This action does not respect the working directory.
+          path: ${{ inputs.directory }}/
+      - name: Run Tests
+        run: '& "$(vswhere -property installationPath)\Common7\IDE\Extensions\TestPlatform\vstest.console.arm64.exe" ".\**\*test*.dll"'
