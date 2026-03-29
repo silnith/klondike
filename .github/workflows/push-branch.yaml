@@ -157,7 +157,8 @@ jobs:
     strategy:
       matrix:
         platform:
-          - ARM
+# Path does not exist: \Common7\IDE\Extensions\TestPlatform\testhost.arm.exe
+#          - ARM
           - ARM64
         configuration:
           - Debug
