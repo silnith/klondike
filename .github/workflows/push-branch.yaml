@@ -10,13 +10,13 @@ env: {}
 jobs:
   get-date:
     name: Date
-    uses: silnith/github-workflows/.github/workflows/bash-get-date.yaml@single-publish-test-results
+    uses: silnith/github-workflows/.github/workflows/bash-get-date.yaml@main
 
   maven-cache:
     name: Maven Cache
     needs:
       - get-date
-    uses: silnith/github-workflows/.github/workflows/maven-cache-dependencies.yaml@single-publish-test-results
+    uses: silnith/github-workflows/.github/workflows/maven-cache-dependencies.yaml@main
     with:
       directory: java/solitaire
       year: ${{ needs.get-date.outputs.year }}
@@ -30,7 +30,7 @@ jobs:
     needs:
       - get-date
       - maven-cache
-    uses: silnith/github-workflows/.github/workflows/maven-verify.yaml@single-publish-test-results
+    uses: silnith/github-workflows/.github/workflows/maven-verify.yaml@main
     with:
       artifact-prefix: java
       directory: java/solitaire
@@ -45,7 +45,7 @@ jobs:
     name: Publish Maven Test Results
     needs:
       - maven-build
-    uses: silnith/github-workflows/.github/workflows/publish-test-results.yaml@single-publish-test-results
+    uses: silnith/github-workflows/.github/workflows/publish-test-results.yaml@main
     with:
       check-name: Java Test Results
       artifact-pattern: java-target
@@ -61,7 +61,7 @@ jobs:
     name: .NET Cache
     needs:
       - get-date
-    uses: silnith/github-workflows/.github/workflows/dotnet-cache-dependencies.yaml@single-publish-test-results
+    uses: silnith/github-workflows/.github/workflows/dotnet-cache-dependencies.yaml@main
     with:
       directory: csharp/Solitaire
       solution-file: Solitaire.sln
@@ -82,7 +82,7 @@ jobs:
         configuration:
           - Debug
           - Release
-    uses: silnith/github-workflows/.github/workflows/dotnet-build.yaml@single-publish-test-results
+    uses: silnith/github-workflows/.github/workflows/dotnet-build.yaml@main
     with:
       artifact-prefix: csharp
       directory: csharp/Solitaire
@@ -99,9 +99,9 @@ jobs:
     name: Publish .NET Test Results
     needs:
       - dotnet-build
-    uses: silnith/github-workflows/.github/workflows/publish-test-results.yaml@single-publish-test-results
+    uses: silnith/github-workflows/.github/workflows/publish-test-results.yaml@main
     with:
-      check-name: .NET Test Results
+      check-name: C# Test Results
       artifact-pattern: csharp-dotnet-test-results-*
       artifact-path: csharp/Solitaire
       test-result-files: csharp/Solitaire/**/TestResults/**/*.trx
@@ -109,14 +109,60 @@ jobs:
     permissions:
       checks: write
 
-  build-cpp:
-    name: C++
-    uses: ./.github/workflows/run-msbuild.yaml
+  cpp-nuget:
+    name: NuGet
+    needs:
+      - get-date
+    uses: silnith/github-workflows/.github/workflows/nuget-cache-dependencies.yaml@main
     with:
-      name: cpp
       directory: cpp/Solitaire
       solution_file: Solitaire.sln
+      year: ${{ needs.get-date.outputs.year }}
+      month: ${{ needs.get-date.outputs.month }}
+      day: ${{ needs.get-date.outputs.day }}
     secrets: inherit
     permissions:
       contents: read
+  cpp-build:
+    name: C++
+    needs:
+      - get-date
+      - cpp-nuget
+    strategy:
+      matrix:
+        platform:
+          - x86
+          - x64
+          - ARM
+          - ARM64
+        configuration:
+          - Debug
+          - Release
+    uses: silnith/github-workflows/.github/workflows/msbuild-build.yaml@main
+    with:
+      artifact-prefix: cpp
+      directory: cpp/Solitaire
+      solution-file: Solitaire.sln
+      platform: ${{ matrix.platform }}
+      configuration: ${{ matrix.configuration }}
+      year: ${{ needs.get-date.outputs.year }}
+      month: ${{ needs.get-date.outputs.month }}
+      day: ${{ needs.get-date.outputs.day }}
+    secrets: inherit
+    permissions:
+      contents: read
+  cpp-test-results:
+    name: Publish VSTest Results
+    needs:
+      - cpp-build
+    uses: silnith/github-workflows/.github/workflows/publish-test-results.yaml@main
+    with:
+      check-name: C++ Test Results
+      artifact-pattern: cpp-vstest-test-results-*
+      artifact-path: cpp/Solitaire
+      test-result-files: |
+        cpp/Solitaire/**/TestResults/**/*.trx
+        cpp/Solitaire/**/*.coverage
+    secrets: inherit
+    permissions:
       checks: write
