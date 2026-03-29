@@ -40,23 +40,62 @@ jobs:
     permissions:
       contents: read
       checks: write
+  dotnet-cache:
+    name: .NET Cache
+    needs:
+      - get-date
+    uses: silnith/github-workflows/.github/workflows/dotnet-cache-dependencies.yaml@main
+    with:
+      directory: csharp/Solitaire
+      solution-file: Solitaire.sln
+      dotnet-versions: 5.x
+      year: ${{ needs.get-date.outputs.year }}
+      month: ${{ needs.get-date.outputs.month }}
+      day: ${{ needs.get-date.outputs.day }}
+    secrets: inherit
+    permissions:
+      contents: read
+  dotnet-build:
+    name: .NET Cache
+    needs:
+      - get-date
+      - dotnet-cache
+    strategy:
+      matrix:
+        configuration:
+          - Debug
+          - Release
+    uses: silnith/github-workflows/.github/workflows/dotnet-build.yaml@main
+    with:
+      artifact-prefix: csharp
+      directory: csharp/Solitaire
+      solution-file: Solitaire.sln
+      configuration: ${{ matrix.configuration }}
+      dotnet-versions: 5.x
+      year: ${{ needs.get-date.outputs.year }}
+      month: ${{ needs.get-date.outputs.month }}
+      day: ${{ needs.get-date.outputs.day }}
+    secrets: inherit
+    permissions:
+      contents: read
+  dotnet-test-results:
+    name: .NET Publish Test Results
+    needs:
+      - dotnet-build
+    uses: silnith/github-workflows/.github/workflows/dotnet-publish-test-results.yaml@main
+    with:
+      artifact-prefix: csharp
+      directory: csharp/Solitaire
+    secrets: inherit
+    permissions:
+      checks: write
+
   build-cpp:
     name: C++
     uses: ./.github/workflows/run-msbuild.yaml
     with:
       name: cpp
       directory: cpp/Solitaire
-      solution_file: Solitaire.sln
-    secrets: inherit
-    permissions:
-      contents: read
-      checks: write
-  build-csharp:
-    name: C#
-    uses: ./.github/workflows/run-dotnet.yaml
-    with:
-      name: csharp
-      directory: csharp/Solitaire
       solution_file: Solitaire.sln
     secrets: inherit
     permissions:
