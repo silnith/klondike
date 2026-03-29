@@ -133,7 +133,7 @@ jobs:
         platform:
           - x86
           - x64
-          - ARM
+          - ARM 
           - ARM64
         configuration:
           - Debug
