@@ -110,7 +110,7 @@ jobs:
       checks: write
 
   cpp-nuget:
-    name: NuGet
+    name: NuGet Cache
     needs:
       - get-date
     uses: silnith/github-workflows/.github/workflows/nuget-cache-dependencies.yaml@main
