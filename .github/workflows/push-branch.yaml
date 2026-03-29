@@ -162,7 +162,6 @@ jobs:
       artifact-path: cpp/Solitaire
       test-result-files: |
         cpp/Solitaire/**/TestResults/**/*.trx
-        cpp/Solitaire/**/*.coverage
     secrets: inherit
     permissions:
       checks: write
