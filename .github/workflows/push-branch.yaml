@@ -124,7 +124,7 @@ jobs:
     permissions:
       contents: read
   cpp-build-intel:
-    name: C++
+    name: C++ Intel
     needs:
       - get-date
       - cpp-nuget
@@ -150,7 +150,7 @@ jobs:
     permissions:
       contents: read
   cpp-build-arm:
-    name: C++
+    name: C++ ARM
     needs:
       - get-date
       - cpp-nuget
