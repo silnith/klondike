@@ -123,7 +123,7 @@ jobs:
     secrets: inherit
     permissions:
       contents: read
-  cpp-build:
+  cpp-build-intel:
     name: C++
     needs:
       - get-date
@@ -133,12 +133,36 @@ jobs:
         platform:
           - x86
           - x64
-          #- ARM
+        configuration:
+          - Debug
+          - Release
+    uses: silnith/github-workflows/.github/workflows/msbuild-intel.yaml@main
+    with:
+      artifact-prefix: cpp
+      directory: cpp/Solitaire
+      solution-file: Solitaire.sln
+      platform: ${{ matrix.platform }}
+      configuration: ${{ matrix.configuration }}
+      year: ${{ needs.get-date.outputs.year }}
+      month: ${{ needs.get-date.outputs.month }}
+      day: ${{ needs.get-date.outputs.day }}
+    secrets: inherit
+    permissions:
+      contents: read
+  cpp-build-arm:
+    name: C++
+    needs:
+      - get-date
+      - cpp-nuget
+    strategy:
+      matrix:
+        platform:
+          - ARM
           - ARM64
         configuration:
           - Debug
           - Release
-    uses: silnith/github-workflows/.github/workflows/msbuild-build.yaml@main
+    uses: silnith/github-workflows/.github/workflows/msbuild-arm.yaml@main
     with:
       artifact-prefix: cpp
       directory: cpp/Solitaire
@@ -154,7 +178,8 @@ jobs:
   cpp-test-results:
     name: Publish VSTest Results
     needs:
-      - cpp-build
+      - cpp-build-intel
+      - cpp-build-arm
     uses: silnith/github-workflows/.github/workflows/publish-test-results.yaml@main
     with:
       check-name: C++ Test Results
