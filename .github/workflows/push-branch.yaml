@@ -42,7 +42,7 @@ jobs:
       contents: read
       checks: write
   maven-test-results:
-    name: Maven Publish Test Results
+    name: Publish Maven Test Results
     needs:
       - maven-build
     uses: silnith/github-workflows/.github/workflows/publish-test-results.yaml@single-publish-test-results
@@ -96,7 +96,7 @@ jobs:
     permissions:
       contents: read
   dotnet-test-results:
-    name: .NET Publish Test Results
+    name: Publish .NET Test Results
     needs:
       - dotnet-build
     uses: silnith/github-workflows/.github/workflows/publish-test-results.yaml@single-publish-test-results
