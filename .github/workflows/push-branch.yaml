@@ -116,7 +116,7 @@ jobs:
     uses: silnith/github-workflows/.github/workflows/nuget-cache-dependencies.yaml@main
     with:
       directory: cpp/Solitaire
-      solution_file: Solitaire.sln
+      solution-file: Solitaire.sln
       year: ${{ needs.get-date.outputs.year }}
       month: ${{ needs.get-date.outputs.month }}
       day: ${{ needs.get-date.outputs.day }}
