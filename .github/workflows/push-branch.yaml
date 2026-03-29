@@ -48,7 +48,7 @@ jobs:
     with:
       directory: csharp/Solitaire
       solution-file: Solitaire.sln
-      dotnet-versions: 5.x 
+      dotnet-versions: 5.x
       year: ${{ needs.get-date.outputs.year }}
       month: ${{ needs.get-date.outputs.month }}
       day: ${{ needs.get-date.outputs.day }}
