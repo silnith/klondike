@@ -56,7 +56,7 @@ jobs:
     permissions:
       contents: read
   dotnet-build:
-    name: .NET Cache
+    name: .NET
     needs:
       - get-date
       - dotnet-cache
