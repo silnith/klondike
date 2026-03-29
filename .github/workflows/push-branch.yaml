@@ -10,12 +10,13 @@ env: {}
 jobs:
   get-date:
     name: Date
-    uses: silnith/github-workflows/.github/workflows/bash-get-date.yaml@main
+    uses: silnith/github-workflows/.github/workflows/bash-get-date.yaml@single-publish-test-results
+
   maven-cache:
     name: Maven Cache
     needs:
       - get-date
-    uses: silnith/github-workflows/.github/workflows/maven-cache-dependencies.yaml@main
+    uses: silnith/github-workflows/.github/workflows/maven-cache-dependencies.yaml@single-publish-test-results
     with:
       directory: java/solitaire
       year: ${{ needs.get-date.outputs.year }}
@@ -29,7 +30,7 @@ jobs:
     needs:
       - get-date
       - maven-cache
-    uses: silnith/github-workflows/.github/workflows/maven-verify.yaml@main
+    uses: silnith/github-workflows/.github/workflows/maven-verify.yaml@single-publish-test-results
     with:
       artifact-prefix: java
       directory: java/solitaire
@@ -40,11 +41,27 @@ jobs:
     permissions:
       contents: read
       checks: write
+  maven-test-results:
+    name: Maven Publish Test Results
+    needs:
+      - maven-build
+    uses: silnith/github-workflows/.github/workflows/publish-test-results.yaml@single-publish-test-results
+    with:
+      check-name: Java Test Results
+      artifact-pattern: java-target
+      artifact-path: java/solitaire
+      test-result-files: |
+        java/solitaire/**/target/surefire-reports/TEST-*.xml
+        java/solitaire/**/target/failsafe-reports/TEST-*.xml
+    secrets: inherit
+    permissions:
+      checks: write
+
   dotnet-cache:
     name: .NET Cache
     needs:
       - get-date
-    uses: silnith/github-workflows/.github/workflows/dotnet-cache-dependencies.yaml@main
+    uses: silnith/github-workflows/.github/workflows/dotnet-cache-dependencies.yaml@single-publish-test-results
     with:
       directory: csharp/Solitaire
       solution-file: Solitaire.sln
@@ -65,7 +82,7 @@ jobs:
         configuration:
           - Debug
           - Release
-    uses: silnith/github-workflows/.github/workflows/dotnet-build.yaml@main
+    uses: silnith/github-workflows/.github/workflows/dotnet-build.yaml@single-publish-test-results
     with:
       artifact-prefix: csharp
       directory: csharp/Solitaire
@@ -82,10 +99,12 @@ jobs:
     name: .NET Publish Test Results
     needs:
       - dotnet-build
-    uses: silnith/github-workflows/.github/workflows/dotnet-publish-test-results.yaml@main
+    uses: silnith/github-workflows/.github/workflows/publish-test-results.yaml@single-publish-test-results
     with:
-      artifact-prefix: csharp
-      directory: csharp/Solitaire
+      check-name: .NET Test Results
+      artifact-pattern: csharp-dotnet-test-results-*
+      artifact-path: csharp/Solitaire
+      test-result-files: csharp/Solitaire/**/TestResults/**/*.trx
     secrets: inherit
     permissions:
       checks: write
