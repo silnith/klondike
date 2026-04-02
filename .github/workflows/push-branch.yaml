@@ -32,7 +32,7 @@ jobs:
       - maven-cache
     uses: silnith/github-workflows/.github/workflows/maven-verify.yaml@main
     with:
-      artifact-prefix: java
+      artifact-prefix: maven
       directory: java/solitaire
       year: ${{ needs.get-date.outputs.year }}
       month: ${{ needs.get-date.outputs.month }}
@@ -48,7 +48,7 @@ jobs:
     uses: silnith/github-workflows/.github/workflows/publish-test-results.yaml@main
     with:
       check-name: Java Test Results
-      artifact-pattern: java-target
+      artifact-pattern: maven-target
       artifact-path: java/solitaire
       test-result-files: |
         java/solitaire/**/target/surefire-reports/TEST-*.xml
@@ -84,7 +84,7 @@ jobs:
           - Release
     uses: silnith/github-workflows/.github/workflows/dotnet-build.yaml@main
     with:
-      artifact-prefix: csharp
+      artifact-prefix: dotnet
       directory: csharp/Solitaire
       solution-file: Solitaire.sln
       configuration: ${{ matrix.configuration }}
@@ -102,14 +102,14 @@ jobs:
     uses: silnith/github-workflows/.github/workflows/publish-test-results.yaml@main
     with:
       check-name: C# Test Results
-      artifact-pattern: csharp-dotnet-test-results-*
+      artifact-pattern: dotnet-test-*
       artifact-path: csharp/Solitaire
       test-result-files: csharp/Solitaire/**/TestResults/**/*.trx
     secrets: inherit
     permissions:
       checks: write
 
-  cpp-nuget:
+  nuget-cache:
     name: NuGet Cache
     needs:
       - get-date
@@ -123,11 +123,11 @@ jobs:
     secrets: inherit
     permissions:
       contents: read
-  cpp-build-intel:
+  msbuild-intel:
     name: C++ Intel
     needs:
       - get-date
-      - cpp-nuget
+      - nuget-cache
     strategy:
       matrix:
         platform:
@@ -138,7 +138,7 @@ jobs:
           - Release
     uses: silnith/github-workflows/.github/workflows/msbuild-intel.yaml@main
     with:
-      artifact-prefix: cpp
+      artifact-prefix: msbuild
       directory: cpp/Solitaire
       solution-file: Solitaire.sln
       platform: ${{ matrix.platform }}
@@ -149,23 +149,22 @@ jobs:
     secrets: inherit
     permissions:
       contents: read
-  cpp-build-arm:
+  msbuild-arm:
     name: C++ ARM
     needs:
       - get-date
-      - cpp-nuget
+      - nuget-cache
     strategy:
       matrix:
         platform:
-# Path does not exist: \Common7\IDE\Extensions\TestPlatform\testhost.arm.exe
-#          - ARM
+          - ARM
           - ARM64
         configuration:
           - Debug
           - Release
     uses: silnith/github-workflows/.github/workflows/msbuild-arm.yaml@main
     with:
-      artifact-prefix: cpp
+      artifact-prefix: msbuild
       directory: cpp/Solitaire
       solution-file: Solitaire.sln
       platform: ${{ matrix.platform }}
@@ -176,15 +175,15 @@ jobs:
     secrets: inherit
     permissions:
       contents: read
-  cpp-test-results:
+  vstest-results:
     name: Publish VSTest Results
     needs:
-      - cpp-build-intel
-      - cpp-build-arm
+      - msbuild-intel
+      - msbuild-arm
     uses: silnith/github-workflows/.github/workflows/publish-test-results.yaml@main
     with:
       check-name: C++ Test Results
-      artifact-pattern: cpp-vstest-test-results-*
+      artifact-pattern: msbuild-vstest-*
       artifact-path: cpp/Solitaire
       test-result-files: |
         cpp/Solitaire/**/TestResults/**/*.trx
