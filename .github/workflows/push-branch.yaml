@@ -14,6 +14,9 @@ jobs:
 
   maven-cache:
     name: Maven Cache
+    permissions:
+      contents: read
+      packages: read
     needs:
       - get-date
     uses: silnith/github-workflows/.github/workflows/maven-cache-dependencies.yaml@main
@@ -23,10 +26,11 @@ jobs:
       month: ${{ needs.get-date.outputs.month }}
       day: ${{ needs.get-date.outputs.day }}
     secrets: inherit
+  maven-verify:
+    name: Maven
     permissions:
       contents: read
-  maven-build:
-    name: Maven
+      packages: read
     needs:
       - get-date
       - maven-cache
@@ -38,13 +42,12 @@ jobs:
       month: ${{ needs.get-date.outputs.month }}
       day: ${{ needs.get-date.outputs.day }}
     secrets: inherit
-    permissions:
-      contents: read
-      checks: write
   maven-test-results:
     name: Publish Maven Test Results
+    permissions:
+      checks: write
     needs:
-      - maven-build
+      - maven-verify
     uses: silnith/github-workflows/.github/workflows/publish-test-results.yaml@main
     with:
       check-name: Java Test Results
@@ -54,11 +57,12 @@ jobs:
         java/solitaire/**/target/surefire-reports/TEST-*.xml
         java/solitaire/**/target/failsafe-reports/TEST-*.xml
     secrets: inherit
-    permissions:
-      checks: write
 
   dotnet-cache:
     name: .NET Cache
+    permissions:
+      contents: read
+      packages: read
     needs:
       - get-date
     uses: silnith/github-workflows/.github/workflows/dotnet-cache-dependencies.yaml@main
@@ -70,10 +74,11 @@ jobs:
       month: ${{ needs.get-date.outputs.month }}
       day: ${{ needs.get-date.outputs.day }}
     secrets: inherit
-    permissions:
-      contents: read
   dotnet-build:
     name: .NET
+    permissions:
+      contents: read
+      packages: read
     needs:
       - get-date
       - dotnet-cache
@@ -93,10 +98,10 @@ jobs:
       month: ${{ needs.get-date.outputs.month }}
       day: ${{ needs.get-date.outputs.day }}
     secrets: inherit
-    permissions:
-      contents: read
   dotnet-test-results:
     name: Publish .NET Test Results
+    permissions:
+      checks: write
     needs:
       - dotnet-build
     uses: silnith/github-workflows/.github/workflows/publish-test-results.yaml@main
@@ -106,11 +111,12 @@ jobs:
       artifact-path: csharp/Solitaire
       test-result-files: csharp/Solitaire/**/TestResults/**/*.trx
     secrets: inherit
-    permissions:
-      checks: write
 
   nuget-cache:
     name: NuGet Cache
+    permissions:
+      contents: read
+      packages: read
     needs:
       - get-date
     uses: silnith/github-workflows/.github/workflows/nuget-cache-dependencies.yaml@main
@@ -121,10 +127,11 @@ jobs:
       month: ${{ needs.get-date.outputs.month }}
       day: ${{ needs.get-date.outputs.day }}
     secrets: inherit
-    permissions:
-      contents: read
   msbuild-intel:
     name: C++ Intel
+    permissions:
+      contents: read
+      packages: read
     needs:
       - get-date
       - nuget-cache
@@ -147,10 +154,11 @@ jobs:
       month: ${{ needs.get-date.outputs.month }}
       day: ${{ needs.get-date.outputs.day }}
     secrets: inherit
-    permissions:
-      contents: read
   msbuild-arm:
     name: C++ ARM
+    permissions:
+      contents: read
+      packages: read
     needs:
       - get-date
       - nuget-cache
@@ -173,10 +181,10 @@ jobs:
       month: ${{ needs.get-date.outputs.month }}
       day: ${{ needs.get-date.outputs.day }}
     secrets: inherit
-    permissions:
-      contents: read
   vstest-results:
     name: Publish VSTest Results
+    permissions:
+      checks: write
     needs:
       - msbuild-intel
       - msbuild-arm
@@ -188,5 +196,3 @@ jobs:
       test-result-files: |
         cpp/Solitaire/**/TestResults/**/*.trx
     secrets: inherit
-    permissions:
-      checks: write
