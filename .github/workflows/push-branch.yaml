@@ -43,8 +43,10 @@ jobs:
       day: ${{ needs.get-date.outputs.day }}
     secrets: inherit
   maven-test-results:
-    name: Publish Maven Test Results
+    name: Maven Test Results
     permissions:
+      contents: read
+      issues: read
       checks: write
     needs:
       - maven-verify
@@ -99,8 +101,10 @@ jobs:
       day: ${{ needs.get-date.outputs.day }}
     secrets: inherit
   dotnet-test-results:
-    name: Publish .NET Test Results
+    name: .NET Test Results
     permissions:
+      contents: read
+      issues: read
       checks: write
     needs:
       - dotnet-build
@@ -182,8 +186,10 @@ jobs:
       day: ${{ needs.get-date.outputs.day }}
     secrets: inherit
   vstest-results:
-    name: Publish VSTest Results
+    name: VSTest Results
     permissions:
+      contents: read
+      issues: read
       checks: write
     needs:
       - msbuild-intel
